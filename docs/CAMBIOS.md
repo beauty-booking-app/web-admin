@@ -1,5 +1,10 @@
 # Registro de cambios
 
+## Fix · Loading en modal de turno y guardado de horarios (2026-08-18)
+
+- El modal de alta de turno muestra un spinner mientras carga los servicios ("Cargando servicios…") antes de mostrar el select de categoría/servicio.
+- El botón "Guardar Cambios de Horario" muestra un spinner y "Guardando…" mientras se ejecuta el PATCH (nueva señal `guardando` en `HorariosService`).
+
 ## Fix · Spinners de carga en las vistas que consultan el backend (2026-08-18)
 
 - Nuevo componente reutilizable `LoadingComponent` (`shared/components/loading/`) con spinner animado + texto.

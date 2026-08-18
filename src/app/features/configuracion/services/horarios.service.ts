@@ -14,11 +14,13 @@ export class HorariosService {
   private readonly _franjas = signal<FranjaLaboral[]>([]);
   private readonly _guardado = signal(false);
   private readonly _cargando = signal(false);
+  private readonly _guardando = signal(false);
   private readonly _error = signal<string | null>(null);
 
   readonly franjas = this._franjas.asReadonly();
   readonly guardado = this._guardado.asReadonly();
   readonly cargando = this._cargando.asReadonly();
+  readonly guardando = this._guardando.asReadonly();
   readonly error = this._error.asReadonly();
 
   readonly diasActivos = computed(() =>
@@ -51,6 +53,7 @@ export class HorariosService {
 
   async guardar(): Promise<void> {
     this._guardado.set(false);
+    this._guardando.set(true);
     const body = this._franjas().map(franjaToBusinessHour);
     try {
       await firstValueFrom(this.http.patch(`${API_URL}/admin/settings/business-hours`, body));
@@ -58,6 +61,8 @@ export class HorariosService {
       setTimeout(() => this._guardado.set(false), 2500);
     } catch (err) {
       this._error.set(mensajeDeError(err));
+    } finally {
+      this._guardando.set(false);
     }
   }
 

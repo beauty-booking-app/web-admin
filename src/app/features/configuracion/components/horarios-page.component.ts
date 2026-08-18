@@ -17,10 +17,15 @@ import type { DiaSemana } from '../../../core/models/franja-laboral.model';
           </p>
         </div>
         <button (click)="guardar()"
-                [disabled]="horariosService.cargando() || horariosService.franjas().length === 0"
+                [disabled]="horariosService.cargando() || horariosService.guardando() || horariosService.franjas().length === 0"
                 class="bg-rose-600 hover:bg-rose-500 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold px-5 py-2 rounded-lg text-xs shadow-md shadow-rose-200 transition flex items-center gap-2"
                 aria-label="Guardar cambios de horario">
-          Guardar Cambios de Horario
+          @if (horariosService.guardando()) {
+            <span class="w-3.5 h-3.5 rounded-full border-2 border-white/40 border-t-white animate-spin"></span>
+            Guardando…
+          } @else {
+            Guardar Cambios de Horario
+          }
         </button>
       </div>
 
