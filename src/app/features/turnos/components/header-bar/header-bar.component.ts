@@ -19,20 +19,14 @@ import { AgendaPdfService } from '../../services/agenda-pdf.service';
           </button>
         </div>
 
-        <div class="hidden md:flex items-center gap-2 text-xs font-medium text-slate-600 bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200">
-          <span class="text-rose-600 animate-pulse">●</span>
-          <span>Hora Actual:</span>
-          <span class="font-bold text-slate-900">{{ horaActual() }}</span>
+        <div class="hidden md:flex items-center gap-2 text-sm font-medium text-slate-600 bg-slate-100 px-4 py-2 rounded-lg border border-slate-200 shadow-sm">
+          <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
+          <span class="text-xs uppercase tracking-wide">Hora</span>
+          <span class="font-bold text-slate-900 tabular-nums">{{ horaActual() }}</span>
         </div>
       </div>
 
       <div class="flex items-center gap-3">
-        <div class="hidden md:flex items-center gap-2 text-sm font-medium text-slate-600 bg-slate-100 px-3 py-2 rounded-lg border border-slate-200">
-          <span class="text-rose-600 animate-pulse">●</span>
-          <span>Hora Actual:</span>
-          <span class="font-bold text-slate-900">{{ horaActual() }}</span>
-        </div>
-
         <button (click)="exportarPdf()"
                 class="flex items-center gap-2 border border-slate-300 text-slate-700 hover:bg-slate-100 font-semibold px-4 py-2 rounded-lg text-xs transition"
                 aria-label="Exportar agenda del día en PDF">
