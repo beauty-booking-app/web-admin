@@ -4,27 +4,22 @@ import { TurnosStateService } from '../../features/turnos/services/turnos-state.
 import { RecordatorioService } from '../../features/turnos/services/recordatorio.service';
 import { ServiciosService } from '../../features/servicios-catalogo/services/servicios.service';
 import { AuthService } from '../../core/api/auth.service';
+import { CurrencyArsPipe } from '../../shared/pipes/currency-ars.pipe';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [RouterLink, RouterLinkActive],
+  imports: [RouterLink, RouterLinkActive, CurrencyArsPipe],
   template: `
     <aside class="w-64 bg-white border-r border-slate-200 flex flex-col shrink-0 shadow-sm h-full">
       <!-- Brand -->
-      <div class="p-4 border-b border-slate-100 flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-rose-600 to-pink-500 flex items-center justify-center text-white shadow-md shadow-rose-200 font-bold text-lg">
-            ✂
-          </div>
-          <div>
-            <h1 class="font-bold text-slate-900 text-sm tracking-wide">VELVET &amp; GLOW</h1>
-            <p class="text-[11px] text-slate-500 font-medium">Gestión Operativa</p>
-          </div>
+      <div class="p-4 border-b border-slate-100 flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-rose-600 to-pink-500 flex items-center justify-center text-white shadow-md shadow-rose-200 font-bold text-lg">
+          ✂
         </div>
-        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-          En Vivo
-        </span>
+        <div>
+          <h1 class="font-bold text-slate-900 text-sm tracking-wide">VELVET &amp; GLOW</h1>
+          <p class="text-[11px] text-slate-500 font-medium">Gestión Operativa</p>
+        </div>
       </div>
 
       <!-- Navigation -->
@@ -85,39 +80,23 @@ import { AuthService } from '../../core/api/auth.service';
            class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all"
            aria-label="Horarios y ausencias">
           <span class="w-4 h-4 text-slate-500">🕐</span>
-          <span>Horarios y Ausencias</span>
+           <span>Horarios y Ausencias</span>
         </a>
-
-        <div class="pt-4 px-3 py-2 text-[10px] font-bold tracking-wider text-slate-400 uppercase">Personal</div>
-
-        <button (click)="turnosState.setFiltroProfesional('todos')"
-                class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-100 transition-all"
-                [class.bg-slate-800]="turnosState.filtroProfesional() === 'todos'"
-                [class.text-white]="turnosState.filtroProfesional() === 'todos'">
-          <span class="w-4 h-4 text-slate-500">👥</span>
-          <span>Ver Todo el Equipo</span>
-        </button>
-
-        <div class="pl-4 space-y-1">
-          <button (click)="turnosState.setFiltroProfesional('Sofía')"
-                  class="w-full flex items-center justify-between px-2 py-1.5 rounded text-xs text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all"
-                  [class.font-bold]="turnosState.filtroProfesional() === 'Sofía'">
-            <span class="flex items-center gap-2">
-              <span class="w-2 h-2 rounded-full bg-pink-500"></span> Sofía (Peluquería)
-            </span>
-          </button>
-          <button (click)="turnosState.setFiltroProfesional('Camila')"
-                  class="w-full flex items-center justify-between px-2 py-1.5 rounded text-xs text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all"
-                  [class.font-bold]="turnosState.filtroProfesional() === 'Camila'">
-            <span class="flex items-center gap-2">
-              <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Camila (Uñas)
-            </span>
-          </button>
-        </div>
       </nav>
 
-      <!-- Status footer -->
-      <div class="p-3 bg-slate-50 border-t border-slate-200 text-xs">
+      <!-- Zona inferior fija: facturación + estado del salón -->
+      <div class="shrink-0 border-t border-slate-200">
+        <!-- Facturación estimada hoy -->
+        <div class="p-3 bg-emerald-50 flex items-center justify-between gap-2">
+          <div class="min-w-0">
+            <p class="text-[10px] font-semibold text-slate-500 uppercase tracking-wide">Facturación Estimada Hoy</p>
+            <p class="text-base font-bold text-emerald-700 mt-0.5 truncate">{{ turnosState.metricas().facturacion | currencyArs }}</p>
+          </div>
+          <div class="w-9 h-9 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-sm shrink-0" aria-hidden="true">$</div>
+        </div>
+
+        <!-- Status footer -->
+        <div class="p-3 bg-slate-50 text-xs">
         <div class="flex items-center justify-between text-slate-600 mb-1">
           <span class="font-medium">Estado del Salón:</span>
           <span class="text-emerald-700 font-bold flex items-center gap-1">
@@ -141,6 +120,7 @@ import { AuthService } from '../../core/api/auth.service';
                   aria-label="Cerrar sesión">
             Cerrar sesión
           </button>
+        </div>
         </div>
       </div>
     </aside>

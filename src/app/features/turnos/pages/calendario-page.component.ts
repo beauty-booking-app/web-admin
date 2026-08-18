@@ -6,31 +6,21 @@ import {
 } from '../services/calendario.service';
 import { STATUS_CONFIG, type EstadoConfig } from '../components/status-config';
 import type { Turno, EstadoTurno } from '../../../core/models/turno.model';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-calendario-page',
+  imports: [LoadingComponent],
   template: `
-    <div class="flex-1 overflow-y-auto p-6 space-y-6">
+    <div class="flex-1 overflow-y-auto pt-24 p-6">
       <!-- Encabezado -->
-      <header class="flex flex-wrap items-center justify-between gap-4">
+      <header class="flex flex-wrap items-center justify-between gap-4 mb-4">
         <div class="flex items-center gap-3">
-          <div class="flex items-center gap-2 bg-white border border-slate-200 rounded-lg p-1.5 shadow-sm">
-            <button (click)="calendario.irAnterior()"
-                    class="p-1.5 rounded hover:bg-slate-100 text-slate-600 transition"
-                    title="Período anterior" aria-label="Período anterior">
-              ‹
-            </button>
-            <button (click)="calendario.irHoy()"
-                    class="px-3 py-1 rounded text-xs font-bold text-slate-700 hover:bg-slate-100 transition"
-                    title="Ir a hoy" aria-label="Ir a hoy">
-              Hoy
-            </button>
-            <button (click)="calendario.irSiguiente()"
-                    class="p-1.5 rounded hover:bg-slate-100 text-slate-600 transition"
-                    title="Período siguiente" aria-label="Período siguiente">
-              ›
-            </button>
-          </div>
+          <button (click)="calendario.irHoy()"
+                  class="px-4 py-2 rounded-lg text-sm font-bold text-slate-700 bg-white border border-slate-200 shadow-sm hover:bg-slate-100 transition"
+                  title="Ir a hoy" aria-label="Ir a hoy">
+            Hoy
+          </button>
 
           <div class="flex items-center bg-slate-100 border border-slate-200 rounded-lg p-1.5" role="group" aria-label="Cambiar vista">
             <button (click)="cambiarVista('semana')"
@@ -54,7 +44,19 @@ import type { Turno, EstadoTurno } from '../../../core/models/turno.model';
           </div>
         </div>
 
-        <h1 class="text-base font-bold text-slate-900">{{ calendario.labelPeriodo() }}</h1>
+        <div class="flex items-center gap-2 bg-white border border-slate-200 rounded-lg p-1.5 shadow-sm">
+          <button (click)="calendario.irAnterior()"
+                  class="p-1.5 rounded hover:bg-slate-100 text-slate-600 transition"
+                  title="Período anterior" aria-label="Período anterior">
+            ‹
+          </button>
+          <h1 class="text-base font-bold text-slate-900 px-2 whitespace-nowrap">{{ calendario.labelPeriodo() }}</h1>
+          <button (click)="calendario.irSiguiente()"
+                  class="p-1.5 rounded hover:bg-slate-100 text-slate-600 transition"
+                  title="Período siguiente" aria-label="Período siguiente">
+            ›
+          </button>
+        </div>
       </header>
 
       @if (calendario.error(); as err) {
@@ -65,8 +67,8 @@ import type { Turno, EstadoTurno } from '../../../core/models/turno.model';
       }
 
       @if (calendario.cargando()) {
-        <div class="bg-white border border-slate-200 rounded-xl p-10 text-center text-sm text-slate-500 shadow-sm">
-          Cargando calendario…
+        <div class="bg-white border border-slate-200 rounded-xl p-10 shadow-sm">
+          <app-loading texto="Cargando calendario…" />
         </div>
       } @else {
         @if (calendario.vista() === 'semana') {
@@ -83,7 +85,7 @@ import type { Turno, EstadoTurno } from '../../../core/models/turno.model';
                     <span class="block text-sm font-bold text-slate-800"
                           [class.text-rose-600]="esHoy(dia)">{{ dia.getDate() }}</span>
                   </button>
-                  <div class="flex-1 p-1.5 space-y-1.5 overflow-y-auto max-h-96 min-h-40">
+                  <div class="flex-1 p-1.5 space-y-1.5 overflow-y-auto max-h-96 min-h-64">
                     @if (lista.length === 0) {
                       <p class="text-center text-[10px] text-slate-300 py-4">—</p>
                     } @else {
@@ -118,7 +120,7 @@ import type { Turno, EstadoTurno } from '../../../core/models/turno.model';
                 @if (celda) {
                   @let lista = turnosDe(celda);
                   <button (click)="irAlDia(celda)"
-                          class="min-h-24 p-1.5 border border-slate-100 text-left align-top transition hover:bg-rose-50/40 flex flex-col gap-1"
+                          class="min-h-32 p-1.5 border border-slate-100 text-left align-top transition hover:bg-rose-50/40 flex flex-col gap-1"
                           [class.bg-rose-50/40]="esHoy(celda)"
                           [attr.aria-label]="'Ir a la agenda del día ' + formatearFecha(celda)">
                     <span class="text-xs font-bold text-slate-600"
@@ -136,7 +138,7 @@ import type { Turno, EstadoTurno } from '../../../core/models/turno.model';
                     }
                   </button>
                 } @else {
-                  <div class="min-h-24 bg-slate-50/60 border border-slate-100"></div>
+                  <div class="min-h-32 bg-slate-50/60 border border-slate-100"></div>
                 }
               }
             </div>

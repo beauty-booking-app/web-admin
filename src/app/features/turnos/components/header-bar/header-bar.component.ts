@@ -5,36 +5,18 @@ import { AgendaPdfService } from '../../services/agenda-pdf.service';
 @Component({
   selector: 'app-header-bar',
   template: `
-    <header class="h-16 border-b border-slate-200 bg-white/90 backdrop-blur px-6 flex items-center justify-between shrink-0 gap-4 shadow-sm">
+    <header class="h-[69px] border-b border-slate-200 bg-white/90 backdrop-blur px-6 flex items-center justify-between shrink-0 gap-4 shadow-sm">
       <div class="flex items-center gap-4">
-        <div class="flex items-center gap-2 bg-slate-100 border border-slate-200 rounded-lg p-1.5">
-          <button (click)="turnosState.irAlDiaAnterior()" class="p-1 rounded hover:bg-slate-200 text-slate-600 transition" title="Día Anterior" aria-label="Día anterior">
-            ‹
-          </button>
-          <div class="px-2 text-center">
+        <div class="flex items-center gap-3 bg-slate-100 border border-slate-200 rounded-lg px-4 h-9">
+          <span class="text-rose-500 animate-pulse" aria-hidden="true">●</span>
+          <div class="text-center leading-tight">
             <span class="text-xs font-bold text-slate-900 block">{{ fechaFormateada() }}</span>
           </div>
-          <button (click)="turnosState.irAlDiaSiguiente()" class="p-1 rounded hover:bg-slate-200 text-slate-600 transition" title="Día Siguiente" aria-label="Día siguiente">
-            ›
-          </button>
-        </div>
-
-        <div class="hidden md:flex items-center gap-2 text-xs font-medium text-slate-600 bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200">
-          <span class="text-rose-600 animate-pulse">●</span>
-          <span>Hora Actual:</span>
-          <span class="font-bold text-slate-900">{{ horaActual() }}</span>
+          <span class="text-xs font-bold text-slate-900 tabular-nums block">{{ horaActual() }}</span>
         </div>
       </div>
 
       <div class="flex items-center gap-3">
-        <div class="relative">
-          <span class="absolute left-3 top-2.5 text-slate-400 text-xs">🔍</span>
-          <input type="text"
-                 placeholder="Buscar cliente, profesional..."
-                 class="pl-9 pr-4 py-1.5 text-xs bg-slate-100 border border-slate-200 rounded-lg text-slate-800 focus:outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500 w-48 lg:w-64 transition"
-                 aria-label="Buscar turno">
-        </div>
-
         <button (click)="exportarPdf()"
                 class="flex items-center gap-2 border border-slate-300 text-slate-700 hover:bg-slate-100 font-semibold px-4 py-2 rounded-lg text-xs transition"
                 aria-label="Exportar agenda del día en PDF">

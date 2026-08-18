@@ -1,5 +1,58 @@
 # Registro de cambios
 
+## Fix · Loading en modal de turno y guardado de horarios (2026-08-18)
+
+- El modal de alta de turno muestra un spinner mientras carga los servicios ("Cargando servicios…") antes de mostrar el select de categoría/servicio.
+- El botón "Guardar Cambios de Horario" muestra un spinner y "Guardando…" mientras se ejecuta el PATCH (nueva señal `guardando` en `HorariosService`).
+
+## Fix · Spinners de carga en las vistas que consultan el backend (2026-08-18)
+
+- Nuevo componente reutilizable `LoadingComponent` (`shared/components/loading/`) con spinner animado + texto.
+- Se reemplazaron los estados de carga planos por el spinner en: agenda, calendario, analytics, servicios y horarios.
+
+## Fix · Quitar sección "Personal" del sidebar (2026-08-18)
+
+- Se eliminó la sección "Personal" del sidebar (filtros "Ver Todo el Equipo", Sofía y Camila). El signal `filtroProfesional` queda en el servicio (sin UI) y el calendario sigue filtrando con el valor por defecto.
+
+## Fix · Alinear navbar de la agenda con el divider del sidebar (2026-08-18)
+
+- El header de la agenda pasó de `h-16` a `h-[69px]` para que su borde inferior quede alineado con el divider que hay debajo del logo de la marca en la sidebar.
+
+## Fix · Agenda: fecha estática con día y hora de hoy (2026-08-18)
+
+- En la agenda del día, el selector de fecha dejó de ser navegable: se quitaron las flechas ‹ › y ahora el bloque muestra el día y la hora de hoy de forma estática, con alto (`h-9`) igual a los botones de la derecha (EXPORTAR PDF / AGENDAR TURNO).
+
+## Fix · Reordenar navegación del calendario (2026-08-18)
+
+- En `/calendario`, "Hoy" quedó como botón aparte y las flechas ‹ › pasaron a flanquear el texto del período visible.
+
+## Fix · Sidebar a altura completa (2026-08-18)
+
+- El sidebar (y el layout) ahora ocupa el 100% del alto de la ventana. Se agregó `height: 100%` a `html`, `body` y `app-root` (faltaba la altura en el `<html>`/`app-root`, cortando la cadena `h-full`).
+
+## Fix · Bloque de facturación fijo al final del sidebar (2026-08-18)
+
+- El bloque de "Facturación Estimada Hoy" junto con el estado del salón se agruparon en una zona inferior fija del sidebar: quedan anclados al pie y siempre visibles aunque el menú tenga scroll.
+
+## Fix · Quitar badge "En Vivo" del sidebar (2026-08-18)
+
+- Se eliminó el badge "En Vivo" del encabezado de la barra lateral (informativo pero redundante/no deseado).
+
+## Fix · Sacar card de métricas de analytics (2026-08-18)
+
+- Se quitó la card "Resumen Operativo y Métricas Clave" del dashboard de analytics (su dato más útil, facturación de hoy, ya vive en el sidebar).
+- Se eliminó el componente `MetricasComponent` (quedaba sin uso).
+
+## Fix · Facturación estimada hoy en el sidebar (2026-08-18)
+
+- El sidebar muestra una card con la "Facturación Estimada Hoy" (con `currencyArs`) arriba del bloque "Estado del Salón".
+
+## Fix · Mover métricas al dashboard de analytics (2026-08-18)
+
+- La card "Resumen Operativo y Métricas Clave (Mes Actual)" (`MetricasComponent`) se movió de la agenda del día al dashboard de analytics (`/analytics`).
+- `AnalyticsPageComponent` ahora también carga la agenda del día (`TurnosStateService.cargarAgenda()`) para que la card tenga datos al entrar directo a analytics.
+- Se quitó del `AgendaPageComponent`.
+
 ## 009 · Migración a pnpm (2026-08-18)
 
 - `packageManager` en `package.json` pasa de `npm@12.0.1` a `pnpm@10.31.0`; `angular.json` (`cli.packageManager`) a `pnpm`.

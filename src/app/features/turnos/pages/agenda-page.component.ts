@@ -2,9 +2,9 @@ import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { HeaderBarComponent } from '../components/header-bar/header-bar.component';
 import { HeroTurnosComponent } from '../components/hero-turnos/hero-turnos.component';
 import { TimelineComponent } from '../components/timeline/timeline.component';
-import { MetricasComponent } from '../components/metricas/metricas.component';
 import { TurnoFormModalComponent } from '../components/turno-form-modal/turno-form-modal.component';
 import { TurnosStateService } from '../services/turnos-state.service';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-agenda-page',
@@ -12,13 +12,13 @@ import { TurnosStateService } from '../services/turnos-state.service';
     HeaderBarComponent,
     HeroTurnosComponent,
     TimelineComponent,
-    MetricasComponent,
     TurnoFormModalComponent,
+    LoadingComponent,
   ],
   template: `
     <app-header-bar (onNuevoTurno)="modalTurno.abrir()" />
 
-    <div class="flex-1 overflow-y-auto p-6 space-y-6">
+    <div class="flex-1 overflow-y-auto p-6 space-y-8">
       @if (turnosState.error(); as err) {
         <div role="alert"
              class="bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-xs text-red-700 font-medium">
@@ -27,8 +27,8 @@ import { TurnosStateService } from '../services/turnos-state.service';
       }
 
       @if (turnosState.cargando()) {
-        <div class="bg-white border border-slate-200 rounded-xl p-10 text-center text-sm text-slate-500 shadow-sm">
-          Cargando agenda…
+        <div class="bg-white border border-slate-200 rounded-xl p-10 shadow-sm">
+          <app-loading texto="Cargando agenda…" />
         </div>
       } @else {
         <!-- Zona Hero -->
@@ -36,9 +36,6 @@ import { TurnosStateService } from '../services/turnos-state.service';
 
         <!-- Zona Media: Timeline -->
         <app-timeline (onTurnoClick)="onTurnoClick($event)" />
-
-        <!-- Zona Inferior: Métricas -->
-        <app-metricas />
       }
     </div>
 

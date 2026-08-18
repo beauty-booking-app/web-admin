@@ -4,10 +4,11 @@ import { TurnosStateService } from '../../services/turnos-state.service';
 import type { Turno } from '../../../../core/models/turno.model';
 import { CurrencyArsPipe } from '../../../../shared/pipes/currency-ars.pipe';
 import { ServiciosService } from '../../../servicios-catalogo/services/servicios.service';
+import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-turno-form-modal',
-  imports: [FormsModule, CurrencyArsPipe],
+  imports: [FormsModule, CurrencyArsPipe, LoadingComponent],
   template: `
     @if (visible()) {
       <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4"
@@ -57,21 +58,27 @@ import { ServiciosService } from '../../../servicios-catalogo/services/servicios
               </div>
             </div>
 
-            <div>
-              <label class="block text-slate-700 font-medium mb-1" for="servicio-select">Categoría y Servicio</label>
-              <select id="servicio-select"
-                      [(ngModel)]="servicioSeleccionado" name="servicio"
-                      class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 focus:outline-none transition">
-                <option value="" disabled>Seleccioná un servicio…</option>
-                @for (grupo of gruposServicios(); track grupo.categoria) {
-                  <optgroup [label]="grupo.categoria">
-                    @for (srv of grupo.servicios; track srv.id) {
-                      <option [value]="srv.id">{{ srv.subtipo }} — {{ srv.precioBase | currencyArs }} — {{ srv.duracionMinutos }}m</option>
-                    }
-                  </optgroup>
+      @if (serviciosService.cargando()) {
+        <div class="rounded-lg border border-slate-200 p-4 bg-white">
+          <app-loading texto="Cargando servicios…" />
+        </div>
+      } @else {
+        <div>
+          <label class="block text-slate-700 font-medium mb-1" for="servicio-select">Categoría y Servicio</label>
+          <select id="servicio-select"
+                  [(ngModel)]="servicioSeleccionado" name="servicio"
+                  class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 focus:outline-none transition">
+            <option value="" disabled>Seleccioná un servicio…</option>
+            @for (grupo of gruposServicios(); track grupo.categoria) {
+              <optgroup [label]="grupo.categoria">
+                @for (srv of grupo.servicios; track srv.id) {
+                  <option [value]="srv.id">{{ srv.subtipo }} — {{ srv.precioBase | currencyArs }} — {{ srv.duracionMinutos }}m</option>
                 }
-              </select>
-            </div>
+              </optgroup>
+            }
+          </select>
+        </div>
+      }
 
             <div class="grid grid-cols-2 gap-3">
               <div>
@@ -109,7 +116,7 @@ import { ServiciosService } from '../../../servicios-catalogo/services/servicios
 })
 export class TurnoFormModalComponent {
   private readonly turnosState = inject(TurnosStateService);
-  private readonly serviciosService = inject(ServiciosService);
+  protected readonly serviciosService = inject(ServiciosService);
 
   readonly visible = signal(false);
   readonly onTurnoCreado = output<void>();
