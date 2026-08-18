@@ -1,5 +1,9 @@
 # Registro de cambios
 
+## Fix · Facturación estimada hoy en el sidebar (2026-08-18)
+
+- El sidebar muestra una card con la "Facturación Estimada Hoy" (con `currencyArs`) arriba del bloque "Estado del Salón".
+
 ## Fix · Mover métricas al dashboard de analytics (2026-08-18)
 
 - La card "Resumen Operativo y Métricas Clave (Mes Actual)" (`MetricasComponent`) se movió de la agenda del día al dashboard de analytics (`/analytics`).

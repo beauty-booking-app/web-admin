@@ -4,10 +4,11 @@ import { TurnosStateService } from '../../features/turnos/services/turnos-state.
 import { RecordatorioService } from '../../features/turnos/services/recordatorio.service';
 import { ServiciosService } from '../../features/servicios-catalogo/services/servicios.service';
 import { AuthService } from '../../core/api/auth.service';
+import { CurrencyArsPipe } from '../../shared/pipes/currency-ars.pipe';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [RouterLink, RouterLinkActive],
+  imports: [RouterLink, RouterLinkActive, CurrencyArsPipe],
   template: `
     <aside class="w-64 bg-white border-r border-slate-200 flex flex-col shrink-0 shadow-sm h-full">
       <!-- Brand -->
@@ -115,6 +116,15 @@ import { AuthService } from '../../core/api/auth.service';
           </button>
         </div>
       </nav>
+
+      <!-- Facturación estimada hoy -->
+      <div class="p-3 bg-emerald-50 border-t border-slate-200 flex items-center justify-between gap-2">
+        <div class="min-w-0">
+          <p class="text-[10px] font-semibold text-slate-500 uppercase tracking-wide">Facturación Estimada Hoy</p>
+          <p class="text-base font-bold text-emerald-700 mt-0.5 truncate">{{ turnosState.metricas().facturacion | currencyArs }}</p>
+        </div>
+        <div class="w-9 h-9 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-sm shrink-0" aria-hidden="true">$</div>
+      </div>
 
       <!-- Status footer -->
       <div class="p-3 bg-slate-50 border-t border-slate-200 text-xs">
