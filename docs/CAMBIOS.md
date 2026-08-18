@@ -1,5 +1,9 @@
 # Registro de cambios
 
+## Fix · Sidebar a altura completa (2026-08-18)
+
+- El sidebar (y el layout) ahora ocupa el 100% del alto de la ventana. Se agregó `height: 100%` a `html`, `body` y `app-root` (faltaba la altura en el `<html>`/`app-root`, cortando la cadena `h-full`).
+
 ## Fix · Bloque de facturación fijo al final del sidebar (2026-08-18)
 
 - El bloque de "Facturación Estimada Hoy" junto con el estado del salón se agruparon en una zona inferior fija del sidebar: quedan anclados al pie y siempre visibles aunque el menú tenga scroll.
