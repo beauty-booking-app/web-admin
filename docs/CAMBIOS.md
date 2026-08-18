@@ -1,5 +1,9 @@
 # Registro de cambios
 
+## Fix · Bloque de facturación fijo al final del sidebar (2026-08-18)
+
+- El bloque de "Facturación Estimada Hoy" junto con el estado del salón se agruparon en una zona inferior fija del sidebar: quedan anclados al pie y siempre visibles aunque el menú tenga scroll.
+
 ## Fix · Quitar badge "En Vivo" del sidebar (2026-08-18)
 
 - Se eliminó el badge "En Vivo" del encabezado de la barra lateral (informativo pero redundante/no deseado).
