@@ -27,12 +27,10 @@ import { AgendaPdfService } from '../../services/agenda-pdf.service';
       </div>
 
       <div class="flex items-center gap-3">
-        <div class="relative">
-          <span class="absolute left-3 top-2.5 text-slate-400 text-xs">🔍</span>
-          <input type="text"
-                 placeholder="Buscar cliente, profesional..."
-                 class="pl-9 pr-4 py-1.5 text-xs bg-slate-100 border border-slate-200 rounded-lg text-slate-800 focus:outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500 w-48 lg:w-64 transition"
-                 aria-label="Buscar turno">
+        <div class="hidden md:flex items-center gap-2 text-sm font-medium text-slate-600 bg-slate-100 px-3 py-2 rounded-lg border border-slate-200">
+          <span class="text-rose-600 animate-pulse">●</span>
+          <span>Hora Actual:</span>
+          <span class="font-bold text-slate-900">{{ horaActual() }}</span>
         </div>
 
         <button (click)="exportarPdf()"
