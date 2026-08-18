@@ -7,7 +7,7 @@ import type { Turno } from '../../../../core/models/turno.model';
   selector: 'app-hero-turnos',
   imports: [CurrencyArsPipe],
   template: `
-    <section class="mb-8">
+    <section class="mb-4">
       <div class="flex items-center justify-between mb-3">
         <div class="flex items-center gap-2">
           <span class="flex h-3 w-3 relative">
