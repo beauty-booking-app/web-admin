@@ -1,5 +1,11 @@
-import { Injectable, computed, signal } from '@angular/core';
-import { SERVICIOS_SEMILLA, type Servicio, type CategoriaServicio } from '../../../core/models/servicio.model';
+import { Injectable, computed, inject, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
+import type { Servicio, CategoriaServicio } from '../../../core/models/servicio.model';
+import { API_URL } from '../../../core/api/environment';
+import type { Appointment, AppointmentStatus } from '../../../core/api/backend.models';
+import { mensajeDeError } from '../../../core/api/error-utils';
+import { ServiciosService } from '../../servicios-catalogo/services/servicios.service';
 
 interface MesAnalitico {
   key: string;
@@ -28,39 +34,31 @@ interface TurnoHistorico {
   profesional: string;
 }
 
-const CLIENTES_SEMILLA = [
-  'Lucía Méndez',
-  'Andrea Paez',
-  'Mariana Gómez',
-  'Sofía Rivas',
-  'Valeria Fernández',
-  'Carolina Rossi',
-  'Camila Herrera',
-  'Josefina López',
-  'Martina Acosta',
-  'Paula Giménez',
-  'Renata Sosa',
-  'Florencia Díaz',
-];
-
-const PROFESIONALES = ['Sofía', 'Camila'];
-
-function crearSemilla(seed: number): () => number {
-  let estado = seed >>> 0;
-  return () => {
-    estado = (estado + 0x6d2b79f5) >>> 0;
-    let t = estado;
-    t = Math.imul(t ^ (t >>> 15), t | 1);
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
+function estadoHistorico(estado: AppointmentStatus): TurnoHistorico['estado'] {
+  switch (estado) {
+    case 'completado':
+      return 'Finalizado';
+    case 'confirmado':
+    case 'reprogramado':
+      return 'Confirmado';
+    case 'cancelado':
+    case 'no_asiste':
+      return 'Cancelado';
+    case 'pendiente':
+      return 'Pendiente';
+  }
 }
 
 @Injectable({ providedIn: 'root' })
 export class AnalyticsService {
+  private readonly http = inject(HttpClient);
+  private readonly serviciosService = inject(ServiciosService);
+
   private readonly _turnos = signal<TurnoHistorico[]>([]);
   private readonly _mesSeleccionado = signal<string>('');
   private readonly _categoriaSeleccionada = signal<CategoriaServicio | 'TODAS'>('TODAS');
+  private readonly _cargando = signal(false);
+  private readonly _error = signal<string | null>(null);
 
   readonly categorias: CategoriaServicio[] = [
     'CORTE UNISEX',
@@ -81,10 +79,39 @@ export class AnalyticsService {
 
   readonly mesSeleccionado = this._mesSeleccionado.asReadonly();
   readonly categoriaSeleccionada = this._categoriaSeleccionada.asReadonly();
+  readonly cargando = this._cargando.asReadonly();
+  readonly error = this._error.asReadonly();
 
   constructor() {
-    this._turnos.set(this.generarTurnos());
     this._mesSeleccionado.set(this.meses()[this.meses().length - 1].key);
+  }
+
+  async cargarHistorico(): Promise<void> {
+    if (this._cargando()) return;
+    this._cargando.set(true);
+    this._error.set(null);
+    try {
+      await this.serviciosService.cargarServiciosSiNecesario();
+      const catalogo = this.serviciosService.catalogoPorSubtipo();
+      const turnos: TurnoHistorico[] = [];
+      for (const mes of this.meses()) {
+        const { from, to } = this.rangoDeMes(mes.key);
+        const citas = await firstValueFrom(
+          this.http.get<Appointment[]>(`${API_URL}/admin/appointments`, {
+            params: { from, to },
+          }),
+        );
+        for (const cita of citas) {
+          turnos.push(...this.citaATurnos(cita, catalogo));
+        }
+      }
+      this._turnos.set(turnos);
+    } catch (err) {
+      this._error.set(mensajeDeError(err));
+      this._turnos.set([]);
+    } finally {
+      this._cargando.set(false);
+    }
   }
 
   readonly turnosPorMes = computed<MesAnalitico[]>(() => {
@@ -146,7 +173,7 @@ export class AnalyticsService {
     }
     return [...conteo.entries()]
       .map(([subtipo, datos]) => {
-        const servicio = SERVICIOS_SEMILLA.find((s) => s.subtipo === subtipo);
+        const servicio = this._turnos().find((t) => t.servicio.subtipo === subtipo)?.servicio;
         return {
           subtipo,
           categoria: servicio?.categoria ?? 'CORTE UNISEX',
@@ -186,6 +213,39 @@ export class AnalyticsService {
     return fecha.toLocaleDateString('es-AR', { month: 'long', year: '2-digit' });
   }
 
+  private rangoDeMes(key: string): { from: string; to: string } {
+    const [anio, mesIdx] = key.split('-').map(Number);
+    const ultimoDia = new Date(anio, mesIdx + 1, 0).getDate();
+    const mes = String(mesIdx + 1).padStart(2, '0');
+    const dia = String(ultimoDia).padStart(2, '0');
+    return { from: `${anio}-${mes}-01`, to: `${anio}-${mes}-${dia}` };
+  }
+
+  private citaATurnos(
+    cita: Appointment,
+    catalogoPorSubtipo: ReadonlyMap<string, Servicio>,
+  ): TurnoHistorico[] {
+    const inicio = new Date(cita.startTime);
+    return cita.serviceTypes.map((linea) => {
+      const base = catalogoPorSubtipo.get(linea.name);
+      const categoria = base?.categoria ?? 'CORTE UNISEX';
+      const profesional = categoria === 'UÑAS' ? 'Camila' : 'Sofía';
+      return {
+        inicio,
+        estado: estadoHistorico(cita.status),
+        servicio: {
+          id: base?.id ?? linea.id,
+          categoria,
+          subtipo: linea.name,
+          duracionMinutos: linea.durationMinutes,
+          precioBase: linea.price,
+        },
+        cliente: { nombre: cita.client.name },
+        profesional,
+      };
+    });
+  }
+
   private turnosDelMesSeleccionado(): TurnoHistorico[] {
     return this._turnos().filter((t) => this.mesKey(t.inicio) === this._mesSeleccionado());
   }
@@ -194,45 +254,5 @@ export class AnalyticsService {
     return this.turnosDelMesSeleccionado().filter(
       (t) => this._categoriaSeleccionada() === 'TODAS' || t.servicio.categoria === this._categoriaSeleccionada(),
     );
-  }
-
-  private generarTurnos(): TurnoHistorico[] {
-    const rand = crearSemilla(42);
-    const turnos: TurnoHistorico[] = [];
-    const hoy = new Date();
-
-    for (let m = 6; m >= 1; m--) {
-      let mesAbs = hoy.getMonth() - m;
-      let anioMes = hoy.getFullYear();
-      if (mesAbs < 0) {
-        mesAbs += 12;
-        anioMes -= 1;
-      }
-      const diasEnMes = new Date(anioMes, mesAbs + 1, 0).getDate();
-      for (let dia = 1; dia <= diasEnMes; dia++) {
-        const fecha = new Date(anioMes, mesAbs, dia);
-        if (fecha.getDay() === 0) continue;
-        const cantidad = 2 + Math.floor(rand() * 4);
-        for (let i = 0; i < cantidad; i++) {
-          const hora = 9 + Math.floor(rand() * 8);
-          const inicio = new Date(anioMes, mesAbs, dia, hora, i % 2 === 0 ? 0 : 30, 0, 0);
-          if (inicio > hoy) continue;
-          const servicio = SERVICIOS_SEMILLA[Math.floor(rand() * SERVICIOS_SEMILLA.length)];
-          const estadoRand = rand();
-          const estado: TurnoHistorico['estado'] =
-            estadoRand < 0.55
-              ? 'Finalizado'
-              : estadoRand < 0.85
-                ? 'Confirmado'
-                : estadoRand < 0.95
-                  ? 'Cancelado'
-                  : 'Pendiente';
-          const cliente = CLIENTES_SEMILLA[Math.floor(rand() * CLIENTES_SEMILLA.length)];
-          const profesional = PROFESIONALES[servicio.categoria === 'UÑAS' ? 1 : 0];
-          turnos.push({ inicio, estado, servicio, cliente: { nombre: cliente }, profesional });
-        }
-      }
-    }
-    return turnos;
   }
 }

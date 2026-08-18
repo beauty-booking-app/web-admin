@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, OnInit } from '@angular/core';
 import { AnalyticsService } from '../services/analytics.service';
 import { CurrencyArsPipe } from '../../../shared/pipes/currency-ars.pipe';
 
@@ -43,6 +43,19 @@ import { CurrencyArsPipe } from '../../../shared/pipes/currency-ars.pipe';
           </div>
         </div>
       </div>
+
+      @if (analyticsService.error(); as err) {
+        <div role="alert"
+             class="bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-xs text-red-700 font-medium">
+          Error al cargar los datos de analytics: {{ err }}
+        </div>
+      }
+
+      @if (analyticsService.cargando()) {
+        <div class="bg-white border border-slate-200 rounded-xl p-10 text-center text-sm text-slate-500 shadow-sm">
+          Cargando datos de analytics…
+        </div>
+      } @else {
 
       <!-- KPIs -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -156,13 +169,18 @@ import { CurrencyArsPipe } from '../../../shared/pipes/currency-ars.pipe';
           </ul>
         </section>
       </div>
+      }
     </div>
   `,
 })
-export class AnalyticsPageComponent {
+export class AnalyticsPageComponent implements OnInit {
   protected readonly analyticsService = inject(AnalyticsService);
 
   protected readonly kpis = this.analyticsService.kpis;
+
+  ngOnInit(): void {
+    void this.analyticsService.cargarHistorico();
+  }
 
   protected readonly descripcionTurnosPorMes = computed(() =>
     this.analyticsService.turnosPorMes()
