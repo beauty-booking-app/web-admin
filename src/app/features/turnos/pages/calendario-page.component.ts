@@ -14,23 +14,11 @@ import type { Turno, EstadoTurno } from '../../../core/models/turno.model';
       <!-- Encabezado -->
       <header class="flex flex-wrap items-center justify-between gap-4">
         <div class="flex items-center gap-3">
-          <div class="flex items-center gap-2 bg-white border border-slate-200 rounded-lg p-1.5 shadow-sm">
-            <button (click)="calendario.irAnterior()"
-                    class="p-1.5 rounded hover:bg-slate-100 text-slate-600 transition"
-                    title="Período anterior" aria-label="Período anterior">
-              ‹
-            </button>
-            <button (click)="calendario.irHoy()"
-                    class="px-3 py-1 rounded text-xs font-bold text-slate-700 hover:bg-slate-100 transition"
-                    title="Ir a hoy" aria-label="Ir a hoy">
-              Hoy
-            </button>
-            <button (click)="calendario.irSiguiente()"
-                    class="p-1.5 rounded hover:bg-slate-100 text-slate-600 transition"
-                    title="Período siguiente" aria-label="Período siguiente">
-              ›
-            </button>
-          </div>
+          <button (click)="calendario.irHoy()"
+                  class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-700 bg-white border border-slate-200 shadow-sm hover:bg-slate-100 transition"
+                  title="Ir a hoy" aria-label="Ir a hoy">
+            Hoy
+          </button>
 
           <div class="flex items-center bg-slate-100 border border-slate-200 rounded-lg p-1.5" role="group" aria-label="Cambiar vista">
             <button (click)="cambiarVista('semana')"
@@ -54,7 +42,19 @@ import type { Turno, EstadoTurno } from '../../../core/models/turno.model';
           </div>
         </div>
 
-        <h1 class="text-base font-bold text-slate-900">{{ calendario.labelPeriodo() }}</h1>
+        <div class="flex items-center gap-2 bg-white border border-slate-200 rounded-lg p-1.5 shadow-sm">
+          <button (click)="calendario.irAnterior()"
+                  class="p-1.5 rounded hover:bg-slate-100 text-slate-600 transition"
+                  title="Período anterior" aria-label="Período anterior">
+            ‹
+          </button>
+          <h1 class="text-base font-bold text-slate-900 px-2 whitespace-nowrap">{{ calendario.labelPeriodo() }}</h1>
+          <button (click)="calendario.irSiguiente()"
+                  class="p-1.5 rounded hover:bg-slate-100 text-slate-600 transition"
+                  title="Período siguiente" aria-label="Período siguiente">
+            ›
+          </button>
+        </div>
       </header>
 
       @if (calendario.error(); as err) {

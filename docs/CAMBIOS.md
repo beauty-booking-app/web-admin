@@ -1,5 +1,9 @@
 # Registro de cambios
 
+## Fix · Reordenar navegación del calendario (2026-08-18)
+
+- En `/calendario`, "Hoy" quedó como botón aparte y las flechas ‹ › pasaron a flanquear el texto del período visible.
+
 ## Fix · Sidebar a altura completa (2026-08-18)
 
 - El sidebar (y el layout) ahora ocupa el 100% del alto de la ventana. Se agregó `height: 100%` a `html`, `body` y `app-root` (faltaba la altura en el `<html>`/`app-root`, cortando la cadena `h-full`).
