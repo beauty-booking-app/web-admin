@@ -1,14 +1,9 @@
-import { Component, inject, signal, output } from '@angular/core';
+import { Component, computed, inject, signal, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TurnosStateService } from '../../services/turnos-state.service';
-import { SERVICIOS_SEMILLA, type CategoriaServicio } from '../../../../core/models/servicio.model';
 import type { Turno } from '../../../../core/models/turno.model';
 import { CurrencyArsPipe } from '../../../../shared/pipes/currency-ars.pipe';
-
-interface GrupoServicios {
-  categoria: CategoriaServicio;
-  servicios: typeof SERVICIOS_SEMILLA;
-}
+import { ServiciosService } from '../../../servicios-catalogo/services/servicios.service';
 
 @Component({
   selector: 'app-turno-form-modal',
@@ -67,7 +62,8 @@ interface GrupoServicios {
               <select id="servicio-select"
                       [(ngModel)]="servicioSeleccionado" name="servicio"
                       class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 focus:outline-none transition">
-                @for (grupo of gruposServicios; track grupo.categoria) {
+                <option value="" disabled>Seleccioná un servicio…</option>
+                @for (grupo of gruposServicios(); track grupo.categoria) {
                   <optgroup [label]="grupo.categoria">
                     @for (srv of grupo.servicios; track srv.id) {
                       <option [value]="srv.id">{{ srv.subtipo }} — {{ srv.precioBase | currencyArs }} — {{ srv.duracionMinutos }}m</option>
@@ -113,6 +109,7 @@ interface GrupoServicios {
 })
 export class TurnoFormModalComponent {
   private readonly turnosState = inject(TurnosStateService);
+  private readonly serviciosService = inject(ServiciosService);
 
   readonly visible = signal(false);
   readonly onTurnoCreado = output<void>();
@@ -120,15 +117,19 @@ export class TurnoFormModalComponent {
   protected nombreCliente = '';
   protected telefonoCliente = '';
   protected profesionalSeleccionado = 'Sofía';
-  protected servicioSeleccionado = 'corte-dama';
+  protected servicioSeleccionado = '';
   protected horaInicio = '11:00';
   protected estadoInicial = 'Confirmado';
 
-  protected readonly gruposServicios: GrupoServicios[] = this.agruparServicios();
+  protected readonly gruposServicios = computed(() => this.serviciosService.categorias());
 
   abrir(horaPre?: string, profesionalPre?: string): void {
     if (horaPre) this.horaInicio = horaPre;
     if (profesionalPre) this.profesionalSeleccionado = profesionalPre;
+    const catalogo = this.serviciosService.servicios();
+    if (catalogo.length > 0 && !catalogo.some((s) => s.id === this.servicioSeleccionado)) {
+      this.servicioSeleccionado = catalogo[0].id;
+    }
     this.visible.set(true);
   }
 
@@ -138,7 +139,9 @@ export class TurnoFormModalComponent {
   }
 
   guardar(): void {
-    const servicio = SERVICIOS_SEMILLA.find((s) => s.id === this.servicioSeleccionado);
+    const servicio = this.serviciosService
+      .servicios()
+      .find((s) => s.id === this.servicioSeleccionado);
     if (!servicio || !this.nombreCliente.trim()) return;
 
     const [h, m] = this.horaInicio.split(':').map(Number);
@@ -165,21 +168,8 @@ export class TurnoFormModalComponent {
     this.nombreCliente = '';
     this.telefonoCliente = '';
     this.profesionalSeleccionado = 'Sofía';
-    this.servicioSeleccionado = 'corte-dama';
+    this.servicioSeleccionado = '';
     this.horaInicio = '11:00';
     this.estadoInicial = 'Confirmado';
-  }
-
-  private agruparServicios(): GrupoServicios[] {
-    const categorias: CategoriaServicio[] = [
-      'CORTE UNISEX',
-      'TRATAMIENTOS CAPILARES',
-      'COLOR',
-      'UÑAS',
-    ];
-    return categorias.map((cat) => ({
-      categoria: cat,
-      servicios: SERVICIOS_SEMILLA.filter((s) => s.categoria === cat),
-    }));
   }
 }

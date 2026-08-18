@@ -1,4 +1,4 @@
-import { Component, inject, ViewChild } from '@angular/core';
+import { Component, inject, ViewChild, OnInit } from '@angular/core';
 import { ServiciosService } from '../services/servicios.service';
 import { ServicioFormModalComponent } from './servicio-form-modal.component';
 import { CurrencyArsPipe } from '../../../shared/pipes/currency-ars.pipe';
@@ -30,8 +30,24 @@ const ICONOS_CATEGORIA: Record<CategoriaServicio, string> = {
         </button>
       </div>
 
-      <!-- Tarjetas de categoría -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+      @if (serviciosService.error(); as err) {
+        <div role="alert"
+             class="bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-xs text-red-700 font-medium">
+          Error al cargar los servicios: {{ err }}
+        </div>
+      }
+
+      @if (serviciosService.cargando()) {
+        <div class="bg-white border border-slate-200 rounded-xl p-10 text-center text-sm text-slate-500 shadow-sm">
+          Cargando servicios…
+        </div>
+      } @else if (serviciosService.totalServicios() === 0 && !serviciosService.error()) {
+        <div class="bg-white border border-slate-200 rounded-xl p-10 text-center text-sm text-slate-500 shadow-sm">
+          No hay servicios cargados.
+        </div>
+      } @else {
+        <!-- Tarjetas de categoría -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
         @for (grupo of categorias(); track grupo.categoria) {
           <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
             <!-- Header de categoría -->
@@ -78,16 +94,21 @@ const ICONOS_CATEGORIA: Record<CategoriaServicio, string> = {
           </div>
         }
       </div>
+      }
     </div>
 
     <app-servicio-form-modal #modalServicio />
   `,
 })
-export class ServicioListComponent {
+export class ServicioListComponent implements OnInit {
   readonly serviciosService = inject(ServiciosService);
   protected readonly categorias = this.serviciosService.categorias;
 
   @ViewChild('modalServicio') modal!: ServicioFormModalComponent;
+
+  ngOnInit(): void {
+    void this.serviciosService.cargarServicios();
+  }
 
   protected icono(categoria: CategoriaServicio): string {
     return ICONOS_CATEGORIA[categoria] ?? '📋';
