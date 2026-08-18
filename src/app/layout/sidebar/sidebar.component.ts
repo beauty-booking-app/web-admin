@@ -1,0 +1,154 @@
+import { Component, inject, computed } from '@angular/core';
+import { RouterLink, RouterLinkActive } from '@angular/router';
+import { TurnosStateService } from '../../features/turnos/services/turnos-state.service';
+import { RecordatorioService } from '../../features/turnos/services/recordatorio.service';
+import { ServiciosService } from '../../features/servicios-catalogo/services/servicios.service';
+
+@Component({
+  selector: 'app-sidebar',
+  imports: [RouterLink, RouterLinkActive],
+  template: `
+    <aside class="w-64 bg-white border-r border-slate-200 flex flex-col shrink-0 shadow-sm h-full">
+      <!-- Brand -->
+      <div class="p-4 border-b border-slate-100 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-rose-600 to-pink-500 flex items-center justify-center text-white shadow-md shadow-rose-200 font-bold text-lg">
+            ✂
+          </div>
+          <div>
+            <h1 class="font-bold text-slate-900 text-sm tracking-wide">VELVET &amp; GLOW</h1>
+            <p class="text-[11px] text-slate-500 font-medium">Gestión Operativa</p>
+          </div>
+        </div>
+        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          En Vivo
+        </span>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="flex-1 p-3 space-y-1 overflow-y-auto" role="navigation" aria-label="Menú principal">
+        <div class="px-3 py-2 text-[10px] font-bold tracking-wider text-slate-400 uppercase">Principal</div>
+
+        <a routerLink="/" routerLinkActive="active-nav" [routerLinkActiveOptions]="{ exact: true }"
+           class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold transition-all"
+           aria-label="Agenda del día">
+          <div class="flex items-center gap-2.5">
+            <span class="w-4 h-4 text-rose-600">📅</span>
+            <span>Agenda del Día</span>
+          </div>
+          <span class="px-2 py-0.5 text-[10px] rounded-full bg-rose-200 text-rose-800 font-bold">
+            {{ turnosState.turnos().length }}
+          </span>
+        </a>
+
+        <a routerLink="/servicios" routerLinkActive="active-nav"
+           class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all"
+           aria-label="Servicios y precios">
+          <div class="flex items-center gap-2.5">
+            <span class="w-4 h-4 text-slate-500">✨</span>
+            <span>Servicios y Precios</span>
+          </div>
+          <span class="text-[10px] text-slate-400 font-medium">{{ serviciosService.totalServicios() }} tipos</span>
+        </a>
+
+        <a routerLink="/recordatorios" routerLinkActive="active-nav"
+           class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all"
+           aria-label="Recordatorios por WhatsApp">
+          <div class="flex items-center gap-2.5">
+            <span class="w-4 h-4 text-slate-500">📱</span>
+            <span>Recordatorios</span>
+          </div>
+          @if (cantidadPendientes() > 0) {
+            <span class="px-2 py-0.5 text-[10px] rounded-full bg-amber-100 text-amber-800 font-bold" title="pend. por enviar">
+              {{ cantidadPendientes() }} pend.
+            </span>
+          }
+        </a>
+
+        <a routerLink="/analytics" routerLinkActive="active-nav"
+           class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all"
+           aria-label="Dashboard de analytics">
+          <span class="w-4 h-4 text-slate-500">📊</span>
+          <span>Analytics</span>
+        </a>
+
+        <a routerLink="/configuracion" routerLinkActive="active-nav"
+           class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all"
+           aria-label="Horarios y ausencias">
+          <span class="w-4 h-4 text-slate-500">🕐</span>
+          <span>Horarios y Ausencias</span>
+        </a>
+
+        <div class="pt-4 px-3 py-2 text-[10px] font-bold tracking-wider text-slate-400 uppercase">Personal</div>
+
+        <button (click)="turnosState.setFiltroProfesional('todos')"
+                class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-100 transition-all"
+                [class.bg-slate-800]="turnosState.filtroProfesional() === 'todos'"
+                [class.text-white]="turnosState.filtroProfesional() === 'todos'">
+          <span class="w-4 h-4 text-slate-500">👥</span>
+          <span>Ver Todo el Equipo</span>
+        </button>
+
+        <div class="pl-4 space-y-1">
+          <button (click)="turnosState.setFiltroProfesional('Sofía')"
+                  class="w-full flex items-center justify-between px-2 py-1.5 rounded text-xs text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all"
+                  [class.font-bold]="turnosState.filtroProfesional() === 'Sofía'">
+            <span class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-pink-500"></span> Sofía (Peluquería)
+            </span>
+          </button>
+          <button (click)="turnosState.setFiltroProfesional('Camila')"
+                  class="w-full flex items-center justify-between px-2 py-1.5 rounded text-xs text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all"
+                  [class.font-bold]="turnosState.filtroProfesional() === 'Camila'">
+            <span class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Camila (Uñas)
+            </span>
+          </button>
+        </div>
+      </nav>
+
+      <!-- Status footer -->
+      <div class="p-3 bg-slate-50 border-t border-slate-200 text-xs">
+        <div class="flex items-center justify-between text-slate-600 mb-1">
+          <span class="font-medium">Estado del Salón:</span>
+          <span class="text-emerald-700 font-bold flex items-center gap-1">
+            ✅ Operativo
+          </span>
+        </div>
+        <div class="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
+          <div class="bg-gradient-to-r from-rose-500 to-emerald-500 h-full" [style.width.%]="porcentajeOcupacion"></div>
+        </div>
+        <div class="flex justify-between text-[10px] text-slate-500 font-medium mt-1">
+          <span>Ocupación hoy: {{ porcentajeOcupacion }}%</span>
+          <span>{{ turnosState.metricas().totalTurnos }} turnos</span>
+        </div>
+      </div>
+    </aside>
+  `,
+  styles: `
+    .active-nav {
+      background-color: rgb(255 241 242 / 0.8);
+      color: rgb(190 18 60);
+      border: 1px solid rgb(254 205 211 / 0.8);
+    }
+    .active-nav:hover {
+      background-color: rgb(255 241 242);
+    }
+  `,
+})
+export class SidebarComponent {
+  readonly turnosState = inject(TurnosStateService);
+  readonly serviciosService = inject(ServiciosService);
+  private readonly recordatorioService = inject(RecordatorioService);
+
+  protected readonly cantidadPendientes = computed(
+    () => this.recordatorioService.turnosPendientes().length,
+  );
+
+  get porcentajeOcupacion(): number {
+    const metricas = this.turnosState.metricas();
+    if (metricas.totalTurnos === 0) return 0;
+    return Math.min(100, Math.round((metricas.totalTurnos / 14) * 100));
+  }
+}

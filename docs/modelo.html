@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full bg-slate-50 text-slate-800">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlowControl - Panel Operativo de Turnos</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        salon: {
+                            50: '#fff1f2',
+                            100: '#ffe4e6',
+                            500: '#f43f5e',
+                            600: '#e11d48',
+                            700: '#be123c',
+                            900: '#881337',
+                            accent: '#fb7185'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .timeline-grid {
+            background-size: 100% 48px;
+            background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+        }
+        .pulse-active {
+            animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse-ring {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.03); }
+        }
+    </style>
+</head>
+<body class="h-full flex flex-col font-sans overflow-hidden antialiased selection:bg-rose-500 selection:text-white">
+
+    <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <div class="flex h-full w-full overflow-hidden">
+        
+        <aside class="w-64 bg-white border-r border-slate-200 flex flex-col shrink-0 shadow-sm">
+            <!-- Brand -->
+            <div class="p-4 border-b border-slate-100 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-rose-600 to-pink-500 flex items-center justify-center text-white shadow-md shadow-rose-200 font-bold text-lg">
+                        <i data-lucide="scissors" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-slate-900 text-sm tracking-wide">VELVET & GLOW</h1>
+                        <p class="text-[11px] text-slate-500 font-medium">Gestión Operativa</p>
+                    </div>
+                </div>
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    En Vivo
+                </span>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="flex-1 p-3 space-y-1 overflow-y-auto">
+                <div class="px-3 py-2 text-[10px] font-bold tracking-wider text-slate-400 uppercase">Principal</div>
+                
+                <button onclick="switchView('agenda')" id="nav-agenda" class="nav-btn active w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold text-rose-700 bg-rose-50/80 hover:bg-rose-50 transition-all border border-rose-200/80">
+                    <div class="flex items-center gap-2.5">
+                        <i data-lucide="calendar-range" class="w-4 h-4 text-rose-600"></i>
+                        <span>Agenda del Día</span>
+                    </div>
+                    <span class="px-2 py-0.5 text-[10px] rounded-full bg-rose-200 text-rose-800 font-bold" id="badge-turnos-hoy">14</span>
+                </button>
+
+                <button onclick="switchView('servicios')" id="nav-servicios" class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all">
+                    <div class="flex items-center gap-2.5">
+                        <i data-lucide="sparkles" class="w-4 h-4"></i>
+                        <span>Servicios y Precios</span>
+                    </div>
+                    <span class="text-[10px] text-slate-400 font-medium">14 tipos</span>
+                </button>
+
+                <button onclick="switchView('horarios')" id="nav-horarios" class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all">
+                    <div class="flex items-center gap-2.5">
+                        <i data-lucide="clock" class="w-4 h-4"></i>
+                        <span>Horarios y Ausencias</span>
+                    </div>
+                </button>
+
+                <button onclick="switchView('recordatorios')" id="nav-recordatorios" class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all">
+                    <div class="flex items-center gap-2.5">
+                        <i data-lucide="message-square" class="w-4 h-4"></i>
+                        <span>Módulo Recordatorios</span>
+                    </div>
+                    <span class="px-1.5 py-0.5 text-[10px] rounded-full bg-amber-100 text-amber-800 font-semibold border border-amber-200">3 pend.</span>
+                </button>
+
+                <div class="pt-4 px-3 py-2 text-[10px] font-bold tracking-wider text-slate-400 uppercase">Personal & Clientes</div>
+                
+                <button onclick="filterStaff('todos')" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-100">
+                    <i data-lucide="users" class="w-4 h-4 text-slate-500"></i>
+                    <span>Ver Todo el Equipo</span>
+                </button>
+                <div class="pl-4 space-y-1">
+                    <button onclick="filterStaff('Sofia')" class="w-full flex items-center justify-between px-2 py-1.5 rounded text-xs text-slate-600 hover:text-slate-900 hover:bg-slate-100">
+                        <span class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-pink-500"></span> Sofía (Peluquería Integral)
+                        </span>
+                        <span class="text-[10px] text-slate-400 font-medium">7 turnos</span>
+                    </button>
+                    <button onclick="filterStaff('Camila')" class="w-full flex items-center justify-between px-2 py-1.5 rounded text-xs text-slate-600 hover:text-slate-900 hover:bg-slate-100">
+                        <span class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Camila (Uñas)
+                        </span>
+                        <span class="text-[10px] text-slate-400 font-medium">5 turnos</span>
+                    </button>
+                </div>
+            </nav>
+
+            <!-- Quick Saldo / Operational status -->
+            <div class="p-3 bg-slate-50 border-t border-slate-200 text-xs">
+                <div class="flex items-center justify-between text-slate-600 mb-1">
+                    <span class="font-medium">Estado del Salón:</span>
+                    <span class="text-emerald-700 font-bold flex items-center gap-1">
+                        <i data-lucide="check-circle" class="w-3 h-3 text-emerald-600"></i> Operativo
+                    </span>
+                </div>
+                <div class="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
+                    <div class="bg-gradient-to-r from-rose-500 to-emerald-500 h-full w-3/4"></div>
+                </div>
+                <div class="flex justify-between text-[10px] text-slate-500 font-medium mt-1">
+                    <span>Ocupación hoy: 75%</span>
+                    <span>12 / 16 horas</span>
+                </div>
+            </div>
+        </aside>
+
+        <main class="flex-1 flex flex-col min-w-0 bg-slate-50 overflow-hidden">
+            
+            <!-- Top Operational Header Bar -->
+            <header class="h-16 border-b border-slate-200 bg-white/90 backdrop-blur px-6 flex items-center justify-between shrink-0 gap-4 shadow-sm">
+                
+                <!-- Quick Date Selector & Live Clock -->
+                <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-2 bg-slate-100 border border-slate-200 rounded-lg p-1.5">
+                        <button class="p-1 rounded hover:bg-slate-200 text-slate-600 transition" title="Día Anterior">
+                            <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                        </button>
+                        <div class="px-2 text-center">
+                            <span class="text-xs font-bold text-slate-900 block" id="current-date-str">Hoy, Miércoles 22 de Julio</span>
+                        </div>
+                        <button class="p-1 rounded hover:bg-slate-200 text-slate-600 transition" title="Día Siguiente">
+                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+
+                    <div class="hidden md:flex items-center gap-2 text-xs font-medium text-slate-600 bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200">
+                        <i data-lucide="clock" class="w-4 h-4 text-rose-600 animate-pulse"></i>
+                        <span>Hora Actual:</span>
+                        <span class="font-bold text-slate-900" id="live-time">10:42 AM</span>
+                    </div>
+                </div>
+
+                <!-- Fast Actions & Search -->
+                <div class="flex items-center gap-3">
+                    <div class="relative">
+                        <i data-lucide="search" class="w-4 h-4 absolute left-3 top-2.5 text-slate-400"></i>
+                        <input type="text" id="turn-search" placeholder="Buscar cliente, profesional..." class="pl-9 pr-4 py-1.5 text-xs bg-slate-100 border border-slate-200 rounded-lg text-slate-800 focus:outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500 w-48 lg:w-64 transition">
+                    </div>
+
+                    <button onclick="openNewAppointmentModal()" class="flex items-center gap-2 bg-gradient-to-r from-rose-600 to-pink-500 hover:from-rose-500 hover:to-pink-400 text-white font-semibold px-4 py-2 rounded-lg text-xs shadow-md shadow-rose-200 transition-all hover:scale-[1.02] active:scale-95">
+                        <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                        <span>+ AGENDAR TURNO</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- SCROLLABLE VIEW CONTAINER -->
+            <div id="main-view-container" class="flex-1 overflow-y-auto p-6 space-y-6">
+                
+                <!-- VIEW 1: AGENDA DEL DÍA (OPERATING CORE) -->
+                <div id="view-agenda" class="space-y-6">
+
+                    <!-- HERO OPERATIVO: TURNOS INMINENTES Y EN PROCESO -->
+                    <section>
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center gap-2">
+                                <span class="flex h-3 w-3 relative">
+                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-3 w-3 bg-rose-600"></span>
+                                </span>
+                                <h2 class="text-xs font-bold tracking-wider text-slate-700 uppercase">Atención en Curso y Próximos 60 Minutos</h2>
+                            </div>
+                            <span class="text-xs text-slate-500 font-medium">3 Turnos requiriendo atención prioritaria</span>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="imminent-cards-container">
+                            
+                            <!-- Card 1: En Proceso -->
+                            <div class="bg-white border-2 border-emerald-400 rounded-xl p-4 relative overflow-hidden shadow-sm hover:shadow-md transition-all">
+                                <div class="absolute top-0 right-0 bg-emerald-600 text-white font-bold text-[10px] px-3 py-0.5 rounded-bl-lg uppercase tracking-wider flex items-center gap-1 shadow-sm">
+                                    <i data-lucide="play" class="w-3 h-3 fill-white"></i> En Proceso
+                                </div>
+                                <div class="flex items-start justify-between mb-3">
+                                    <div>
+                                        <span class="text-xs font-mono text-emerald-700 font-bold">10:00 - 11:15 AM</span>
+                                        <h3 class="font-bold text-slate-900 text-base mt-0.5">Mariana Gómez</h3>
+                                        <p class="text-xs text-slate-500">Tel: +54 9 351 445-8890</p>
+                                    </div>
+                                </div>
+                                <div class="space-y-2 text-xs bg-slate-50 p-2.5 rounded-lg border border-slate-200/80 mb-3">
+                                    <div class="flex justify-between">
+                                        <span class="text-slate-500">Servicio:</span>
+                                        <span class="text-slate-900 font-semibold">COLOR - Mechas en gorro</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-slate-500">Profesional:</span>
+                                        <span class="text-pink-600 font-bold">Sofía (Peluquería)</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between gap-2 pt-1">
+                                    <button onclick="changeStatusModal(1, 'Finalizado')" class="flex-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1 transition shadow-xs">
+                                        <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-600"></i> Finalizar y Cobrar
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Card 2: Próximo Inminente -->
+                            <div class="bg-white border-2 border-rose-300 rounded-xl p-4 relative overflow-hidden shadow-sm hover:shadow-md transition-all">
+                                <div class="absolute top-0 right-0 bg-rose-600 text-white font-bold text-[10px] px-3 py-0.5 rounded-bl-lg uppercase tracking-wider shadow-sm">
+                                    Próximo (en 18 min)
+                                </div>
+                                <div class="flex items-start justify-between mb-3">
+                                    <div>
+                                        <span class="text-xs font-mono text-rose-700 font-bold">11:00 - 11:45 AM</span>
+                                        <h3 class="font-bold text-slate-900 text-base mt-0.5">Carolina Rossi</h3>
+                                        <p class="text-xs text-slate-500">Tel: +54 9 351 988-1234</p>
+                                    </div>
+                                </div>
+                                <div class="space-y-2 text-xs bg-slate-50 p-2.5 rounded-lg border border-slate-200/80 mb-3">
+                                    <div class="flex justify-between">
+                                        <span class="text-slate-500">Servicio:</span>
+                                        <span class="text-slate-900 font-semibold">UÑAS - Soft Gel</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-slate-500">Profesional:</span>
+                                        <span class="text-emerald-600 font-bold">Camila (Manicura)</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between gap-2 pt-1">
+                                    <button onclick="changeStatusModal(2, 'En Proceso')" class="flex-1 bg-rose-600 hover:bg-rose-500 text-white py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1 transition shadow-md shadow-rose-100">
+                                        <i data-lucide="play" class="w-3.5 h-3.5"></i> Iniciar Atención
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Card 3: Pendiente Recordatorio -->
+                            <div class="bg-white border-2 border-amber-300 rounded-xl p-4 relative overflow-hidden shadow-sm hover:shadow-md transition-all">
+                                <div class="absolute top-0 right-0 bg-amber-500 text-white font-bold text-[10px] px-3 py-0.5 rounded-bl-lg uppercase tracking-wider shadow-sm">
+                                    Sin Confirmar
+                                </div>
+                                <div class="flex items-start justify-between mb-3">
+                                    <div>
+                                        <span class="text-xs font-mono text-amber-700 font-bold">11:30 - 12:30 PM</span>
+                                        <h3 class="font-bold text-slate-900 text-base mt-0.5">Valeria Fernández</h3>
+                                        <p class="text-xs text-slate-500">Tel: +54 9 351 223-9911</p>
+                                    </div>
+                                </div>
+                                <div class="space-y-2 text-xs bg-slate-50 p-2.5 rounded-lg border border-slate-200/80 mb-3">
+                                    <div class="flex justify-between">
+                                        <span class="text-slate-500">Servicio:</span>
+                                        <span class="text-slate-900 font-semibold">TRATAMIENTO - Botox Capilar</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-slate-500">Profesional:</span>
+                                        <span class="text-pink-600 font-bold">Sofía (Estilista)</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between gap-2 pt-1">
+                                    <button onclick="sendWhatsAppReminder('Valeria Fernández', '+54 9 351 223-9911', '11:30 AM')" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1 transition shadow-md shadow-emerald-100">
+                                        <i data-lucide="send" class="w-3.5 h-3.5"></i> WhatsApp Recordatorio
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </section>
+
+                    <section class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5 pb-4 border-b border-slate-100">
+                            <div>
+                                <h2 class="text-base font-bold text-slate-900">Agenda Interactiva por Profesional</h2>
+                                <p class="text-xs text-slate-500">Haz clic en un hueco libre para agendar inmediatamente o sobre un turno para gestionarlo</p>
+                            </div>
+
+                            <!-- Staff Filters -->
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <span class="text-xs text-slate-500 font-medium">Filtrar:</span>
+                                <button onclick="filterStaff('todos')" class="staff-filter-btn active text-xs px-3 py-1 rounded-full bg-slate-800 text-white border border-slate-800 font-medium hover:bg-slate-700 shadow-xs">Todos</button>
+                                <button onclick="filterStaff('Sofia')" class="staff-filter-btn text-xs px-3 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-200 font-medium hover:bg-slate-200">Sofía (Peluquería)</button>
+                                <button onclick="filterStaff('Camila')" class="staff-filter-btn text-xs px-3 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-200 font-medium hover:bg-slate-200">Camila (Uñas)</button>
+                            </div>
+                        </div>
+
+                        <!-- Timeline Columns Layout (2 Staff Columns) -->
+                        <div class="overflow-x-auto">
+                            <div class="min-w-[600px]">
+                                <!-- Column Headers -->
+                                <div class="grid grid-cols-3 gap-3 mb-3 border-b border-slate-200 pb-2">
+                                    <div class="text-center font-bold text-xs text-slate-500 uppercase tracking-wider py-1">Horario</div>
+                                    <div class="bg-slate-50 p-2 rounded-lg text-center border-t-2 border-pink-500 border border-slate-200/60">
+                                        <p class="font-bold text-slate-900 text-xs">Sofía</p>
+                                        <p class="text-[10px] text-pink-600 font-medium">Peluquería Integral (Corte, Color, Tratamientos)</p>
+                                    </div>
+                                    <div class="bg-slate-50 p-2 rounded-lg text-center border-t-2 border-emerald-500 border border-slate-200/60">
+                                        <p class="font-bold text-slate-900 text-xs">Camila</p>
+                                        <p class="text-[10px] text-emerald-600 font-medium">Especialista en Uñas & Manicura</p>
+                                    </div>
+                                </div>
+
+                                <!-- Hours Slots Grid (3 Columns) -->
+                                <div class="space-y-2 font-mono text-xs" id="timeline-grid-body">
+                                    
+                                    <!-- 09:00 AM Row -->
+                                    <div class="grid grid-cols-3 gap-3 items-center min-h-[56px] border-b border-slate-100 py-1">
+                                        <div class="text-center font-bold text-slate-500 text-xs">09:00 AM</div>
+                                        
+                                        <!-- Sofía 9am (Occupied - Color) -->
+                                        <div onclick="openAppointmentDetails('Lucía Méndez', 'COLOR - Global', 'Sofía', '09:00 - 10:15 AM', 'Confirmado')" class="bg-purple-50 border border-purple-200 rounded-lg p-2 cursor-pointer hover:border-purple-400 transition shadow-xs">
+                                            <div class="flex justify-between items-center text-[10px] mb-1">
+                                                <span class="font-bold text-purple-900">Lucía Méndez</span>
+                                                <span class="bg-purple-200 text-purple-800 px-1.5 py-0.5 rounded font-sans font-semibold">Confirmado</span>
+                                            </div>
+                                            <div class="text-[11px] text-purple-800 font-sans truncate">COLOR - Global</div>
+                                        </div>
+
+                                        <!-- Camila 9am (Occupied) -->
+                                        <div onclick="openAppointmentDetails('Andrea Paez', 'UÑAS - Semipermanente', 'Camila', '09:00 - 10:00 AM', 'Finalizado')" class="bg-slate-100 border border-slate-200 rounded-lg p-2 cursor-pointer hover:border-slate-400 transition opacity-80">
+                                            <div class="flex justify-between items-center text-[10px] mb-1">
+                                                <span class="font-bold text-slate-800">Andrea Paez</span>
+                                                <span class="bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded font-sans font-semibold">Finalizado</span>
+                                            </div>
+                                            <div class="text-[11px] text-slate-600 font-sans truncate">UÑAS - Semipermanente</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- 10:00 AM Row -->
+                                    <div class="grid grid-cols-3 gap-3 items-center min-h-[56px] border-b border-slate-100 py-1 bg-rose-50/30 rounded-lg">
+                                        <div class="text-center font-bold text-rose-600 text-xs flex items-center justify-center gap-1">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping"></span> 10:00 AM
+                                        </div>
+
+                                        <!-- Sofía 10am (Occupied - Active Color) -->
+                                        <div onclick="openAppointmentDetails('Mariana Gómez', 'COLOR - Mechas en gorro', 'Sofía', '10:00 - 11:15 AM', 'En Proceso')" class="bg-emerald-50 border-2 border-emerald-400 rounded-lg p-2 cursor-pointer hover:border-emerald-500 transition shadow-sm">
+                                            <div class="flex justify-between items-center text-[10px] mb-1">
+                                                <span class="font-bold text-emerald-900 flex items-center gap-1">
+                                                    <i data-lucide="play" class="w-3 h-3 fill-emerald-600 text-emerald-600"></i> Mariana Gómez
+                                                </span>
+                                                <span class="bg-emerald-600 text-white font-bold px-1.5 py-0.5 rounded uppercase font-sans">En Proceso</span>
+                                            </div>
+                                            <div class="text-[11px] text-emerald-800 font-sans truncate font-medium">COLOR - Mechas en gorro</div>
+                                        </div>
+
+                                        <!-- Camila 10am (Occupied) -->
+                                        <div onclick="openAppointmentDetails('Sofía Rivas', 'UÑAS - Kapping', 'Camila', '10:00 - 11:00 AM', 'Confirmado')" class="bg-emerald-50/70 border border-emerald-200 rounded-lg p-2 cursor-pointer hover:border-emerald-400 transition">
+                                            <div class="flex justify-between items-center text-[10px] mb-1">
+                                                <span class="font-bold text-emerald-900">Sofía Rivas</span>
+                                                <span class="bg-emerald-200 text-emerald-800 px-1.5 py-0.5 rounded font-sans font-semibold">Confirmado</span>
+                                            </div>
+                                            <div class="text-[11px] text-emerald-800 font-sans truncate">UÑAS - Kapping</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- 11:00 AM Row -->
+                                    <div class="grid grid-cols-3 gap-3 items-center min-h-[56px] border-b border-slate-100 py-1">
+                                        <div class="text-center font-bold text-slate-500 text-xs">11:00 AM</div>
+
+                                        <!-- Sofía 11am (Occupied - Treatment) -->
+                                        <div onclick="openAppointmentDetails('Valeria Fernández', 'TRATAMIENTOS - Botox', 'Sofía', '11:30 - 12:30 PM', 'Pendiente Recordatorio')" class="bg-amber-50 border border-amber-200 rounded-lg p-2 cursor-pointer hover:border-amber-400 transition">
+                                            <div class="flex justify-between items-center text-[10px] mb-1">
+                                                <span class="font-bold text-amber-900">Valeria Fernández</span>
+                                                <span class="bg-amber-200 text-amber-800 px-1.5 py-0.5 rounded font-sans font-semibold">Pendiente Conf.</span>
+                                            </div>
+                                            <div class="text-[11px] text-amber-800 font-sans truncate">TRATAMIENTOS - Botox Capilar</div>
+                                        </div>
+
+                                        <!-- Camila 11am (Next) -->
+                                        <div onclick="openAppointmentDetails('Carolina Rossi', 'UÑAS - Soft Gel', 'Camila', '11:00 - 11:45 AM', 'Próximo')" class="bg-rose-50 border border-rose-200 rounded-lg p-2 cursor-pointer hover:border-rose-400 transition">
+                                            <div class="flex justify-between items-center text-[10px] mb-1">
+                                                <span class="font-bold text-rose-900">Carolina Rossi</span>
+                                                <span class="bg-rose-200 text-rose-800 px-1.5 py-0.5 rounded font-sans font-semibold">Próximo</span>
+                                            </div>
+                                            <div class="text-[11px] text-rose-800 font-sans truncate">UÑAS - Soft Gel</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- 12:00 PM Row -->
+                                    <div class="grid grid-cols-3 gap-3 items-center min-h-[56px] border-b border-slate-100 py-1">
+                                        <div class="text-center font-bold text-slate-500 text-xs">12:00 PM</div>
+                                        
+                                        <div class="bg-slate-50 hover:bg-rose-50/50 border border-dashed border-slate-300 hover:border-rose-300 rounded-lg p-2 transition cursor-pointer flex items-center justify-center text-slate-500 text-[11px] group" onclick="quickBook('Sofía', '12:00 PM')">
+                                            <span class="group-hover:hidden">+ Disponible (Sofía)</span>
+                                            <span class="hidden group-hover:inline text-rose-600 font-bold">+ Agendar Peluquería</span>
+                                        </div>
+
+                                        <div class="bg-slate-50 hover:bg-rose-50/50 border border-dashed border-slate-300 hover:border-rose-300 rounded-lg p-2 transition cursor-pointer flex items-center justify-center text-slate-500 text-[11px] group" onclick="quickBook('Camila', '12:00 PM')">
+                                            <span class="group-hover:hidden">+ Disponible (Camila)</span>
+                                            <span class="hidden group-hover:inline text-rose-600 font-bold">+ Agendar Uñas</span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ZONA INFERIOR SECUNDARIA: DASHBOARD ANALYTICS COMPACTO -->
+                    <section class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-2">
+                                <i data-lucide="bar-chart-2" class="w-4 h-4 text-slate-400"></i>
+                                Resumen Operativo y Métricas Clave (Mes Actual)
+                            </h3>
+                            <span class="text-[11px] text-slate-500">Métricas secundarias del negocio</span>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <!-- Metric 1 -->
+                            <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 flex items-center justify-between">
+                                <div>
+                                    <p class="text-[11px] text-slate-500 font-medium">Facturación Estimada Hoy</p>
+                                    <p class="text-base font-bold text-emerald-600 mt-0.5">$185.400</p>
+                                </div>
+                                <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center">
+                                    <i data-lucide="dollar-sign" class="w-4 h-4"></i>
+                                </div>
+                            </div>
+
+                            <!-- Metric 2 -->
+                            <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 flex items-center justify-between">
+                                <div>
+                                    <p class="text-[11px] text-slate-500 font-medium">Servicio Más Demandado</p>
+                                    <p class="text-xs font-bold text-slate-800 mt-0.5">UÑAS - Soft Gel</p>
+                                </div>
+                                <div class="w-8 h-8 rounded-lg bg-pink-100 text-pink-600 flex items-center justify-center">
+                                    <i data-lucide="sparkles" class="w-4 h-4"></i>
+                                </div>
+                            </div>
+
+                            <!-- Metric 3 -->
+                            <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 flex items-center justify-between">
+                                <div>
+                                    <p class="text-[11px] text-slate-500 font-medium">Asistencia Promedio</p>
+                                    <p class="text-base font-bold text-rose-600 mt-0.5">94.2%</p>
+                                </div>
+                                <div class="w-8 h-8 rounded-lg bg-rose-100 text-rose-600 flex items-center justify-center">
+                                    <i data-lucide="user-check" class="w-4 h-4"></i>
+                                </div>
+                            </div>
+
+                            <!-- Metric 4 -->
+                            <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 flex items-center justify-between">
+                                <div>
+                                    <p class="text-[11px] text-slate-500 font-medium">Recordatorios Confirmados</p>
+                                    <p class="text-base font-bold text-purple-600 mt-0.5">11 de 14</p>
+                                </div>
+                                <div class="w-8 h-8 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center">
+                                    <i data-lucide="message-circle" class="w-4 h-4"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                </div>
+
+                <div id="view-servicios" class="hidden space-y-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="text-lg font-bold text-slate-900">Catálogo de Servicios y Precios</h2>
+                            <p class="text-xs text-slate-500">Edita duraciones, valores y disponibilidad de servicios</p>
+                        </div>
+                        <button onclick="openNewServiceModal()" class="bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold px-4 py-2 rounded-lg flex items-center gap-2 shadow-sm">
+                            <i data-lucide="plus" class="w-4 h-4"></i> Nuevo Servicio
+                        </button>
+                    </div>
+
+                    <!-- Category Cards Grid based on Domain Specification -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="services-grid">
+                        
+                        <!-- CORTE UNISEX -->
+                        <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
+                            <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
+                                <h3 class="font-bold text-rose-600 text-sm flex items-center gap-2">
+                                    <i data-lucide="scissors" class="w-4 h-4"></i> CORTE UNISEX
+                                </h3>
+                                <span class="text-[10px] bg-slate-100 px-2 py-0.5 rounded text-slate-600 font-medium">3 Subtipos</span>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex items-center justify-between p-2.5 bg-slate-50 border border-slate-100 rounded-lg text-xs">
+                                    <div>
+                                        <p class="font-semibold text-slate-900">Corte Dama</p>
+                                        <p class="text-[10px] text-slate-500">Incluye lavado y peinado · 45 min</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="font-bold text-emerald-600">$12.500</p>
+                                        <button class="text-[10px] text-rose-600 hover:underline font-medium">Editar</button>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between p-2.5 bg-slate-50 border border-slate-100 rounded-lg text-xs">
+                                    <div>
+                                        <p class="font-semibold text-slate-900">Corte Caballero</p>
+                                        <p class="text-[10px] text-slate-500">Corte tradicional o fade · 30 min</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="font-bold text-emerald-600">$9.000</p>
+                                        <button class="text-[10px] text-rose-600 hover:underline font-medium">Editar</button>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between p-2.5 bg-slate-50 border border-slate-100 rounded-lg text-xs">
+                                    <div>
+                                        <p class="font-semibold text-slate-900">Corte Niño</p>
+                                        <p class="text-[10px] text-slate-500">Hasta 12 años · 30 min</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="font-bold text-emerald-600">$7.500</p>
+                                        <button class="text-[10px] text-rose-600 hover:underline font-medium">Editar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TRATAMIENTOS CAPILARES -->
+                        <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
+                            <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
+                                <h3 class="font-bold text-pink-600 text-sm flex items-center gap-2">
+                                    <i data-lucide="sparkles" class="w-4 h-4"></i> TRATAMIENTOS CAPILARES
+                                </h3>
+                                <span class="text-[10px] bg-slate-100 px-2 py-0.5 rounded text-slate-600 font-medium">5 Subtipos</span>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex items-center justify-between p-2 bg-slate-50 border border-slate-100 rounded-lg text-xs">
+                                    <span class="text-slate-800 font-medium">Nutrición Intensa (40m)</span>
+                                    <span class="font-bold text-emerald-600">$14.000</span>
+                                </div>
+                                <div class="flex items-center justify-between p-2 bg-slate-50 border border-slate-100 rounded-lg text-xs">
+                                    <span class="text-slate-800 font-medium">Botox Capilar (60m)</span>
+                                    <span class="font-bold text-emerald-600">$22.000</span>
+                                </div>
+                                <div class="flex items-center justify-between p-2 bg-slate-50 border border-slate-100 rounded-lg text-xs">
+                                    <span class="text-slate-800 font-medium">Anti Frizz (60m)</span>
+                                    <span class="font-bold text-emerald-600">$20.000</span>
+                                </div>
+                                <div class="flex items-center justify-between p-2 bg-slate-50 border border-slate-100 rounded-lg text-xs">
+                                    <span class="text-slate-800 font-medium">Alisado Definitivo (120m)</span>
+                                    <span class="font-bold text-emerald-600">$35.000</span>
+                                </div>
+                                <div class="flex items-center justify-between p-2 bg-slate-50 border border-slate-100 rounded-lg text-xs">
+                                    <span class="text-slate-800 font-medium">Permanente (90m)</span>
+                                    <span class="font-bold text-emerald-600">$28.000</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- COLOR -->
+                        <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
+                            <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
+                                <h3 class="font-bold text-purple-600 text-sm flex items-center gap-2">
+                                    <i data-lucide="palette" class="w-4 h-4"></i> COLOR
+                                </h3>
+                                <span class="text-[10px] bg-slate-100 px-2 py-0.5 rounded text-slate-600 font-medium">3 Subtipos</span>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex items-center justify-between p-2 bg-slate-50 border border-slate-100 rounded-lg text-xs">
+                                    <span class="text-slate-800 font-medium">Color Global (75m)</span>
+                                    <span class="font-bold text-emerald-600">$25.000</span>
+                                </div>
+                                <div class="flex items-center justify-between p-2 bg-slate-50 border border-slate-100 rounded-lg text-xs">
+                                    <span class="text-slate-800 font-medium">Mechas en Gorro (90m)</span>
+                                    <span class="font-bold text-emerald-600">$32.000</span>
+                                </div>
+                                <div class="flex items-center justify-between p-2 bg-slate-50 border border-slate-100 rounded-lg text-xs">
+                                    <span class="text-slate-800 font-medium">Técnica Banda / Balayage (150m)</span>
+                                    <span class="font-bold text-emerald-600">$45.000</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- UÑAS -->
+                        <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
+                            <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
+                                <h3 class="font-bold text-emerald-600 text-sm flex items-center gap-2">
+                                    <i data-lucide="heart" class="w-4 h-4"></i> UÑAS
+                                </h3>
+                                <span class="text-[10px] bg-slate-100 px-2 py-0.5 rounded text-slate-600 font-medium">3 Subtipos</span>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex items-center justify-between p-2 bg-slate-50 border border-slate-100 rounded-lg text-xs">
+                                    <span class="text-slate-800 font-medium">Esmaltado Semipermanente (50m)</span>
+                                    <span class="font-bold text-emerald-600">$11.000</span>
+                                </div>
+                                <div class="flex items-center justify-between p-2 bg-slate-50 border border-slate-100 rounded-lg text-xs">
+                                    <span class="text-slate-800 font-medium">Kapping (60m)</span>
+                                    <span class="font-bold text-emerald-600">$15.000</span>
+                                </div>
+                                <div class="flex items-center justify-between p-2 bg-slate-50 border border-slate-100 rounded-lg text-xs">
+                                    <span class="text-slate-800 font-medium">Soft Gel (75m)</span>
+                                    <span class="font-bold text-emerald-600">$18.500</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div id="view-horarios" class="hidden space-y-6">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-900">Configuración de Horarios y Franjas Laborales</h2>
+                        <p class="text-xs text-slate-500">Establece turnos de atención y días feriados o de descanso</p>
+                    </div>
+
+                    <div class="bg-white border border-slate-200 rounded-xl p-5 space-y-4 shadow-sm">
+                        <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Horarios de Atención Generales</h3>
+                        
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs">
+                                <div class="flex items-center gap-3">
+                                    <input type="checkbox" checked class="rounded border-slate-300 bg-white text-rose-600 focus:ring-rose-500">
+                                    <span class="font-semibold text-slate-800">Lunes a Viernes</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <input type="time" value="09:00" class="bg-white border border-slate-300 rounded px-2 py-1 text-slate-800 focus:ring-1 focus:ring-rose-500">
+                                    <span class="text-slate-500">a</span>
+                                    <input type="time" value="20:00" class="bg-white border border-slate-300 rounded px-2 py-1 text-slate-800 focus:ring-1 focus:ring-rose-500">
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs">
+                                <div class="flex items-center gap-3">
+                                    <input type="checkbox" checked class="rounded border-slate-300 bg-white text-rose-600 focus:ring-rose-500">
+                                    <span class="font-semibold text-slate-800">Sábados</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <input type="time" value="09:00" class="bg-white border border-slate-300 rounded px-2 py-1 text-slate-800 focus:ring-1 focus:ring-rose-500">
+                                    <span class="text-slate-500">a</span>
+                                    <input type="time" value="18:00" class="bg-white border border-slate-300 rounded px-2 py-1 text-slate-800 focus:ring-1 focus:ring-rose-500">
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs">
+                                <div class="flex items-center gap-3">
+                                    <input type="checkbox" class="rounded border-slate-300 bg-white text-rose-600 focus:ring-rose-500">
+                                    <span class="font-semibold text-slate-500">Domingos (Cerrado)</span>
+                                </div>
+                                <span class="text-slate-500 font-mono font-medium">No Laboral</span>
+                            </div>
+                        </div>
+
+                        <button onclick="saveScheduleSettings()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold px-4 py-2 rounded-lg shadow-sm">
+                            Guardar Cambios de Horario
+                        </button>
+                    </div>
+                </div>
+
+                <div id="view-recordatorios" class="hidden space-y-6">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-900">Envío Masivo e Individual de Recordatorios</h2>
+                        <p class="text-xs text-slate-500">Notifica por WhatsApp a tus clientes para reducir inasistencias</p>
+                    </div>
+
+                    <div class="bg-white border border-slate-200 rounded-xl p-5 space-y-4 shadow-sm">
+                        <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+                            <span class="text-xs font-bold text-slate-800">Turnos de Mañana (3 por confirmar)</span>
+                            <button onclick="sendAllReminders()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center gap-2 shadow-sm">
+                                <i data-lucide="send" class="w-3.5 h-3.5"></i> Enviar Todos por WhatsApp
+                            </button>
+                        </div>
+
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs">
+                                <div>
+                                    <p class="font-bold text-slate-900">Valeria Fernández</p>
+                                    <p class="text-[10px] text-slate-500">Hoy 11:30 AM · TRATAMIENTO - Botox</p>
+                                </div>
+                                <button onclick="sendWhatsAppReminder('Valeria Fernández', '+54 9 351 223-9911', '11:30 AM')" class="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-300 px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1 transition">
+                                    <i data-lucide="message-square" class="w-3.5 h-3.5"></i> Enviar Individual
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <div id="modal-nuevo-turno" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white border border-slate-200 w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden">
+            <div class="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+                <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
+                    <i data-lucide="calendar-plus" class="w-4 h-4 text-rose-600"></i>
+                    Agendar Nuevo Turno
+                </h3>
+                <button onclick="closeNewAppointmentModal()" class="text-slate-400 hover:text-slate-600 transition">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <form onsubmit="saveAppointment(event)" class="p-5 space-y-4 text-xs">
+                <div>
+                    <label class="block text-slate-700 font-medium mb-1">Nombre y Apellido del Cliente</label>
+                    <input type="text" required placeholder="Ej: Marcela López" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 focus:outline-none transition">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-slate-700 font-medium mb-1">Teléfono / WhatsApp</label>
+                        <input type="tel" required placeholder="+54 9 351 ..." class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 focus:outline-none transition">
+                    </div>
+                    <div>
+                        <label class="block text-slate-700 font-medium mb-1">Profesional Asignado</label>
+                        <select id="modal-staff-select" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 focus:outline-none transition">
+                            <option value="Sofía">Sofía (Peluquería Integral: Corte, Color y Tratamientos)</option>
+                            <option value="Camila">Camila (Manicura y Uñas)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Domain Category & Specific Service Dropdown -->
+                <div>
+                    <label class="block text-slate-700 font-medium mb-1">Categoría y Servicio</label>
+                    <select id="modal-service-select" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 focus:outline-none transition">
+                        <optgroup label="CORTE UNISEX">
+                            <option value="CORTE - Dama">Corte Dama ($12.500 - 45 min)</option>
+                            <option value="CORTE - Caballero">Corte Caballero ($9.000 - 30 min)</option>
+                            <option value="CORTE - Niño">Corte Niño ($7.500 - 30 min)</option>
+                        </optgroup>
+                        <optgroup label="TRATAMIENTOS CAPILARES">
+                            <option value="TRATAMIENTO - Nutrición">Nutrición ($14.000 - 40 min)</option>
+                            <option value="TRATAMIENTO - Botox">Botox ($22.000 - 60 min)</option>
+                            <option value="TRATAMIENTO - Anti Frizz">Anti Frizz ($20.000 - 60 min)</option>
+                            <option value="TRATAMIENTO - Alisado">Alisado ($35.000 - 120 min)</option>
+                            <option value="TRATAMIENTO - Permanente">Permanente ($28.000 - 90 min)</option>
+                        </optgroup>
+                        <optgroup label="COLOR">
+                            <option value="COLOR - Global">Color Global ($25.000 - 75 min)</option>
+                            <option value="COLOR - Mechas en gorro">Mechas en gorro ($32.000 - 90 min)</option>
+                            <option value="COLOR - Banda">Técnica Banda / Balayage ($45.000 - 150 min)</option>
+                        </optgroup>
+                        <optgroup label="UÑAS">
+                            <option value="UÑAS - Semipermanente">Semipermanente ($11.000 - 50 min)</option>
+                            <option value="UÑAS - Kapping">Kapping ($15.000 - 60 min)</option>
+                            <option value="UÑAS - Soft Gel">Soft Gel ($18.500 - 75 min)</option>
+                        </optgroup>
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-slate-700 font-medium mb-1">Horario Inicio</label>
+                        <input type="time" id="modal-time-input" value="11:00" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 focus:outline-none transition">
+                    </div>
+                    <div>
+                        <label class="block text-slate-700 font-medium mb-1">Estado Inicial</label>
+                        <select class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 focus:outline-none transition">
+                            <option value="Confirmado">Confirmado</option>
+                            <option value="Pendiente de recordatorio">Pendiente de recordatorio</option>
+                            <option value="En proceso">En proceso</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-2">
+                    <button type="button" onclick="closeNewAppointmentModal()" class="px-4 py-2 rounded-lg text-slate-600 hover:bg-slate-100 font-medium">Cancelar</button>
+                    <button type="submit" class="bg-rose-600 hover:bg-rose-500 text-white font-semibold px-5 py-2 rounded-lg shadow-md shadow-rose-200 transition">Confirmar Agendamiento</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            startLiveClock();
+        });
+
+        function startLiveClock() {
+            const update = () => {
+                const now = new Date();
+                const timeStr = now.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hour12: true });
+                const clockEl = document.getElementById('live-time');
+                if (clockEl) clockEl.textContent = timeStr;
+            };
+            update();
+            setInterval(update, 1000);
+        }
+
+        function switchView(viewName) {
+            ['agenda', 'servicios', 'horarios', 'recordatorios'].forEach(v => {
+                const el = document.getElementById(`view-${v}`);
+                if (el) el.classList.add('hidden');
+                
+                const navBtn = document.getElementById(`nav-${v}`);
+                if (navBtn) {
+                    navBtn.classList.remove('bg-rose-50/80', 'text-rose-700', 'border', 'border-rose-200/80');
+                    navBtn.classList.add('text-slate-600');
+                }
+            });
+
+            const selectedView = document.getElementById(`view-${viewName}`);
+            if (selectedView) selectedView.classList.remove('hidden');
+
+            const activeBtn = document.getElementById(`nav-${viewName}`);
+            if (activeBtn) {
+                activeBtn.classList.add('bg-rose-50/80', 'text-rose-700', 'border', 'border-rose-200/80');
+                activeBtn.classList.remove('text-slate-600');
+            }
+        }
+
+        function filterStaff(staffName) {
+            showToast(`Filtrando vista para: ${staffName === 'todos' ? 'Todo el Personal' : staffName}`);
+            
+            document.querySelectorAll('.staff-filter-btn').forEach(btn => {
+                if (btn.textContent.includes(staffName) || (staffName === 'todos' && btn.textContent === 'Todos')) {
+                    btn.classList.add('bg-slate-800', 'text-white', 'border-slate-800');
+                    btn.classList.remove('bg-slate-100', 'text-slate-700');
+                } else {
+                    btn.classList.remove('bg-slate-800', 'text-white', 'border-slate-800');
+                    btn.classList.add('bg-slate-100', 'text-slate-700');
+                }
+            });
+        }
+
+        function openNewAppointmentModal() {
+            document.getElementById('modal-nuevo-turno').classList.remove('hidden');
+        }
+
+        function closeNewAppointmentModal() {
+            document.getElementById('modal-nuevo-turno').classList.add('hidden');
+        }
+
+        function quickBook(stylist, time) {
+            document.getElementById('modal-staff-select').value = stylist;
+            openNewAppointmentModal();
+        }
+
+        function saveAppointment(e) {
+            e.preventDefault();
+            closeNewAppointmentModal();
+            showToast('¡Turno agendado exitosamente!');
+        }
+
+        function openAppointmentDetails(client, service, staff, time, status) {
+            showToast(`Gestionando turno de ${client} (${service})`);
+        }
+
+        function changeStatusModal(id, newStatus) {
+            showToast(`Estado del turno actualizado a: ${newStatus}`);
+        }
+
+        function sendWhatsAppReminder(name, phone, time) {
+            showToast(`WhatsApp de recordatorio preparado para ${name} (${time})`);
+        }
+
+        function sendAllReminders() {
+            showToast('Enviando 3 recordatorios pendientes por WhatsApp...');
+        }
+
+        function saveScheduleSettings() {
+            showToast('Horarios de atención actualizados correctamente');
+        }
+
+        function showToast(message) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'bg-slate-900 border border-slate-700 text-slate-100 text-xs px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2 pointer-events-auto transform transition-all duration-300 translate-y-2 opacity-0';
+            toast.innerHTML = `
+                <i data-lucide="info" class="w-4 h-4 text-rose-400"></i>
+                <span>${message}</span>
+            `;
+            container.appendChild(toast);
+            lucide.createIcons();
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
