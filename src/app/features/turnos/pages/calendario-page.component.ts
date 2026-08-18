@@ -83,7 +83,7 @@ import type { Turno, EstadoTurno } from '../../../core/models/turno.model';
                     <span class="block text-sm font-bold text-slate-800"
                           [class.text-rose-600]="esHoy(dia)">{{ dia.getDate() }}</span>
                   </button>
-                  <div class="flex-1 p-1.5 space-y-1.5 overflow-y-auto max-h-96 min-h-40">
+                  <div class="flex-1 p-1.5 space-y-1.5 overflow-y-auto max-h-96 min-h-64">
                     @if (lista.length === 0) {
                       <p class="text-center text-[10px] text-slate-300 py-4">—</p>
                     } @else {
@@ -118,7 +118,7 @@ import type { Turno, EstadoTurno } from '../../../core/models/turno.model';
                 @if (celda) {
                   @let lista = turnosDe(celda);
                   <button (click)="irAlDia(celda)"
-                          class="min-h-24 p-1.5 border border-slate-100 text-left align-top transition hover:bg-rose-50/40 flex flex-col gap-1"
+                          class="min-h-32 p-1.5 border border-slate-100 text-left align-top transition hover:bg-rose-50/40 flex flex-col gap-1"
                           [class.bg-rose-50/40]="esHoy(celda)"
                           [attr.aria-label]="'Ir a la agenda del día ' + formatearFecha(celda)">
                     <span class="text-xs font-bold text-slate-600"
@@ -136,7 +136,7 @@ import type { Turno, EstadoTurno } from '../../../core/models/turno.model';
                     }
                   </button>
                 } @else {
-                  <div class="min-h-24 bg-slate-50/60 border border-slate-100"></div>
+                  <div class="min-h-32 bg-slate-50/60 border border-slate-100"></div>
                 }
               }
             </div>
