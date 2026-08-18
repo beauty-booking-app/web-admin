@@ -1,5 +1,9 @@
 # Registro de cambios
 
+## Fix · Quitar badge "En Vivo" del sidebar (2026-08-18)
+
+- Se eliminó el badge "En Vivo" del encabezado de la barra lateral (informativo pero redundante/no deseado).
+
 ## Fix · Sacar card de métricas de analytics (2026-08-18)
 
 - Se quitó la card "Resumen Operativo y Métricas Clave" del dashboard de analytics (su dato más útil, facturación de hoy, ya vive en el sidebar).

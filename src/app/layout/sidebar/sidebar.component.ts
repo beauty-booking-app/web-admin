@@ -12,20 +12,14 @@ import { CurrencyArsPipe } from '../../shared/pipes/currency-ars.pipe';
   template: `
     <aside class="w-64 bg-white border-r border-slate-200 flex flex-col shrink-0 shadow-sm h-full">
       <!-- Brand -->
-      <div class="p-4 border-b border-slate-100 flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-rose-600 to-pink-500 flex items-center justify-center text-white shadow-md shadow-rose-200 font-bold text-lg">
-            ✂
-          </div>
-          <div>
-            <h1 class="font-bold text-slate-900 text-sm tracking-wide">VELVET &amp; GLOW</h1>
-            <p class="text-[11px] text-slate-500 font-medium">Gestión Operativa</p>
-          </div>
+      <div class="p-4 border-b border-slate-100 flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-rose-600 to-pink-500 flex items-center justify-center text-white shadow-md shadow-rose-200 font-bold text-lg">
+          ✂
         </div>
-        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-          En Vivo
-        </span>
+        <div>
+          <h1 class="font-bold text-slate-900 text-sm tracking-wide">VELVET &amp; GLOW</h1>
+          <p class="text-[11px] text-slate-500 font-medium">Gestión Operativa</p>
+        </div>
       </div>
 
       <!-- Navigation -->
