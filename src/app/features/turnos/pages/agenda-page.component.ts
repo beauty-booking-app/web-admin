@@ -2,7 +2,6 @@ import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { HeaderBarComponent } from '../components/header-bar/header-bar.component';
 import { HeroTurnosComponent } from '../components/hero-turnos/hero-turnos.component';
 import { TimelineComponent } from '../components/timeline/timeline.component';
-import { MetricasComponent } from '../components/metricas/metricas.component';
 import { TurnoFormModalComponent } from '../components/turno-form-modal/turno-form-modal.component';
 import { TurnosStateService } from '../services/turnos-state.service';
 
@@ -12,7 +11,6 @@ import { TurnosStateService } from '../services/turnos-state.service';
     HeaderBarComponent,
     HeroTurnosComponent,
     TimelineComponent,
-    MetricasComponent,
     TurnoFormModalComponent,
   ],
   template: `
@@ -36,9 +34,6 @@ import { TurnosStateService } from '../services/turnos-state.service';
 
         <!-- Zona Media: Timeline -->
         <app-timeline (onTurnoClick)="onTurnoClick($event)" />
-
-        <!-- Zona Inferior: Métricas -->
-        <app-metricas />
       }
     </div>
 

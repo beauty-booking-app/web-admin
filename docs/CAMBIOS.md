@@ -1,5 +1,11 @@
 # Registro de cambios
 
+## Fix · Mover métricas al dashboard de analytics (2026-08-18)
+
+- La card "Resumen Operativo y Métricas Clave (Mes Actual)" (`MetricasComponent`) se movió de la agenda del día al dashboard de analytics (`/analytics`).
+- `AnalyticsPageComponent` ahora también carga la agenda del día (`TurnosStateService.cargarAgenda()`) para que la card tenga datos al entrar directo a analytics.
+- Se quitó del `AgendaPageComponent`.
+
 ## 009 · Migración a pnpm (2026-08-18)
 
 - `packageManager` en `package.json` pasa de `npm@12.0.1` a `pnpm@10.31.0`; `angular.json` (`cli.packageManager`) a `pnpm`.
