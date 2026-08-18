@@ -11,4 +11,9 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/recordatorios-page.component').then((m) => m.RecordatoriosPageComponent),
   },
+  {
+    path: 'calendario',
+    loadComponent: () =>
+      import('./pages/calendario-page.component').then((m) => m.CalendarioPageComponent),
+  },
 ];
