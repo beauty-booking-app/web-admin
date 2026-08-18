@@ -1,4 +1,4 @@
-import { Component, signal, inject, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Component, computed, signal, inject, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { TurnosStateService } from '../../services/turnos-state.service';
 import { AgendaPdfService } from '../../services/agenda-pdf.service';
 
@@ -8,13 +8,13 @@ import { AgendaPdfService } from '../../services/agenda-pdf.service';
     <header class="h-16 border-b border-slate-200 bg-white/90 backdrop-blur px-6 flex items-center justify-between shrink-0 gap-4 shadow-sm">
       <div class="flex items-center gap-4">
         <div class="flex items-center gap-2 bg-slate-100 border border-slate-200 rounded-lg p-1.5">
-          <button class="p-1 rounded hover:bg-slate-200 text-slate-600 transition" title="Día Anterior" aria-label="Día anterior">
+          <button (click)="turnosState.irAlDiaAnterior()" class="p-1 rounded hover:bg-slate-200 text-slate-600 transition" title="Día Anterior" aria-label="Día anterior">
             ‹
           </button>
           <div class="px-2 text-center">
             <span class="text-xs font-bold text-slate-900 block">{{ fechaFormateada() }}</span>
           </div>
-          <button class="p-1 rounded hover:bg-slate-200 text-slate-600 transition" title="Día Siguiente" aria-label="Día siguiente">
+          <button (click)="turnosState.irAlDiaSiguiente()" class="p-1 rounded hover:bg-slate-200 text-slate-600 transition" title="Día Siguiente" aria-label="Día siguiente">
             ›
           </button>
         </div>
@@ -55,11 +55,11 @@ import { AgendaPdfService } from '../../services/agenda-pdf.service';
 export class HeaderBarComponent implements OnDestroy {
   @Output() readonly onNuevoTurno = new EventEmitter<void>();
 
-  private readonly turnosState = inject(TurnosStateService);
+  protected readonly turnosState = inject(TurnosStateService);
   private readonly agendaPdf = inject(AgendaPdfService);
 
   protected readonly horaActual = signal(this.obtenerHora());
-  protected readonly fechaFormateada = signal(this.obtenerFecha());
+  protected readonly fechaFormateada = computed(() => this.obtenerFecha(this.turnosState.fechaActual()));
   private readonly intervalId = setInterval(() => this.horaActual.set(this.obtenerHora()), 1000);
 
   ngOnDestroy(): void {
@@ -74,10 +74,9 @@ export class HeaderBarComponent implements OnDestroy {
     return new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hour12: true });
   }
 
-  private obtenerFecha(): string {
-    const ahora = new Date();
+  private obtenerFecha(fecha: Date): string {
     const opciones: Intl.DateTimeFormatOptions = { weekday: 'long', day: 'numeric', month: 'long' };
-    const fecha = ahora.toLocaleDateString('es-AR', opciones);
-    return `Hoy, ${fecha.charAt(0).toUpperCase() + fecha.slice(1)}`;
+    const texto = fecha.toLocaleDateString('es-AR', opciones);
+    return texto.charAt(0).toUpperCase() + texto.slice(1);
   }
 }

@@ -1,14 +1,39 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, computed, inject, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 import type { Turno, EstadoTurno } from '../../../core/models/turno.model';
-import { SERVICIOS_SEMILLA } from '../../../core/models/servicio.model';
+import { API_URL } from '../../../core/api/environment';
+import type { Agenda } from '../../../core/api/backend.models';
+import {
+  agendaAppointmentToTurno,
+  ESTADO_UI_TO_BACKEND,
+  formatearFechaISO,
+} from '../../../core/api/mappers';
+import { mensajeDeError } from '../../../core/api/error-utils';
+import { ServiciosService } from '../../servicios-catalogo/services/servicios.service';
+
+function inicioDelDia(fecha: Date): Date {
+  const f = new Date(fecha);
+  f.setHours(0, 0, 0, 0);
+  return f;
+}
 
 @Injectable({ providedIn: 'root' })
 export class TurnosStateService {
-  private readonly _turnos = signal<Turno[]>(this.crearDatosSemilla());
+  private readonly http = inject(HttpClient);
+  private readonly serviciosService = inject(ServiciosService);
+
+  private readonly _turnos = signal<Turno[]>([]);
   private readonly _filtroProfesional = signal<string>('todos');
+  private readonly _fechaActual = signal<Date>(inicioDelDia(new Date()));
+  private readonly _cargando = signal(false);
+  private readonly _error = signal<string | null>(null);
 
   readonly turnos = this._turnos.asReadonly();
   readonly filtroProfesional = this._filtroProfesional.asReadonly();
+  readonly fechaActual = this._fechaActual.asReadonly();
+  readonly cargando = this._cargando.asReadonly();
+  readonly error = this._error.asReadonly();
 
   readonly turnosInminentes = computed(() => {
     const ahora = new Date();
@@ -65,6 +90,47 @@ export class TurnosStateService {
     return { facturacion, servicioMasDemandado, asistencia, confirmados, totalTurnos: total };
   });
 
+  async cargarAgenda(): Promise<void> {
+    this._cargando.set(true);
+    this._error.set(null);
+    try {
+      await this.serviciosService.cargarServiciosSiNecesario();
+      const fecha = this._fechaActual();
+      const agenda = await firstValueFrom(
+        this.http.get<Agenda>(`${API_URL}/admin/agenda`, {
+          params: { date: formatearFechaISO(fecha) },
+        }),
+      );
+      const catalogo = this.serviciosService.catalogoPorSubtipo();
+      this._turnos.set(
+        agenda.appointments.map((app) => agendaAppointmentToTurno(app, fecha, catalogo)),
+      );
+    } catch (err) {
+      this._error.set(mensajeDeError(err));
+      this._turnos.set([]);
+    } finally {
+      this._cargando.set(false);
+    }
+  }
+
+  irAlDiaAnterior(): void {
+    this._fechaActual.update((fecha) => {
+      const prev = new Date(fecha);
+      prev.setDate(prev.getDate() - 1);
+      return prev;
+    });
+    void this.cargarAgenda();
+  }
+
+  irAlDiaSiguiente(): void {
+    this._fechaActual.update((fecha) => {
+      const next = new Date(fecha);
+      next.setDate(next.getDate() + 1);
+      return next;
+    });
+    void this.cargarAgenda();
+  }
+
   setFiltroProfesional(nombre: string): void {
     this._filtroProfesional.set(nombre);
   }
@@ -74,103 +140,31 @@ export class TurnosStateService {
   }
 
   cambiarEstado(turnoId: string, nuevoEstado: EstadoTurno): void {
+    const turno = this._turnos().find((t) => t.id === turnoId);
+    if (!turno || turno.estado === nuevoEstado) return;
+
     this._turnos.update((lista) =>
       lista.map((t) => (t.id === turnoId ? { ...t, estado: nuevoEstado } : t)),
     );
+
+    if (nuevoEstado === 'En Proceso') return;
+
+    this.http
+      .patch(`${API_URL}/admin/appointments/${turnoId}/status`, {
+        status: ESTADO_UI_TO_BACKEND[nuevoEstado],
+      })
+      .subscribe({
+        error: () => {
+          this._turnos.update((lista) =>
+            lista.map((t) => (t.id === turnoId ? { ...t, estado: turno.estado } : t)),
+          );
+        },
+      });
   }
 
   marcarRecordatorio(turnoId: string): void {
     this._turnos.update((lista) =>
       lista.map((t) => (t.id === turnoId ? { ...t, recordatorioEnviado: true } : t)),
     );
-  }
-
-  private crearDatosSemilla(): Turno[] {
-    const hoy = new Date();
-    hoy.setHours(0, 0, 0, 0);
-
-    const d = (horas: number, minutos: number): Date => {
-      const fecha = new Date(hoy);
-      fecha.setHours(horas, minutos, 0, 0);
-      return fecha;
-    };
-
-    const fin = (inicio: Date, duracionMin: number): Date =>
-      new Date(inicio.getTime() + duracionMin * 60 * 1000);
-
-    const servicio = (id: string) => SERVICIOS_SEMILLA.find((s) => s.id === id)!;
-
-    return [
-      {
-        id: 'turno-001',
-        cliente: { nombre: 'Lucía Méndez', telefono: '+54 9 351 555-1001' },
-        servicio: servicio('color-global'),
-        profesional: 'Sofía',
-        inicio: d(9, 0),
-        fin: fin(d(9, 0), 75),
-        estado: 'Confirmado',
-        recordatorioEnviado: true,
-      },
-      {
-        id: 'turno-002',
-        cliente: { nombre: 'Andrea Paez', telefono: '+54 9 351 555-1002' },
-        servicio: servicio('unas-semi'),
-        profesional: 'Camila',
-        inicio: d(9, 0),
-        fin: fin(d(9, 0), 50),
-        estado: 'Finalizado',
-        recordatorioEnviado: true,
-      },
-      {
-        id: 'turno-003',
-        cliente: { nombre: 'Mariana Gómez', telefono: '+54 9 351 445-8890' },
-        servicio: servicio('color-mechas'),
-        profesional: 'Sofía',
-        inicio: d(10, 0),
-        fin: fin(d(10, 0), 90),
-        estado: 'En Proceso',
-        recordatorioEnviado: true,
-      },
-      {
-        id: 'turno-004',
-        cliente: { nombre: 'Sofía Rivas', telefono: '+54 9 351 555-1004' },
-        servicio: servicio('unas-kapping'),
-        profesional: 'Camila',
-        inicio: d(10, 0),
-        fin: fin(d(10, 0), 60),
-        estado: 'Confirmado',
-        recordatorioEnviado: true,
-      },
-      {
-        id: 'turno-005',
-        cliente: { nombre: 'Valeria Fernández', telefono: '+54 9 351 223-9911' },
-        servicio: servicio('trat-botox'),
-        profesional: 'Sofía',
-        inicio: d(11, 30),
-        fin: fin(d(11, 30), 60),
-        estado: 'Pendiente',
-        recordatorioEnviado: false,
-      },
-      {
-        id: 'turno-006',
-        cliente: { nombre: 'Carolina Rossi', telefono: '+54 9 351 988-1234' },
-        servicio: servicio('unas-softgel'),
-        profesional: 'Camila',
-        inicio: d(11, 0),
-        fin: fin(d(11, 0), 75),
-        estado: 'Confirmado',
-        recordatorioEnviado: true,
-      },
-      {
-        id: 'turno-007',
-        cliente: { nombre: 'Camila Herrera', telefono: '+54 9 351 555-1007' },
-        servicio: servicio('corte-dama'),
-        profesional: 'Sofía',
-        inicio: d(12, 0),
-        fin: fin(d(12, 0), 45),
-        estado: 'Confirmado',
-        recordatorioEnviado: true,
-      },
-    ];
   }
 }

@@ -5,7 +5,9 @@ export type EstadoTurno =
   | 'Pendiente'
   | 'En Proceso'
   | 'Finalizado'
-  | 'Cancelado';
+  | 'Cancelado'
+  | 'Reprogramado'
+  | 'No Asiste';
 
 export interface Turno {
   id: string;

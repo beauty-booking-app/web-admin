@@ -15,6 +15,8 @@ const STATUS_CONFIG: Record<EstadoTurno, EstadoConfig> = {
   'Pendiente': { label: 'Pendiente', bg: 'bg-amber-100', text: 'text-amber-700' },
   'Finalizado': { label: 'Finalizado', bg: 'bg-slate-100', text: 'text-slate-500' },
   'Cancelado': { label: 'Cancelado', bg: 'bg-red-100', text: 'text-red-500' },
+  'Reprogramado': { label: 'Reprogramado', bg: 'bg-blue-100', text: 'text-blue-700' },
+  'No Asiste': { label: 'No Asiste', bg: 'bg-orange-100', text: 'text-orange-700' },
 };
 
 const CATEGORY_CONFIG: Record<string, { label: string; bg: string; text: string }> = {
@@ -61,7 +63,7 @@ const CATEGORY_CONFIG: Record<string, { label: string; bg: string; text: string 
                   @for (turno of serviciosGenerales(); track turno.id) {
                     @let cfg = statusConfig(turno.estado);
                     @let cat = categoryConfig(turno.servicio.categoria);
-                    @let esPasado = turno.estado === 'Finalizado' || turno.estado === 'Cancelado';
+                    @let esPasado = turno.estado === 'Finalizado' || turno.estado === 'Cancelado' || turno.estado === 'No Asiste';
                     @let esAhora = turno.estado === 'En Proceso';
 
                     <div class="relative flex gap-2.5 sm:gap-3 rounded-xl border bg-white p-2.5 transition-opacity text-[13px]"
@@ -84,7 +86,9 @@ const CATEGORY_CONFIG: Record<string, { label: string; bg: string; text: string 
                               [class.bg-purple-500]="turno.estado === 'Confirmado'"
                               [class.bg-amber-500]="turno.estado === 'Pendiente'"
                               [class.bg-slate-400]="turno.estado === 'Finalizado'"
-                              [class.bg-red-400]="turno.estado === 'Cancelado'">
+                              [class.bg-red-400]="turno.estado === 'Cancelado'"
+                              [class.bg-blue-500]="turno.estado === 'Reprogramado'"
+                              [class.bg-orange-400]="turno.estado === 'No Asiste'">
                         </span>
                       </div>
 
@@ -154,7 +158,7 @@ const CATEGORY_CONFIG: Record<string, { label: string; bg: string; text: string 
                   @for (turno of serviciosUnas(); track turno.id) {
                     @let cfg = statusConfig(turno.estado);
                     @let cat = categoryConfig(turno.servicio.categoria);
-                    @let esPasado = turno.estado === 'Finalizado' || turno.estado === 'Cancelado';
+                    @let esPasado = turno.estado === 'Finalizado' || turno.estado === 'Cancelado' || turno.estado === 'No Asiste';
                     @let esAhora = turno.estado === 'En Proceso';
 
                     <div class="relative flex gap-2.5 sm:gap-3 rounded-xl border bg-white p-2.5 transition-opacity text-[13px]"
@@ -177,7 +181,9 @@ const CATEGORY_CONFIG: Record<string, { label: string; bg: string; text: string 
                               [class.bg-purple-500]="turno.estado === 'Confirmado'"
                               [class.bg-amber-500]="turno.estado === 'Pendiente'"
                               [class.bg-slate-400]="turno.estado === 'Finalizado'"
-                              [class.bg-red-400]="turno.estado === 'Cancelado'">
+                              [class.bg-red-400]="turno.estado === 'Cancelado'"
+                              [class.bg-blue-500]="turno.estado === 'Reprogramado'"
+                              [class.bg-orange-400]="turno.estado === 'No Asiste'">
                         </span>
                       </div>
 

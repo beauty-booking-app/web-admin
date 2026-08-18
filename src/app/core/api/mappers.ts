@@ -25,7 +25,7 @@ const DIAS_SEMANA: DiaSemana[] = [
   'Domingo',
 ];
 
-const ESTADO_BACKEND_TO_UI: Record<AppointmentStatus, string> = {
+const ESTADO_BACKEND_TO_UI: Record<AppointmentStatus, EstadoTurno> = {
   pendiente: 'Pendiente',
   confirmado: 'Confirmado',
   reprogramado: 'Reprogramado',
@@ -34,7 +34,7 @@ const ESTADO_BACKEND_TO_UI: Record<AppointmentStatus, string> = {
   no_asiste: 'No Asiste',
 };
 
-export const ESTADO_UI_TO_BACKEND: Record<string, AppointmentStatus> = {
+export const ESTADO_UI_TO_BACKEND: Record<EstadoTurno, AppointmentStatus> = {
   Pendiente: 'pendiente',
   Confirmado: 'confirmado',
   Reprogramado: 'reprogramado',
@@ -96,7 +96,7 @@ export function agendaAppointmentToTurno(
     profesional,
     inicio: horaADate(dia, app.startTime),
     fin: horaADate(dia, app.endTime),
-    estado: ESTADO_BACKEND_TO_UI[app.status] as EstadoTurno,
+    estado: ESTADO_BACKEND_TO_UI[app.status],
     recordatorioEnviado: false,
   };
 }
