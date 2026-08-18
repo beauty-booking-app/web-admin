@@ -1,59 +1,101 @@
-# AdminApp
+# GlowControl — Panel de Administración (web-admin)
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.0.7.
+Panel de administración web del salón de belleza (VELVET & GLOW). Es un **dashboard operacional** para la gestión interna: agenda del día, turnos, catálogo de servicios, horarios operativos y recordatorios a clientes.
 
-## Development server
+Consume la API del backend FastAPI (`api-backend`).
 
-To start a local development server, run:
+## Stack
 
-```bash
-ng serve
-```
+| Capa | Tecnología |
+|---|---|
+| Framework | Angular 22 (Standalone Components, CSR) |
+| Lenguaje | TypeScript 6 |
+| Estado | Angular Signals |
+| Estilos | Tailwind CSS v4 (PostCSS) |
+| Tests | Vitest + jsdom |
+| Build | `@angular/build:application` (Vite) |
+| Extras | jsPDF (exportación de agenda), RxJS (HTTP) |
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Requisitos
 
-## Code scaffolding
+- Node.js con npm 12 (`packageManager` del proyecto: `npm@12.0.1`)
+- El backend corriendo en `http://localhost:8000` (ver README de `api-backend`)
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+> La API base se configura en `src/app/core/api/environment.ts` (`API_BASE_URL` + prefijo `/api/v1`).
 
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
+## Puesta en marcha
 
 ```bash
-ng build
+npm install      # primera vez
+npm start        # servidor de desarrollo (ng serve) → http://localhost:4200
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+La app redirige a `/login`. Credenciales de desarrollo del backend:
 
-## Running unit tests
+- **Email:** `admin@salon.com`
+- **Password:** `Admin#2026`
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+Los tokens se persisten en `localStorage`; el `auth.interceptor` renueva el access token automáticamente en un 401.
 
-```bash
-ng test
+## Comandos
+
+| Comando | Descripción |
+|---|---|
+| `npm start` | Servidor de desarrollo en `http://localhost:4200` |
+| `npm run build` | Build de producción (se usa como validación) |
+| `npm test` | Tests unitarios (Vitest) |
+
+## Rutas
+
+| Ruta | Descripción |
+|---|---|
+| `/login` | Login (email/password, sin layout) |
+| `/` | Agenda del día (dashboard principal) |
+| `/calendario` | Calendario por semana y mes |
+| `/recordatorios` | Recordatorios por WhatsApp |
+| `/analytics` | Dashboard de analytics |
+| `/servicios` | Catálogo de servicios y precios |
+| `/configuracion` | Horarios y ausencias |
+
+## Estructura del proyecto
+
+```
+web-admin/
+├── src/
+│   ├── app/
+│   │   ├── core/
+│   │   │   ├── models/          # Modelos de dominio (servicio, turno, franja laboral)
+│   │   │   └── api/             # Conexión con el backend: environment, backend.models, mappers, auth.service/interceptor/guard
+│   │   ├── shared/              # Pipes y utils reutilizables (currency-ars, whatsapp)
+│   │   ├── features/            # Funcionalidades por módulo (lazy): auth, turnos, servicios-catalogo, configuracion, analytics
+│   │   ├── layout/              # Shell de maquetación: admin-layout + sidebar
+│   │   └── app.config.ts        # Providers globales
+│   ├── styles.css               # Tailwind
+│   └── index.html
+├── docs/                        # ARQUITECTURA.md, CONVENCIONES.md, CAMBIOS.md, best-practices.md, backend/
+├── spec/                        # Spec-Driven Development: constitution/ + features/
+├── public/
+└── angular.json
 ```
 
-## Running end-to-end tests
+## Backend / API
 
-For end-to-end (e2e) testing, run:
+- Base: `http://localhost:8000` · Prefijo: `/api/v1` · JSON en **camelCase** · Auth `Bearer`.
+- Los state services cargan desde la API; si falla muestran error y vacío (sin fallback a semilla).
+- El catálogo y la agenda se cargan de endpoints reales; el alta de turnos y el ABM de servicios siguen en memoria (el backend no los expone aún).
+- Modelos y API documentados en `docs/backend/api.md` y `docs/backend/models.md`.
 
-```bash
-ng e2e
-```
+## Convenciones
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+- Todo el contenido visible en español (es-AR).
+- Angular Signals para estado local; RxJS solo para flujos HTTP complejos.
+- Componentes standalone con templates inline.
+- Cumplimiento WCAG 2.1 AA.
+- Detalles en `docs/ARQUITECTURA.md`, `docs/CONVENCIONES.md` y `docs/best-practices.md`.
+- Documentar cambios significativos en `docs/CAMBIOS.md`.
 
-## Additional Resources
+## Especificación y roadmap
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+El proyecto usa **Spec-Driven Development** (`spec/`): cada feature tiene `spec.md`, `plan.md` y `tasks.md` en `spec/features/NNN-nombre/`, con el roadmap en `spec/constitution/roadmap.md`.
+
+Estado actual: features 001–008 implementadas (agenda del día, catálogo, horarios, recordatorios, analytics, exportación, integración con backend y **calendario semana/mes**).

@@ -28,6 +28,7 @@ admin-app/
 │       ├── 004-recordatorios/       # ✅ Implementado
 │       └── 005-dashboard-analytics/ # ✅ Implementado
 │       └── 006-exportacion-agenda/  # ✅ Implementado
+│       └── 008-calendario-semana-mes/  # ✅ Implementado
 │
 ├── src/
 │   ├── app/
@@ -55,16 +56,19 @@ admin-app/
 │   │   │   ├── auth/                # 🆕 FEATURE 007 — LOGIN (autenticación)
 │   │   │   │   ├── auth.routes.ts             # Ruta lazy /login
 │   │   │   │   └── login-page.component.ts    # Formulario email + password
-│   │   │   ├── turnos/              # ✅ FEATURE 001 y 004 — CORAZÓN OPERATIVO
+│   │   │   ├── turnos/              # ✅ FEATURE 001, 004 y 008 — CORAZÓN OPERATIVO
 │   │   │   │   ├── turnos.routes.ts             # Lazy route
 │   │   │   │   ├── pages/
 │   │   │   │   │   ├── agenda-page.component.ts      # Contenedor principal
-│   │   │   │   │   └── recordatorios-page.component.ts  # 🆕 004 Recordatorios WhatsApp
+│   │   │   │   │   ├── recordatorios-page.component.ts  # 004 Recordatorios WhatsApp
+│   │   │   │   │   └── calendario-page.component.ts   # 🆕 008 Calendario semana/mes
 │   │   │   │   ├── services/
 │   │   │   │   │   ├── turnos-state.service.ts   # Signal state + GET /admin/agenda + PATCH status
-│   │   │   │   │   ├── recordatorio.service.ts   # 🆕 Estado de envío + filtrado pendientes
-│   │   │   │   │   └── agenda-pdf.service.ts     # 🆕 Exportación de agenda a PDF (jsPDF)
+│   │   │   │   │   ├── recordatorio.service.ts   # Estado de envío + filtrado pendientes
+│   │   │   │   │   ├── agenda-pdf.service.ts     # Exportación de agenda a PDF (jsPDF)
+│   │   │   │   │   └── calendario.service.ts     # 🆕 008 GET /admin/appointments?from&to + vistas semana/mes
 │   │   │   │   └── components/
+│   │   │   │       ├── status-config.ts          # 🆕 008 STATUS_CONFIG/CATEGORY_CONFIG compartidos
 │   │   │   │       ├── hero-turnos/              # Tarjetas de turnos inminentes
 │   │   │   │       │   └── hero-turnos.component.ts
 │   │   │   │       ├── timeline/                 # Timeline 2 columnas (General / Uñas)
@@ -132,11 +136,12 @@ admin-app/
 5. **`RecordatorioService`** filtra los turnos `Pendiente` del día desde `TurnosStateService` y genera enlaces `wa.me`. Si el turno no trae teléfono (limitación de la API), el envío se deshabilita.
 6. **`AgendaPdfService`** genera el PDF de la agenda del día con jsPDF a partir de `turnosState.turnos()`.
 7. **`AnalyticsService`** obtiene las citas de los últimos 6 meses con `GET /admin/appointments?from&to` (una entrada por servicio en cada cita) y expone `computed` de KPIs, turnos/ganancias por mes (con diferencia %), servicios más solicitados (filtro por categoría y mes) y clientes frecuentes.
-8. Cada state service expone señales `cargando` y `error`; las páginas muestran banner de error y estado vacío si la API falla (no hay fallback a semilla).
-9. El componente página (`AgendaPageComponent`) dispara `cargarAgenda()` al montar y orquesta los componentes hijos de turnos.
-10. Los componentes hijos son "dumb": reciben datos vía signals del state service y emiten eventos vía `output()`.
-11. El **sidebar** muestra navegación con filtros por profesional, conteo dinámico de servicios, usuario autenticado y botón de cierre de sesión.
-12. **Backend real:** FastAPI en `http://localhost:8000` con prefijo `/api/v1`. Documentación de la API y modelos en `docs/backend/api.md` y `docs/backend/models.md`.
+8. **`CalendarioService`** es la fuente de verdad del calendario semana/mes: calcula el rango visible (`lunesDe`/`rangoPeriodo`), pide `GET /admin/appointments?from&to`, mapea con `appointmentToTurno()` y agrupa por día (`agruparPorDia`). `irAlDia(fecha)` delega en `TurnosStateService` y navega a `/` para operar la agenda de ese día.
+9. Cada state service expone señales `cargando` y `error`; las páginas muestran banner de error y estado vacío si la API falla (no hay fallback a semilla).
+10. El componente página (`AgendaPageComponent`) dispara `cargarAgenda()` al montar y orquesta los componentes hijos de turnos.
+11. Los componentes hijos son "dumb": reciben datos vía signals del state service y emiten eventos vía `output()`.
+12. El **sidebar** muestra navegación con filtros por profesional, conteo dinámico de servicios, usuario autenticado y botón de cierre de sesión.
+13. **Backend real:** FastAPI en `http://localhost:8000` con prefijo `/api/v1`. Documentación de la API y modelos en `docs/backend/api.md` y `docs/backend/models.md`.
 
 ## Routing
 
@@ -144,6 +149,7 @@ admin-app/
 |------------------|--------------------------------------|---------------------------------|
 | `/login`         | Inicio de sesión                     | `auth/` (lazy)                  |
 | `/`              | Agenda del día (dashboard principal) | `turnos/` (lazy)                |
+| `/calendario`    | Calendario semana/mes                | `turnos/` (lazy) 🆕            |
 | `/recordatorios` | Recordatorios por WhatsApp           | `turnos/` (lazy)                |
 | `/analytics`     | Dashboard de analytics              | `analytics/` (lazy)            |
 | `/servicios`     | Catálogo de servicios y precios      | `servicios-catalogo/` (lazy)   |
