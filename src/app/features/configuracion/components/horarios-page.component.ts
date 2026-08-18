@@ -1,9 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { HorariosService } from '../services/horarios.service';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 import type { DiaSemana } from '../../../core/models/franja-laboral.model';
 
 @Component({
   selector: 'app-horarios-page',
+  imports: [LoadingComponent],
   template: `
     <div class="p-6 space-y-6">
       <!-- Header -->
@@ -40,8 +42,8 @@ import type { DiaSemana } from '../../../core/models/franja-laboral.model';
       }
 
       @if (horariosService.cargando()) {
-        <div class="bg-white border border-slate-200 rounded-xl p-10 text-center text-sm text-slate-500 shadow-sm">
-          Cargando horarios…
+        <div class="bg-white border border-slate-200 rounded-xl p-10 shadow-sm">
+          <app-loading texto="Cargando horarios…" />
         </div>
       } @else if (horariosService.franjas().length === 0 && !horariosService.error()) {
         <div class="bg-white border border-slate-200 rounded-xl p-10 text-center text-sm text-slate-500 shadow-sm">

@@ -1,10 +1,11 @@
 import { Component, computed, inject, OnInit } from '@angular/core';
 import { AnalyticsService } from '../services/analytics.service';
 import { CurrencyArsPipe } from '../../../shared/pipes/currency-ars.pipe';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-analytics-page',
-  imports: [CurrencyArsPipe],
+  imports: [CurrencyArsPipe, LoadingComponent],
   template: `
     <div class="p-6 space-y-6">
       <!-- Header -->
@@ -52,8 +53,8 @@ import { CurrencyArsPipe } from '../../../shared/pipes/currency-ars.pipe';
       }
 
       @if (analyticsService.cargando()) {
-        <div class="bg-white border border-slate-200 rounded-xl p-10 text-center text-sm text-slate-500 shadow-sm">
-          Cargando datos de analytics…
+        <div class="bg-white border border-slate-200 rounded-xl p-10 shadow-sm">
+          <app-loading texto="Cargando datos de analytics…" />
         </div>
       } @else {
 

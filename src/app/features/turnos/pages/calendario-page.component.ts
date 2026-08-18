@@ -6,9 +6,11 @@ import {
 } from '../services/calendario.service';
 import { STATUS_CONFIG, type EstadoConfig } from '../components/status-config';
 import type { Turno, EstadoTurno } from '../../../core/models/turno.model';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-calendario-page',
+  imports: [LoadingComponent],
   template: `
     <div class="flex-1 overflow-y-auto pt-24 p-6">
       <!-- Encabezado -->
@@ -65,8 +67,8 @@ import type { Turno, EstadoTurno } from '../../../core/models/turno.model';
       }
 
       @if (calendario.cargando()) {
-        <div class="bg-white border border-slate-200 rounded-xl p-10 text-center text-sm text-slate-500 shadow-sm">
-          Cargando calendario…
+        <div class="bg-white border border-slate-200 rounded-xl p-10 shadow-sm">
+          <app-loading texto="Cargando calendario…" />
         </div>
       } @else {
         @if (calendario.vista() === 'semana') {

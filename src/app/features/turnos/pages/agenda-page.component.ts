@@ -4,6 +4,7 @@ import { HeroTurnosComponent } from '../components/hero-turnos/hero-turnos.compo
 import { TimelineComponent } from '../components/timeline/timeline.component';
 import { TurnoFormModalComponent } from '../components/turno-form-modal/turno-form-modal.component';
 import { TurnosStateService } from '../services/turnos-state.service';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-agenda-page',
@@ -12,6 +13,7 @@ import { TurnosStateService } from '../services/turnos-state.service';
     HeroTurnosComponent,
     TimelineComponent,
     TurnoFormModalComponent,
+    LoadingComponent,
   ],
   template: `
     <app-header-bar (onNuevoTurno)="modalTurno.abrir()" />
@@ -25,8 +27,8 @@ import { TurnosStateService } from '../services/turnos-state.service';
       }
 
       @if (turnosState.cargando()) {
-        <div class="bg-white border border-slate-200 rounded-xl p-10 text-center text-sm text-slate-500 shadow-sm">
-          Cargando agenda…
+        <div class="bg-white border border-slate-200 rounded-xl p-10 shadow-sm">
+          <app-loading texto="Cargando agenda…" />
         </div>
       } @else {
         <!-- Zona Hero -->

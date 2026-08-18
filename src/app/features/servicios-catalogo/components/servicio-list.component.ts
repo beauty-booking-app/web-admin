@@ -2,6 +2,7 @@ import { Component, inject, ViewChild, OnInit } from '@angular/core';
 import { ServiciosService } from '../services/servicios.service';
 import { ServicioFormModalComponent } from './servicio-form-modal.component';
 import { CurrencyArsPipe } from '../../../shared/pipes/currency-ars.pipe';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 import type { Servicio, CategoriaServicio } from '../../../core/models/servicio.model';
 
 const ICONOS_CATEGORIA: Record<CategoriaServicio, string> = {
@@ -13,7 +14,7 @@ const ICONOS_CATEGORIA: Record<CategoriaServicio, string> = {
 
 @Component({
   selector: 'app-servicio-list',
-  imports: [CurrencyArsPipe, ServicioFormModalComponent],
+  imports: [CurrencyArsPipe, ServicioFormModalComponent, LoadingComponent],
   template: `
     <div class="p-6 space-y-6">
       <!-- Header -->
@@ -38,8 +39,8 @@ const ICONOS_CATEGORIA: Record<CategoriaServicio, string> = {
       }
 
       @if (serviciosService.cargando()) {
-        <div class="bg-white border border-slate-200 rounded-xl p-10 text-center text-sm text-slate-500 shadow-sm">
-          Cargando servicios…
+        <div class="bg-white border border-slate-200 rounded-xl p-10 shadow-sm">
+          <app-loading texto="Cargando servicios…" />
         </div>
       } @else if (serviciosService.totalServicios() === 0 && !serviciosService.error()) {
         <div class="bg-white border border-slate-200 rounded-xl p-10 text-center text-sm text-slate-500 shadow-sm">

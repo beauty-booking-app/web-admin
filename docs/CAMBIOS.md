@@ -1,5 +1,10 @@
 # Registro de cambios
 
+## Fix · Spinners de carga en las vistas que consultan el backend (2026-08-18)
+
+- Nuevo componente reutilizable `LoadingComponent` (`shared/components/loading/`) con spinner animado + texto.
+- Se reemplazaron los estados de carga planos por el spinner en: agenda, calendario, analytics, servicios y horarios.
+
 ## Fix · Quitar sección "Personal" del sidebar (2026-08-18)
 
 - Se eliminó la sección "Personal" del sidebar (filtros "Ver Todo el Equipo", Sofía y Camila). El signal `filtroProfesional` queda en el servicio (sin UI) y el calendario sigue filtrando con el valor por defecto.
