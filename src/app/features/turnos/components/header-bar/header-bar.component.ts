@@ -7,22 +7,12 @@ import { AgendaPdfService } from '../../services/agenda-pdf.service';
   template: `
     <header class="h-16 border-b border-slate-200 bg-white/90 backdrop-blur px-6 flex items-center justify-between shrink-0 gap-4 shadow-sm">
       <div class="flex items-center gap-4">
-        <div class="flex items-center gap-2 bg-slate-100 border border-slate-200 rounded-lg p-1.5">
-          <button (click)="turnosState.irAlDiaAnterior()" class="p-1 rounded hover:bg-slate-200 text-slate-600 transition" title="Día Anterior" aria-label="Día anterior">
-            ‹
-          </button>
-          <div class="px-2 text-center">
+        <div class="flex items-center gap-3 bg-slate-100 border border-slate-200 rounded-lg px-4 h-9">
+          <span class="text-rose-500 animate-pulse" aria-hidden="true">●</span>
+          <div class="text-center leading-tight">
             <span class="text-xs font-bold text-slate-900 block">{{ fechaFormateada() }}</span>
           </div>
-          <button (click)="turnosState.irAlDiaSiguiente()" class="p-1 rounded hover:bg-slate-200 text-slate-600 transition" title="Día Siguiente" aria-label="Día siguiente">
-            ›
-          </button>
-        </div>
-
-        <div class="hidden md:flex items-center gap-2 text-sm font-medium text-slate-600 bg-slate-100 px-4 py-2 rounded-lg border border-slate-200 shadow-sm">
-          <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
-          <span class="text-xs uppercase tracking-wide">Hora</span>
-          <span class="font-bold text-slate-900 tabular-nums">{{ horaActual() }}</span>
+          <span class="text-xs font-bold text-slate-900 tabular-nums block">{{ horaActual() }}</span>
         </div>
       </div>
 

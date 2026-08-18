@@ -1,5 +1,9 @@
 # Registro de cambios
 
+## Fix · Agenda: fecha estática con día y hora de hoy (2026-08-18)
+
+- En la agenda del día, el selector de fecha dejó de ser navegable: se quitaron las flechas ‹ › y ahora el bloque muestra el día y la hora de hoy de forma estática, con alto (`h-9`) igual a los botones de la derecha (EXPORTAR PDF / AGENDAR TURNO).
+
 ## Fix · Reordenar navegación del calendario (2026-08-18)
 
 - En `/calendario`, "Hoy" quedó como botón aparte y las flechas ‹ › pasaron a flanquear el texto del período visible.
