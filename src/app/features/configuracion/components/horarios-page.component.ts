@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { HorariosService } from '../services/horarios.service';
 import type { DiaSemana } from '../../../core/models/franja-laboral.model';
 
@@ -15,11 +15,19 @@ import type { DiaSemana } from '../../../core/models/franja-laboral.model';
           </p>
         </div>
         <button (click)="guardar()"
-                class="bg-rose-600 hover:bg-rose-500 text-white font-semibold px-5 py-2 rounded-lg text-xs shadow-md shadow-rose-200 transition flex items-center gap-2"
+                [disabled]="horariosService.cargando() || horariosService.franjas().length === 0"
+                class="bg-rose-600 hover:bg-rose-500 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold px-5 py-2 rounded-lg text-xs shadow-md shadow-rose-200 transition flex items-center gap-2"
                 aria-label="Guardar cambios de horario">
           Guardar Cambios de Horario
         </button>
       </div>
+
+      @if (horariosService.error(); as err) {
+        <div role="alert"
+             class="bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-xs text-red-700 font-medium">
+          Error: {{ err }}
+        </div>
+      }
 
       <!-- Toast de confirmación -->
       @if (horariosService.guardado()) {
@@ -30,6 +38,16 @@ import type { DiaSemana } from '../../../core/models/franja-laboral.model';
           Configuración de horarios guardada correctamente.
         </div>
       }
+
+      @if (horariosService.cargando()) {
+        <div class="bg-white border border-slate-200 rounded-xl p-10 text-center text-sm text-slate-500 shadow-sm">
+          Cargando horarios…
+        </div>
+      } @else if (horariosService.franjas().length === 0 && !horariosService.error()) {
+        <div class="bg-white border border-slate-200 rounded-xl p-10 text-center text-sm text-slate-500 shadow-sm">
+          No hay horarios cargados.
+        </div>
+      } @else {
 
       <!-- Franjas laborales -->
       <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
@@ -99,11 +117,16 @@ import type { DiaSemana } from '../../../core/models/franja-laboral.model';
           <p class="text-slate-400 italic">No hay días cerrados configurados.</p>
         }
       </div>
+      }
     </div>
   `,
 })
-export class HorariosPageComponent {
+export class HorariosPageComponent implements OnInit {
   readonly horariosService = inject(HorariosService);
+
+  ngOnInit(): void {
+    void this.horariosService.cargarFranjas();
+  }
 
   protected onHoraChange(dia: DiaSemana, campo: 'horaInicio' | 'horaFin', event: Event): void {
     const valor = (event.target as HTMLInputElement).value;
@@ -111,6 +134,6 @@ export class HorariosPageComponent {
   }
 
   protected guardar(): void {
-    this.horariosService.guardar();
+    void this.horariosService.guardar();
   }
 }
