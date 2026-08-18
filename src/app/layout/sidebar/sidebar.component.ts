@@ -1,8 +1,9 @@
 import { Component, inject, computed } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { TurnosStateService } from '../../features/turnos/services/turnos-state.service';
 import { RecordatorioService } from '../../features/turnos/services/recordatorio.service';
 import { ServiciosService } from '../../features/servicios-catalogo/services/servicios.service';
+import { AuthService } from '../../core/api/auth.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -123,6 +124,17 @@ import { ServiciosService } from '../../features/servicios-catalogo/services/ser
           <span>Ocupación hoy: {{ porcentajeOcupacion }}%</span>
           <span>{{ turnosState.metricas().totalTurnos }} turnos</span>
         </div>
+
+        <div class="mt-3 pt-3 border-t border-slate-200 flex items-center justify-between gap-2">
+          <span class="font-semibold text-slate-700 truncate" title="{{ auth.usuario()?.name ?? '' }}">
+            {{ auth.usuario()?.name ?? 'Administrador' }}
+          </span>
+          <button (click)="cerrarSesion()"
+                  class="text-[11px] font-semibold text-rose-600 hover:text-rose-700 transition whitespace-nowrap min-h-[44px]"
+                  aria-label="Cerrar sesión">
+            Cerrar sesión
+          </button>
+        </div>
       </div>
     </aside>
   `,
@@ -141,10 +153,17 @@ export class SidebarComponent {
   readonly turnosState = inject(TurnosStateService);
   readonly serviciosService = inject(ServiciosService);
   private readonly recordatorioService = inject(RecordatorioService);
+  protected readonly auth = inject(AuthService);
+  private readonly router = inject(Router);
 
   protected readonly cantidadPendientes = computed(
     () => this.recordatorioService.turnosPendientes().length,
   );
+
+  protected cerrarSesion(): void {
+    this.auth.cerrarSesion();
+    void this.router.navigate(['/login']);
+  }
 
   get porcentajeOcupacion(): number {
     const metricas = this.turnosState.metricas();
