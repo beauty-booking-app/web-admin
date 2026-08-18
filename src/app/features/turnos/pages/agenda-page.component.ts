@@ -16,7 +16,7 @@ import { TurnosStateService } from '../services/turnos-state.service';
   template: `
     <app-header-bar (onNuevoTurno)="modalTurno.abrir()" />
 
-    <div class="flex-1 overflow-y-auto p-6 space-y-6">
+    <div class="flex-1 overflow-y-auto p-6 space-y-8">
       @if (turnosState.error(); as err) {
         <div role="alert"
              class="bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-xs text-red-700 font-medium">
