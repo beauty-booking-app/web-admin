@@ -10,9 +10,9 @@ import type { Turno, EstadoTurno } from '../../../core/models/turno.model';
 @Component({
   selector: 'app-calendario-page',
   template: `
-    <div class="flex-1 overflow-y-auto p-6 space-y-6">
+    <div class="flex-1 overflow-y-auto pt-24 p-6">
       <!-- Encabezado -->
-      <header class="flex flex-wrap items-center justify-between gap-4">
+      <header class="flex flex-wrap items-center justify-between gap-4 mb-4">
         <div class="flex items-center gap-3">
           <button (click)="calendario.irHoy()"
                   class="px-4 py-2 rounded-lg text-sm font-bold text-slate-700 bg-white border border-slate-200 shadow-sm hover:bg-slate-100 transition"
