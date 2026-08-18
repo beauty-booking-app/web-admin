@@ -80,35 +80,8 @@ import { CurrencyArsPipe } from '../../shared/pipes/currency-ars.pipe';
            class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all"
            aria-label="Horarios y ausencias">
           <span class="w-4 h-4 text-slate-500">🕐</span>
-          <span>Horarios y Ausencias</span>
+           <span>Horarios y Ausencias</span>
         </a>
-
-        <div class="pt-4 px-3 py-2 text-[10px] font-bold tracking-wider text-slate-400 uppercase">Personal</div>
-
-        <button (click)="turnosState.setFiltroProfesional('todos')"
-                class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-100 transition-all"
-                [class.bg-slate-800]="turnosState.filtroProfesional() === 'todos'"
-                [class.text-white]="turnosState.filtroProfesional() === 'todos'">
-          <span class="w-4 h-4 text-slate-500">👥</span>
-          <span>Ver Todo el Equipo</span>
-        </button>
-
-        <div class="pl-4 space-y-1">
-          <button (click)="turnosState.setFiltroProfesional('Sofía')"
-                  class="w-full flex items-center justify-between px-2 py-1.5 rounded text-xs text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all"
-                  [class.font-bold]="turnosState.filtroProfesional() === 'Sofía'">
-            <span class="flex items-center gap-2">
-              <span class="w-2 h-2 rounded-full bg-pink-500"></span> Sofía (Peluquería)
-            </span>
-          </button>
-          <button (click)="turnosState.setFiltroProfesional('Camila')"
-                  class="w-full flex items-center justify-between px-2 py-1.5 rounded text-xs text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all"
-                  [class.font-bold]="turnosState.filtroProfesional() === 'Camila'">
-            <span class="flex items-center gap-2">
-              <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Camila (Uñas)
-            </span>
-          </button>
-        </div>
       </nav>
 
       <!-- Zona inferior fija: facturación + estado del salón -->

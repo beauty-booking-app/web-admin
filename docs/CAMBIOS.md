@@ -1,5 +1,9 @@
 # Registro de cambios
 
+## Fix · Quitar sección "Personal" del sidebar (2026-08-18)
+
+- Se eliminó la sección "Personal" del sidebar (filtros "Ver Todo el Equipo", Sofía y Camila). El signal `filtroProfesional` queda en el servicio (sin UI) y el calendario sigue filtrando con el valor por defecto.
+
 ## Fix · Alinear navbar de la agenda con el divider del sidebar (2026-08-18)
 
 - El header de la agenda pasó de `h-16` a `h-[69px]` para que su borde inferior quede alineado con el divider que hay debajo del logo de la marca en la sidebar.
