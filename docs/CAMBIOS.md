@@ -1,5 +1,17 @@
 # Registro de cambios
 
+## 008 · Calendario semana/mes (2026-08-18)
+
+- Nuevo `CalendarioService` (`features/turnos/services/`) con vistas **semana** y **mes**: carga `GET /admin/appointments?from&to` para el rango visible, agrupa por día y respeta el filtro de profesional. Funciones puras exportadas (`lunesDe`, `rangoPeriodo`, `agruparPorDia`) testeables.
+- Nuevo mapper `appointmentToTurno()` en `core/api/mappers.ts` (modelo `Appointment` → `Turno`, datetime ISO completo), con la lógica común extraída en `turnoDesdeFuente()` junto a `agendaAppointmentToTurno()`.
+- Nueva página `/calendario` (`CalendarioPageComponent`): toggle Semana|Mes, navegación ‹ › y "Hoy", grilla semanal de 7 columnas con tarjetas compactas y grilla mensual con hasta 3 turnos por celda + "+N más". Hoy resaltado. Click en un día o turno navega a la agenda del día con esa fecha.
+- `TurnosStateService.irAlDia(fecha)` para que el calendario abra la agenda del día con la fecha elegida (reusado por ir al día anterior/siguiente).
+- `STATUS_CONFIG` y `CATEGORY_CONFIG` movidos a `components/status-config.ts` (compartidos entre timeline y calendario).
+- Enlace "Calendario" en el sidebar.
+- Sin cambios en el backend (se usa `GET /admin/appointments?from&to` existente).
+- Tests nuevos del service (4 casos: `lunesDe`, `rangoPeriodo`, `agruparPorDia`).
+- Sin dependencias nuevas.
+
 ## 007 · Integración con el Backend Real (2026-08-18)
 
 - Nueva capa API en `src/app/core/api/`: `environment.ts` (`http://localhost:8000/api/v1`), `backend.models.ts` (tipos del backend en camelCase), `mappers.ts` (backend ↔ modelos de dominio), `error-utils.ts` (mensajes de error).

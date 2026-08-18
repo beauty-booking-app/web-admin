@@ -9,6 +9,7 @@
 5. **005 · Dashboard de Analytics** — KPIs, turnos/ganancias por mes, servicios más solicitados y clientes frecuentes.
 6. **006 · Exportación de Agenda** — Descarga de la agenda del día como PDF con detalle por profesional.
 7. **007 · Integración con el Backend Real** — Login/refresh/logout contra `/auth/*`, agenda desde `/admin/agenda`, catálogo desde `/public/services`, horarios contra `/admin/settings/business-hours` y analytics con citas reales de `/admin/appointments`. Estados de carga/error por feature.
+8. **008 · Calendario semana/mes** — Pantalla de lectura en `/calendario` con vista por semana y mes, agrupando los turnos de `GET /admin/appointments?from&to`; click en un día navega a la agenda del día. Sin cambios en el backend.
 
 ## Siguiente 🔜
 

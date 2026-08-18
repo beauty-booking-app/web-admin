@@ -226,6 +226,7 @@ export interface Turno {
 |------|-------------|--------|
 | `/login`          | Login (email/password, sin layout) | `auth/` (lazy) |
 | `/`              | Agenda del día (dashboard principal) | `turnos/` (lazy) |
+| `/calendario`    | Calendario semana/mes              | `turnos/` (lazy) |
 | `/recordatorios` | Recordatorios por WhatsApp           | `turnos/` (lazy) |
 | `/analytics`     | Dashboard de analytics              | `analytics/` (lazy) |
 | `/servicios`     | Catálogo de servicios y precios      | `servicios-catalogo/` (lazy) |

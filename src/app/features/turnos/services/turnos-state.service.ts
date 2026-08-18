@@ -114,20 +114,19 @@ export class TurnosStateService {
   }
 
   irAlDiaAnterior(): void {
-    this._fechaActual.update((fecha) => {
-      const prev = new Date(fecha);
-      prev.setDate(prev.getDate() - 1);
-      return prev;
-    });
-    void this.cargarAgenda();
+    const prev = new Date(this._fechaActual());
+    prev.setDate(prev.getDate() - 1);
+    this.irAlDia(prev);
   }
 
   irAlDiaSiguiente(): void {
-    this._fechaActual.update((fecha) => {
-      const next = new Date(fecha);
-      next.setDate(next.getDate() + 1);
-      return next;
-    });
+    const next = new Date(this._fechaActual());
+    next.setDate(next.getDate() + 1);
+    this.irAlDia(next);
+  }
+
+  irAlDia(fecha: Date): void {
+    this._fechaActual.set(inicioDelDia(fecha));
     void this.cargarAgenda();
   }
 

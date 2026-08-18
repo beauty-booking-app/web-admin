@@ -43,6 +43,13 @@ import { AuthService } from '../../core/api/auth.service';
           </span>
         </a>
 
+        <a routerLink="/calendario" routerLinkActive="active-nav"
+           class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all"
+           aria-label="Calendario por semana y mes">
+          <span class="w-4 h-4 text-slate-500">🗓️</span>
+          <span>Calendario</span>
+        </a>
+
         <a routerLink="/servicios" routerLinkActive="active-nav"
            class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all"
            aria-label="Servicios y precios">

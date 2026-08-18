@@ -1,5 +1,6 @@
 import type {
   AgendaAppointment,
+  Appointment,
   AppointmentStatus,
   BusinessHour,
   Service,
@@ -79,24 +80,73 @@ export function agendaAppointmentToTurno(
   dia: Date,
   catalogoPorSubtipo: ReadonlyMap<string, Servicio>,
 ): Turno {
-  const primerServicio = app.serviceNames[0] ?? 'Servicio';
+  return turnoDesdeFuente(
+    {
+      id: app.id,
+      clienteNombre: app.clientName,
+      serviceNames: app.serviceNames,
+      price: app.price,
+      duracionMinutos: 60,
+      status: app.status,
+      inicio: horaADate(dia, app.startTime),
+      fin: horaADate(dia, app.endTime),
+    },
+    catalogoPorSubtipo,
+  );
+}
+
+export function appointmentToTurno(
+  app: Appointment,
+  catalogoPorSubtipo: ReadonlyMap<string, Servicio>,
+): Turno {
+  return turnoDesdeFuente(
+    {
+      id: app.id,
+      clienteNombre: app.client.name,
+      serviceNames: app.serviceTypes.map((t) => t.name),
+      price: app.price,
+      duracionMinutos: app.durationMinutes,
+      status: app.status,
+      inicio: new Date(app.startTime),
+      fin: new Date(app.endTime),
+    },
+    catalogoPorSubtipo,
+  );
+}
+
+interface TurnoFuente {
+  id: string;
+  clienteNombre: string;
+  serviceNames: string[];
+  price: number;
+  duracionMinutos: number;
+  status: AppointmentStatus;
+  inicio: Date;
+  fin: Date;
+}
+
+function turnoDesdeFuente(
+  fuente: TurnoFuente,
+  catalogoPorSubtipo: ReadonlyMap<string, Servicio>,
+): Turno {
+  const primerServicio = fuente.serviceNames[0] ?? 'Servicio';
   const base = catalogoPorSubtipo.get(primerServicio);
   const categoria = base?.categoria ?? 'CORTE UNISEX';
   const profesional = categoria === 'UÑAS' ? 'Camila' : 'Sofía';
   return {
-    id: app.id,
-    cliente: { nombre: app.clientName, telefono: '' },
+    id: fuente.id,
+    cliente: { nombre: fuente.clienteNombre, telefono: '' },
     servicio: {
-      id: base?.id ?? app.id,
+      id: base?.id ?? fuente.id,
       categoria,
       subtipo: primerServicio,
-      duracionMinutos: base?.duracionMinutos ?? 60,
-      precioBase: app.price,
+      duracionMinutos: base?.duracionMinutos ?? fuente.duracionMinutos,
+      precioBase: fuente.price,
     },
     profesional,
-    inicio: horaADate(dia, app.startTime),
-    fin: horaADate(dia, app.endTime),
-    estado: ESTADO_BACKEND_TO_UI[app.status],
+    inicio: fuente.inicio,
+    fin: fuente.fin,
+    estado: ESTADO_BACKEND_TO_UI[fuente.status],
     recordatorioEnviado: false,
   };
 }
