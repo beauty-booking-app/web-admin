@@ -1,12 +1,10 @@
 import { Component, computed, inject, OnInit } from '@angular/core';
 import { AnalyticsService } from '../services/analytics.service';
-import { MetricasComponent } from '../../turnos/components/metricas/metricas.component';
-import { TurnosStateService } from '../../turnos/services/turnos-state.service';
 import { CurrencyArsPipe } from '../../../shared/pipes/currency-ars.pipe';
 
 @Component({
   selector: 'app-analytics-page',
-  imports: [CurrencyArsPipe, MetricasComponent],
+  imports: [CurrencyArsPipe],
   template: `
     <div class="p-6 space-y-6">
       <!-- Header -->
@@ -171,22 +169,17 @@ import { CurrencyArsPipe } from '../../../shared/pipes/currency-ars.pipe';
           </ul>
         </section>
       </div>
-
-      <!-- Resumen Operativo y Métricas Clave -->
-      <app-metricas />
       }
     </div>
   `,
 })
 export class AnalyticsPageComponent implements OnInit {
   protected readonly analyticsService = inject(AnalyticsService);
-  private readonly turnosState = inject(TurnosStateService);
 
   protected readonly kpis = this.analyticsService.kpis;
 
   ngOnInit(): void {
     void this.analyticsService.cargarHistorico();
-    void this.turnosState.cargarAgenda();
   }
 
   protected readonly descripcionTurnosPorMes = computed(() =>

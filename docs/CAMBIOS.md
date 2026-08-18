@@ -1,5 +1,10 @@
 # Registro de cambios
 
+## Fix · Sacar card de métricas de analytics (2026-08-18)
+
+- Se quitó la card "Resumen Operativo y Métricas Clave" del dashboard de analytics (su dato más útil, facturación de hoy, ya vive en el sidebar).
+- Se eliminó el componente `MetricasComponent` (quedaba sin uso).
+
 ## Fix · Facturación estimada hoy en el sidebar (2026-08-18)
 
 - El sidebar muestra una card con la "Facturación Estimada Hoy" (con `currencyArs`) arriba del bloque "Estado del Salón".
