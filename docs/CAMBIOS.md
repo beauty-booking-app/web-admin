@@ -1,5 +1,18 @@
 # Registro de cambios
 
+## 007 · Integración con el Backend Real (2026-08-18)
+
+- Nueva capa API en `src/app/core/api/`: `environment.ts` (`http://localhost:8000/api/v1`), `backend.models.ts` (tipos del backend en camelCase), `mappers.ts` (backend ↔ modelos de dominio), `error-utils.ts` (mensajes de error).
+- **Auth:** nuevo `AuthService` (login/logout/refresh, tokens en `localStorage`), `authInterceptor` (Bearer + refresh automático en 401), `authGuard` y pantalla `/login` (`features/auth/`). Rutas admin protegidas; logout en el sidebar.
+- **Agenda:** `TurnosStateService` ahora carga `GET /admin/agenda?date=...` y persiste estados con `PATCH /admin/appointments/{id}/status`. Se agregaron estados `Reprogramado` y `No Asiste` (fidelidad con el backend). Navegación día anterior/siguiente funcional.
+- **Servicios:** `ServiciosService.cargarServicios()` desde `GET /public/services` (Service + types → `Servicio`). El ABM (agregar/editar) sigue en memoria (la API no expone CRUD admin). El modal de nuevo turno consume el catálogo del backend.
+- **Horarios:** `cargarFranjas()` y `guardar()` contra `GET/PATCH /admin/settings/business-hours` (PATCH de reemplazo total).
+- **Analytics:** `cargarHistorico()` obtiene las citas de los últimos 6 meses con `GET /admin/appointments?from&to` y computa KPIs, turnos/ganancias, top servicios y clientes frecuentes con datos reales.
+- **Recordatorios:** los turnos del backend no incluyen teléfono; el envío de WhatsApp se deshabilita cuando no hay teléfono.
+- **UI:** estados de carga y banners de error por feature (sin fallback a semilla).
+- Config: `provideHttpClient(withInterceptors([authInterceptor]))` en `app.config.ts`.
+- Sin dependencias nuevas.
+
 ## 006 · Exportación de Agenda (2026-08-17)
 
 - Se instaló **jsPDF** (`^4.2.1`) — dependencia aprobada.

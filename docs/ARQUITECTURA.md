@@ -31,11 +31,19 @@ admin-app/
 │
 ├── src/
 │   ├── app/
-│   │   ├── core/                    # Modelos globales
-│   │   │   └── models/
-│   │   │       ├── servicio.model.ts       # Interfaz Servicio + 14 datos semilla
-│   │   │       ├── turno.model.ts          # Interfaz Turno + tipo EstadoTurno
-│   │   │       └── franja-laboral.model.ts # Interfaz FranjaLaboral + 7 franjas semilla
+│   │   ├── core/                    # Modelos globales y capa API
+│   │   │   ├── models/
+│   │   │   │   ├── servicio.model.ts       # Interfaz Servicio + 14 datos semilla
+│   │   │   │   ├── turno.model.ts          # Interfaz Turno + tipo EstadoTurno
+│   │   │   │   └── franja-laboral.model.ts # Interfaz FranjaLaboral + 7 franjas semilla
+│   │   │   └── api/                  # 🆕 Conexión con el backend real (FastAPI)
+│   │   │       ├── environment.ts          # API_BASE_URL + API_URL (/api/v1)
+│   │   │       ├── backend.models.ts       # Tipos del backend (camelCase)
+│   │   │       ├── mappers.ts              # Backend ↔ modelos de dominio
+│   │   │       ├── error-utils.ts          # mensajeDeError() para la UI
+│   │   │       ├── auth.service.ts         # 🆕 Login/logout/refresh + tokens en localStorage
+│   │   │       ├── auth.interceptor.ts     # 🆕 Bearer + refresh automático en 401
+│   │   │       └── auth.guard.ts           # 🆕 Guard funcional de rutas admin
 │   │   │
 │   │   ├── shared/                  # Pipes y utils reutilizables
 │   │   │   ├── pipes/
@@ -44,13 +52,16 @@ admin-app/
 │   │   │       └── whatsapp-utils.ts       # Enlaces wa.me + mensajes de recordatorio
 │   │   │
 │   │   ├── features/
+│   │   │   ├── auth/                # 🆕 FEATURE 007 — LOGIN (autenticación)
+│   │   │   │   ├── auth.routes.ts             # Ruta lazy /login
+│   │   │   │   └── login-page.component.ts    # Formulario email + password
 │   │   │   ├── turnos/              # ✅ FEATURE 001 y 004 — CORAZÓN OPERATIVO
 │   │   │   │   ├── turnos.routes.ts             # Lazy route
 │   │   │   │   ├── pages/
 │   │   │   │   │   ├── agenda-page.component.ts      # Contenedor principal
 │   │   │   │   │   └── recordatorios-page.component.ts  # 🆕 004 Recordatorios WhatsApp
 │   │   │   │   ├── services/
-│   │   │   │   │   ├── turnos-state.service.ts   # Signal state + datos semilla
+│   │   │   │   │   ├── turnos-state.service.ts   # Signal state + GET /admin/agenda + PATCH status
 │   │   │   │   │   ├── recordatorio.service.ts   # 🆕 Estado de envío + filtrado pendientes
 │   │   │   │   │   └── agenda-pdf.service.ts     # 🆕 Exportación de agenda a PDF (jsPDF)
 │   │   │   │   └── components/
@@ -68,7 +79,7 @@ admin-app/
 │   │   │   ├── servicios-catalogo/  # ✅ FEATURE 002 — CATÁLOGO DE SERVICIOS
 │   │   │   │   ├── servicios.routes.ts             # Lazy route
 │   │   │   │   ├── services/
-│   │   │   │   │   └── servicios.service.ts        # Signal state + 14 servicios semilla
+│   │   │   │   │   └── servicios.service.ts        # Signal state + GET /public/services
 │   │   │   │   └── components/
 │   │   │   │       ├── servicio-list.component.ts  # 4 tarjetas de categoría
 │   │   │   │       └── servicio-form-modal.component.ts  # Modal alta/edición
@@ -76,7 +87,7 @@ admin-app/
 │   │   │   ├── configuracion/       # ✅ FEATURE 003 — HORARIOS Y AUSENCIAS
 │   │   │   │   ├── configuracion.routes.ts             # Lazy route
 │   │   │   │   ├── services/
-│   │   │   │   │   └── horarios.service.ts             # Signal state + franjas semilla
+│   │   │   │   │   └── horarios.service.ts             # Signal state + GET/PATCH business-hours
 │   │   │   │   └── components/
 │   │   │   │       ├── horarios-page.component.ts      # Franjas laborales + toast
 │   │   │   │       └── configuracion-placeholder.component.ts  # Placeholder (no usado)
@@ -84,7 +95,7 @@ admin-app/
 │   │   │   └── analytics/           # ✅ FEATURE 005 — DASHBOARD DE ANALYTICS
 │   │   │       ├── analytics.routes.ts             # Lazy route
 │   │   │       ├── services/
-│   │   │       │   └── analytics.service.ts        # Dataset histórico 6 meses + computed KPIs/ganancias
+│   │   │       │   └── analytics.service.ts        # Dataset real 6 meses (GET /admin/appointments)
 │   │   │       └── pages/
 │   │   │           └── analytics-page.component.ts # KPIs, gráficos CSS, filtros por mes/categoría
 │   │   │
@@ -114,28 +125,31 @@ admin-app/
 
 ## Flujo de datos
 
-1. **`TurnosStateService`** es la fuente de verdad para la agenda. Mantiene la lista de turnos del día en un `signal()` con 7 datos semilla. Incluye `computed()` para turnos inminentes, filtrados por profesional y métricas.
-2. **`ServiciosService`** es la fuente de verdad para el catálogo. Mantiene 14 servicios en un `signal()` con métodos `agregar()` y `editar()`. Incluye `computed()` para categorías y total.
-3. **`HorariosService`** es la fuente de verdad para horarios operativos. Mantiene 7 franjas laborales en un `signal()` con toggle por día, horarios editables y estado de guardado.
-4. **`RecordatorioService`** filtra los turnos `Pendiente` del día desde `TurnosStateService` y genera enlaces `wa.me` con mensaje preformateado (`whatsapp-utils.ts`). Mantiene el estado de envíos realizados.
-5. **`AgendaPdfService`** genera el PDF de la agenda del día con jsPDF: cabecera, secciones por profesional y filas de turnos.
-6. **`AnalyticsService`** mantiene un dataset histórico generado de 6 meses (independiente de la agenda operativa) y expone `computed` de KPIs, turnos/ganancias por mes (con diferencia %), servicios más solicitados (filtro por categoría y mes) y clientes frecuentes.
-7. El componente página (`AgendaPageComponent`) orquesta los componentes hijos de turnos.
-8. Los componentes hijos son "dumb": reciben datos vía signals del state service y emiten eventos vía `output()`.
-9. El **sidebar** muestra navegación con filtros por profesional y conteo dinámico de servicios.
-10. No hay backend propio; la app consume APIs externas vía HTTP (pendiente).
+1. **Auth (`AuthService`)** es la puerta de entrada: `login()` contra `POST /auth/login`, `refresh()` contra `/auth/refresh` y `cerrarSesion()` contra `/auth/logout`. Los tokens persisten en `localStorage`; el `authInterceptor` inyecta `Authorization: Bearer` y, en 401, renueva el access token y reintenta. `authGuard` protege las rutas admin.
+2. **`TurnosStateService`** es la fuente de verdad de la agenda. `cargarAgenda()` pide `GET /admin/agenda?date=YYYY-MM-DD` y mapea las citas a `Turno[]` (con el catálogo para resolver categoría/profesional). `cambiarEstado()` actualiza optimistamente y persiste con `PATCH /admin/appointments/{id}/status`. Excluye navegación por día (`irAlDiaAnterior/Siguiente`).
+3. **`ServiciosService`** es la fuente de verdad del catálogo. `cargarServicios()` pide `GET /public/services` y traduce cada `Service` + types a `Servicio[]`. El ABM (`agregar()`/`editar()`) sigue en memoria porque la API no expone CRUD admin. `catalogoPorSubtipo()` alimenta el mapeo de agenda y analytics.
+4. **`HorariosService`** carga `GET /admin/settings/business-hours` y guarda con `PATCH` de reemplazo total (business-hours → franjas laborales).
+5. **`RecordatorioService`** filtra los turnos `Pendiente` del día desde `TurnosStateService` y genera enlaces `wa.me`. Si el turno no trae teléfono (limitación de la API), el envío se deshabilita.
+6. **`AgendaPdfService`** genera el PDF de la agenda del día con jsPDF a partir de `turnosState.turnos()`.
+7. **`AnalyticsService`** obtiene las citas de los últimos 6 meses con `GET /admin/appointments?from&to` (una entrada por servicio en cada cita) y expone `computed` de KPIs, turnos/ganancias por mes (con diferencia %), servicios más solicitados (filtro por categoría y mes) y clientes frecuentes.
+8. Cada state service expone señales `cargando` y `error`; las páginas muestran banner de error y estado vacío si la API falla (no hay fallback a semilla).
+9. El componente página (`AgendaPageComponent`) dispara `cargarAgenda()` al montar y orquesta los componentes hijos de turnos.
+10. Los componentes hijos son "dumb": reciben datos vía signals del state service y emiten eventos vía `output()`.
+11. El **sidebar** muestra navegación con filtros por profesional, conteo dinámico de servicios, usuario autenticado y botón de cierre de sesión.
+12. **Backend real:** FastAPI en `http://localhost:8000` con prefijo `/api/v1`. Documentación de la API y modelos en `docs/backend/api.md` y `docs/backend/models.md`.
 
 ## Routing
 
 | Ruta             | Descripción                          | Módulo                          |
 |------------------|--------------------------------------|---------------------------------|
-| `/`              | Agenda del día (dashboard principal) | `turnos/` (lazy)               |
-| `/recordatorios` | Recordatorios por WhatsApp           | `turnos/` (lazy)               |
+| `/login`         | Inicio de sesión                     | `auth/` (lazy)                  |
+| `/`              | Agenda del día (dashboard principal) | `turnos/` (lazy)                |
+| `/recordatorios` | Recordatorios por WhatsApp           | `turnos/` (lazy)                |
 | `/analytics`     | Dashboard de analytics              | `analytics/` (lazy)            |
 | `/servicios`     | Catálogo de servicios y precios      | `servicios-catalogo/` (lazy)   |
 | `/configuracion` | Horarios y ausencias                 | `configuracion/` (lazy)        |
 
-Todas las rutas usan lazy loading para optimizar el bundle inicial.
+Todas las rutas usan lazy loading para optimizar el bundle inicial. Las rutas admin están protegidas con `authGuard` y redirigen a `/login` sin sesión.
 
 ## Modelo de datos
 
@@ -165,7 +179,9 @@ export type EstadoTurno =
   | 'Pendiente'
   | 'En Proceso'
   | 'Finalizado'
-  | 'Cancelado';
+  | 'Cancelado'
+  | 'Reprogramado'
+  | 'No Asiste';
 
 export interface Turno {
   id: string;
@@ -217,6 +233,7 @@ export interface FranjaLaboral {
 - **Vite** — Build tool (`@angular/build:application`)
 - **Tailwind CSS v4** (`^4.1.12`) — Utility-first CSS con PostCSS plugin
 - **Angular Signals** — Gestión de estado reactivo
+- **HttpClient** (`@angular/common`) — Consumo de la API del backend (`provideHttpClient` + interceptores)
 - **jsPDF** (`^4.2.1`) — Generación del PDF de la agenda
 - **Vitest** (`^4.0.8`) — Testing framework con jsdom (`^28.0.0`)
 - **Prettier** (`^3.8.1`) — Formateo de código con parser angular para HTML

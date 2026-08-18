@@ -1,6 +1,6 @@
 # 007 · Integración con el Backend Real
 
-**Estado:** en desarrollo 🔧
+**Estado:** implementado ✅
 
 ## Qué hace
 
@@ -19,17 +19,17 @@ La misión define al panel como una SPA que consume APIs externas vía HTTP. Los
 
 ## Criterios de aceptación
 
-- [ ] La app muestra login cuando no hay sesión y protege las rutas admin con un guard.
-- [ ] Login/refresh/logout funcionan contra `/auth/*`; los tokens persisten en `localStorage` y se envían como `Authorization: Bearer`.
-- [ ] La agenda del día se carga desde `GET /admin/agenda?date=...` con estados mapeados (`pendiente/confirmado/reprogramado/completado/cancelado/no_asiste`).
-- [ ] Las acciones de la timeline (Confirmar, Completar) persisten vía `PATCH /admin/appointments/{id}/status`.
-- [ ] El catálogo de servicios se carga desde `GET /public/services` (Service + types → Servicio).
-- [ ] Los horarios se cargan al entrar y se guardan con PATCH de reemplazo total contra `/admin/settings/business-hours`.
-- [ ] Analytics usa datos reales: KPIs del mes, turnos/ganancias por mes, top servicios y clientes frecuentes.
-- [ ] Cada feature muestra estado de carga y un banner de error si la API falla (sin datos).
-- [ ] El ABM de servicios y el alta local de turnos siguen funcionando en memoria (la API no expone CRUD admin).
-- [ ] Los turnos sin teléfono (limitación de la API) no habilitan el envío de recordatorio por WhatsApp.
-- [ ] `npm run build` pasa y los tests existentes no se rompen.
+- [x] La app muestra login cuando no hay sesión y protege las rutas admin con un guard.
+- [x] Login/refresh/logout funcionan contra `/auth/*`; los tokens persisten en `localStorage` y se envían como `Authorization: Bearer`.
+- [x] La agenda del día se carga desde `GET /admin/agenda?date=...` con estados mapeados (`pendiente/confirmado/reprogramado/completado/cancelado/no_asiste`).
+- [x] Las acciones de la timeline (Confirmar, Completar) persisten vía `PATCH /admin/appointments/{id}/status`.
+- [x] El catálogo de servicios se carga desde `GET /public/services` (Service + types → Servicio).
+- [x] Los horarios se cargan al entrar y se guardan con PATCH de reemplazo total contra `/admin/settings/business-hours`.
+- [x] Analytics usa datos reales: KPIs del mes, turnos/ganancias por mes, top servicios y clientes frecuentes.
+- [x] Cada feature muestra estado de carga y un banner de error si la API falla (sin datos).
+- [x] El ABM de servicios y el alta local de turnos siguen funcionando en memoria (la API no expone CRUD admin).
+- [x] Los turnos sin teléfono (limitación de la API) no habilitan el envío de recordatorio por WhatsApp.
+- [x] `npm run build` pasa y los tests existentes no se rompen.
 
 ## Fuera de alcance
 

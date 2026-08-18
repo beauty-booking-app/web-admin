@@ -8,6 +8,7 @@
 4. **004 · Recordatorios** — Envío de recordatorios por WhatsApp individual y masivo a turnos pendientes.
 5. **005 · Dashboard de Analytics** — KPIs, turnos/ganancias por mes, servicios más solicitados y clientes frecuentes.
 6. **006 · Exportación de Agenda** — Descarga de la agenda del día como PDF con detalle por profesional.
+7. **007 · Integración con el Backend Real** — Login/refresh/logout contra `/auth/*`, agenda desde `/admin/agenda`, catálogo desde `/public/services`, horarios contra `/admin/settings/business-hours` y analytics con citas reales de `/admin/appointments`. Estados de carga/error por feature.
 
 ## Siguiente 🔜
 

@@ -63,11 +63,19 @@ admin-app/
 │
 ├── src/
 │   ├── app/
-│   │   ├── core/                    # Modelos globales
-│   │   │   └── models/
-│   │   │       ├── servicio.model.ts       # Interfaz Servicio + 14 datos semilla
-│   │   │       ├── turno.model.ts          # Interfaz Turno + tipo EstadoTurno
-│   │   │       └── franja-laboral.model.ts # Interfaz FranjaLaboral + 7 franjas semilla
+│   │   ├── core/                    # Modelos globales y capa API
+│   │   │   ├── models/
+│   │   │   │   ├── servicio.model.ts       # Interfaz Servicio + 14 datos semilla
+│   │   │   │   ├── turno.model.ts          # Interfaz Turno + tipo EstadoTurno
+│   │   │   │   └── franja-laboral.model.ts # Interfaz FranjaLaboral + 7 franjas semilla
+│   │   │   └── api/                  # Conexión con el backend real (FastAPI)
+│   │   │       ├── environment.ts          # API_BASE_URL + API_URL (/api/v1)
+│   │   │       ├── backend.models.ts       # Tipos del backend (camelCase)
+│   │   │       ├── mappers.ts              # Backend ↔ modelos de dominio
+│   │   │       ├── error-utils.ts          # mensajeDeError()
+│   │   │       ├── auth.service.ts         # Login/logout/refresh + tokens en localStorage
+│   │   │       ├── auth.interceptor.ts     # Bearer + refresh automático en 401
+│   │   │       └── auth.guard.ts           # Guard funcional de rutas admin
 │   │   │
 │   │   ├── shared/                  # Componentes, pipes y utils reutilizables
 │   │   │   ├── pipes/
@@ -76,13 +84,16 @@ admin-app/
 │   │   │       └── whatsapp-utils.ts       # Enlaces wa.me + mensajes de recordatorio
 │   │   │
 │   │   ├── features/
+│   │   │   ├── auth/                # FEATURE 007 — LOGIN
+│   │   │   │   ├── auth.routes.ts             # Ruta lazy /login
+│   │   │   │   └── login-page.component.ts    # Formulario email + password
 │   │   │   ├── turnos/              # ✅ FEATURE 001 y 004 — CORAZÓN OPERATIVO
 │   │   │   │   ├── turnos.routes.ts             # Lazy route
 │   │   │   │   ├── pages/
 │   │   │   │   │   ├── agenda-page.component.ts      # Contenedor principal
 │   │   │   │   │   └── recordatorios-page.component.ts  # Recordatorios WhatsApp (004)
 │   │   │   │   ├── services/
-│   │   │   │   │   ├── turnos-state.service.ts   # Signal state + datos semilla
+│   │   │   │   │   ├── turnos-state.service.ts   # Signal state + GET /admin/agenda + PATCH status
 │   │   │   │   │   ├── recordatorio.service.ts   # Filtrado pendientes + envío
 │   │   │   │   │   └── agenda-pdf.service.ts     # Exportación de agenda a PDF (jsPDF)
 │   │   │   │   └── components/
@@ -100,7 +111,7 @@ admin-app/
 │   │   │   ├── servicios-catalogo/  # ✅ FEATURE 002 — CATÁLOGO DE SERVICIOS
 │   │   │   │   ├── servicios.routes.ts             # Lazy route
 │   │   │   │   ├── services/
-│   │   │   │   │   └── servicios.service.ts        # Signal state + 14 servicios semilla
+│   │   │   │   │   └── servicios.service.ts        # Signal state + GET /public/services
 │   │   │   │   └── components/
 │   │   │   │       ├── servicio-list.component.ts  # 4 tarjetas de categoría
 │   │   │   │       └── servicio-form-modal.component.ts  # Modal alta/edición
@@ -108,7 +119,7 @@ admin-app/
 │   │   │   └── configuracion/       # ✅ FEATURE 003 — HORARIOS Y AUSENCIAS
 │   │   │       ├── configuracion.routes.ts             # Lazy route
 │   │   │       ├── services/
-│   │   │       │   └── horarios.service.ts             # Signal state + franjas semilla
+│   │   │       │   └── horarios.service.ts             # Signal state + GET/PATCH business-hours
 │   │   │       └── components/
 │   │   │           ├── horarios-page.component.ts      # Franjas laborales + toast
 │   │   │           └── configuracion-placeholder.component.ts  # Placeholder (no usado)
@@ -116,7 +127,7 @@ admin-app/
 │   │   │   └── analytics/           # ✅ FEATURE 005 — DASHBOARD DE ANALYTICS
 │   │   │       ├── analytics.routes.ts             # Lazy route
 │   │   │       ├── services/
-│   │   │       │   └── analytics.service.ts        # Dataset histórico + computed KPIs/ganancias
+│   │   │       │   └── analytics.service.ts        # Dataset real 6 meses + computed KPIs/ganancias
 │   │   │       └── pages/
 │   │   │           └── analytics-page.component.ts # KPIs, gráficos CSS, filtros por mes/categoría
 │   │   │
@@ -213,6 +224,7 @@ export interface Turno {
 
 | Ruta | Descripción | Módulo |
 |------|-------------|--------|
+| `/login`          | Login (email/password, sin layout) | `auth/` (lazy) |
 | `/`              | Agenda del día (dashboard principal) | `turnos/` (lazy) |
 | `/recordatorios` | Recordatorios por WhatsApp           | `turnos/` (lazy) |
 | `/analytics`     | Dashboard de analytics              | `analytics/` (lazy) |
@@ -243,8 +255,8 @@ export interface Turno {
 
 - **Entorno:** SPA construida con **Angular 22 + Vite**.
 - **Restricción Clave:** NO framework full-stack. Todo el código corre en el cliente.
-- **Backend/API:** Consumo de APIs externas vía HTTP (pendiente).
+- **Backend/API:** FastAPI real en `http://localhost:8000` (prefijo `/api/v1`, camelCase, auth Bearer). API y modelos en `docs/backend/api.md` y `docs/backend/models.md`. Los state services cargan desde la API; si falla se muestra error y vacío (sin fallback a semilla). El ABM de servicios y el alta de turnos siguen en memoria (la API no los expone).
 - 4 categorías de servicios: CORTE UNISEX, TRATAMIENTOS CAPILARES, COLOR, UÑAS.
-- 14 servicios con precios y duraciones definidos.
+- 14 servicios con precios y duraciones definidos (semilla; el catálogo real se carga de `/public/services`).
 - 2 profesionales: Sofía (Peluquería Integral), Camila (Uñas & Manicura).
-- Memoria no persiste por ahora.
+- Autenticación por email/password contra `/auth/login` (ruta `/login`); los tokens persisten en `localStorage`.
