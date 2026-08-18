@@ -18,7 +18,7 @@ Consume la API del backend FastAPI (`api-backend`).
 
 ## Requisitos
 
-- Node.js con npm 12 (`packageManager` del proyecto: `npm@12.0.1`)
+- Node.js con pnpm 10 (`packageManager` del proyecto: `pnpm@10.31.0`)
 - El backend corriendo en `http://localhost:8000` (ver README de `api-backend`)
 
 > La API base se configura en `src/app/core/api/environment.ts` (`API_BASE_URL` + prefijo `/api/v1`).
@@ -26,8 +26,8 @@ Consume la API del backend FastAPI (`api-backend`).
 ## Puesta en marcha
 
 ```bash
-npm install      # primera vez
-npm start        # servidor de desarrollo (ng serve) → http://localhost:4200
+pnpm install      # primera vez
+pnpm start        # servidor de desarrollo (ng serve) → http://localhost:4200
 ```
 
 La app redirige a `/login`. Credenciales de desarrollo del backend:
@@ -41,9 +41,9 @@ Los tokens se persisten en `localStorage`; el `auth.interceptor` renueva el acce
 
 | Comando | Descripción |
 |---|---|
-| `npm start` | Servidor de desarrollo en `http://localhost:4200` |
-| `npm run build` | Build de producción (se usa como validación) |
-| `npm test` | Tests unitarios (Vitest) |
+| `pnpm start` | Servidor de desarrollo en `http://localhost:4200` |
+| `pnpm run build` | Build de producción (se usa como validación) |
+| `pnpm test` | Tests unitarios (Vitest) |
 
 ## Rutas
 

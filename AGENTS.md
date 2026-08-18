@@ -16,7 +16,7 @@ Aplicación web administrativa interna para un salón de belleza (peluquería y 
 * **Estilos:** Tailwind CSS v4 (`^4.1.12`) con PostCSS plugin (`@tailwindcss/postcss`).
 * **Templates:** Todos inline (sin archivos `.html` separados).
 * **Testing:** Vitest (`^4.0.8`) + jsdom (`^28.0.0`).
-* **Package manager:** npm (`12.0.1`).
+* **Package manager:** pnpm (`10.31.0`).
 * **Formateo:** Prettier (`^3.8.1`) con parser angular para HTML.
 
 No hay base de datos. Por ahora la memoria no persiste.
@@ -24,9 +24,9 @@ No hay base de datos. Por ahora la memoria no persiste.
 ## Comandos
 
 ```bash
-npm start          # servidor de desarrollo (ng serve)
-npm run build      # build de producción (se usa como validación)
-npm test           # tests unitarios (vitest)
+pnpm start          # servidor de desarrollo (ng serve)
+pnpm run build      # build de producción (se usa como validación)
+pnpm test           # tests unitarios (vitest)
 ```
 
 ## 3. Estructura del proyecto

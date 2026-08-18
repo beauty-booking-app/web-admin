@@ -6,7 +6,7 @@
 - **Framework / runtime:** Angular 22 (`^22.0.0`) con Vite (`@angular/build:application`)
 - **Gestión de estado:** Angular Signals (evitar RxJS innecesario para estado local; reservar para flujos HTTP/asíncronos complejos)
 - **Estilos:** Tailwind CSS v4 (`^4.1.12`) con PostCSS plugin (`@tailwindcss/postcss`)
-- **Package manager:** npm (`12.0.1`)
+- **Package manager:** pnpm (`10.31.0`)
 - **Base de datos:** No aplica — los datos no persisten
 - **Tests:** Vitest (`^4.0.8`) + jsdom (`^28.0.0`)
 - **Formateo:** Prettier (`^3.8.1`) con parser angular para HTML
@@ -26,9 +26,9 @@
 
 ## Comandos
 
-- `npm start` — arranca el servidor de desarrollo (ng serve)
-- `npm run build` — compila para producción (se usa como validación)
-- `npm test` — ejecuta tests unitarios (vitest)
+- `pnpm start` — arranca el servidor de desarrollo (ng serve)
+- `pnpm run build` — compila para producción (se usa como validación)
+- `pnpm test` — ejecuta tests unitarios (vitest)
 
 ## Modelo de datos / dominio
 

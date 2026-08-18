@@ -243,7 +243,7 @@ export interface FranjaLaboral {
 - **jsPDF** (`^4.2.1`) — Generación del PDF de la agenda
 - **Vitest** (`^4.0.8`) — Testing framework con jsdom (`^28.0.0`)
 - **Prettier** (`^3.8.1`) — Formateo de código con parser angular para HTML
-- **npm** (`12.0.1`) — Package manager
+- **pnpm** (`10.31.0`) — Package manager
 
 ## Paleta de colores
 

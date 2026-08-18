@@ -1,5 +1,13 @@
 # Registro de cambios
 
+## 009 · Migración a pnpm (2026-08-18)
+
+- `packageManager` en `package.json` pasa de `npm@12.0.1` a `pnpm@10.31.0`; `angular.json` (`cli.packageManager`) a `pnpm`.
+- Se reemplaza `package-lock.json` por `pnpm-lock.yaml` (instalación con pnpm).
+- `.vscode/settings.json` con `npm.packageManager: "pnpm"` para que las tareas de VS Code usen pnpm.
+- Comandos actualizados a `pnpm` en `AGENTS.md`, `README.md`, `docs/ARQUITECTURA.md` y `spec/constitution/tech-stack.md`.
+- Build y tests (12) OK con pnpm.
+
 ## 008 · Calendario semana/mes (2026-08-18)
 
 - Nuevo `CalendarioService` (`features/turnos/services/`) con vistas **semana** y **mes**: carga `GET /admin/appointments?from&to` para el rango visible, agrupa por día y respeta el filtro de profesional. Funciones puras exportadas (`lunesDe`, `rangoPeriodo`, `agruparPorDia`) testeables.
