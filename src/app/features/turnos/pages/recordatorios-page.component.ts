@@ -17,7 +17,7 @@ import type { Turno } from '../../../core/models/turno.model';
           </p>
         </div>
         <button (click)="enviarTodos()"
-                [disabled]="sinPendientes()"
+                [disabled]="sinConTelefono()"
                 class="bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold px-5 py-2.5 rounded-lg text-xs shadow-md shadow-emerald-100 transition flex items-center gap-2"
                 aria-label="Enviar todos los recordatorios pendientes por WhatsApp">
           📱 Enviar Todos por WhatsApp
@@ -64,12 +64,12 @@ import type { Turno } from '../../../core/models/turno.model';
                     <p class="text-xs text-slate-500 mt-0.5">
                       {{ formatHora(turno) }} · {{ turno.servicio.categoria }} - {{ turno.servicio.subtipo }}
                     </p>
-                    <p class="text-xs text-slate-500">{{ turno.cliente.telefono }}</p>
+                    <p class="text-xs text-slate-500">{{ turno.cliente.telefono || 'Sin teléfono registrado' }}</p>
                   </div>
                   <div class="flex items-center gap-2 shrink-0">
                     <span class="text-xs text-slate-500 font-medium">{{ turno.servicio.precioBase | currencyArs }}</span>
                     <button (click)="enviarIndividual(turno)"
-                            [disabled]="yaEnviado(turno.id)"
+                            [disabled]="yaEnviado(turno.id) || !turno.cliente.telefono"
                             class="bg-emerald-50 hover:bg-emerald-100 disabled:opacity-40 disabled:cursor-not-allowed text-emerald-800 border border-emerald-300 py-2 px-3 rounded-lg text-xs font-semibold transition shadow-xs"
                             [attr.aria-label]="'Enviar recordatorio por WhatsApp a ' + turno.cliente.nombre">
                       📱 Enviar Individual
@@ -89,6 +89,9 @@ export class RecordatoriosPageComponent {
 
   protected readonly turnosPendientes = this.recordatorioService.turnosPendientes;
   protected readonly sinPendientes = computed(() => this.turnosPendientes().length === 0);
+  protected readonly sinConTelefono = computed(
+    () => this.turnosPendientes().filter((t) => t.cliente.telefono).length === 0,
+  );
   protected readonly mostrarToast = this.recordatorioService.enviados;
 
   protected yaEnviado(turnoId: string): boolean {

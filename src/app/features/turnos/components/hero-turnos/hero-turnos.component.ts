@@ -90,7 +90,8 @@ import type { Turno } from '../../../../core/models/turno.model';
                 </button>
               } @else if (turno.estado === 'Pendiente') {
                 <button (click)="enviarRecordatorio(turno)"
-                        class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1 transition shadow-md shadow-emerald-100">
+                        [disabled]="!turno.cliente.telefono"
+                        class="flex-1 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 disabled:cursor-not-allowed text-white py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1 transition shadow-md shadow-emerald-100">
                   📱 WhatsApp Recordatorio
                 </button>
               }
@@ -135,6 +136,7 @@ export class HeroTurnosComponent {
   }
 
   protected enviarRecordatorio(turno: Turno): void {
+    if (!turno.cliente.telefono) return;
     this.turnosState.marcarRecordatorio(turno.id);
     this.turnosState.cambiarEstado(turno.id, 'Confirmado');
   }

@@ -20,6 +20,7 @@ export class RecordatorioService {
   readonly enviados = signal<string[]>([]);
 
   enviarIndividual(turno: Turno): void {
+    if (!turno.cliente.telefono) return;
     this.abrirWhatsApp(turno);
     this.turnosState.marcarRecordatorio(turno.id);
     this.registrarEnviado(turno.id);
@@ -27,6 +28,7 @@ export class RecordatorioService {
 
   enviarTodos(): void {
     for (const turno of this.turnosPendientes()) {
+      if (!turno.cliente.telefono) continue;
       this.abrirWhatsApp(turno);
       this.turnosState.marcarRecordatorio(turno.id);
       this.registrarEnviado(turno.id);
