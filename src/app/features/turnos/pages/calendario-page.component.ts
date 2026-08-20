@@ -78,9 +78,9 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
               @for (dia of diasSemana(); track dia.getTime()) {
                 @let lista = turnosDe(dia);
                 <div class="flex flex-col min-w-0" [class.bg-rose-50/40]="esHoy(dia)">
-                  <button (click)="irAlDia(dia)"
+                  <button (click)="abrirModalDia(dia)"
                           class="px-2 py-2 text-center border-b border-slate-100 hover:bg-slate-50 transition"
-                          [attr.aria-label]="'Ir a la agenda del día ' + diaCorto(dia)">
+                          [attr.aria-label]="'Ver turnos del día ' + diaCorto(dia)">
                     <span class="block text-[10px] uppercase tracking-wide font-bold text-slate-500">{{ diaCorto(dia) }}</span>
                     <span class="block text-sm font-bold text-slate-800"
                           [class.text-rose-600]="esHoy(dia)">{{ dia.getDate() }}</span>
@@ -91,7 +91,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
                     } @else {
                       @for (turno of lista; track turno.id) {
                         @let cfg = statusConfig(turno.estado);
-                        <button (click)="irAlDia(dia)"
+                        <button (click)="abrirModalDia(dia)"
                                 class="w-full text-left rounded-lg border border-slate-200 bg-white px-2 py-1.5 transition hover:border-rose-300"
                                 [attr.aria-label]="turno.cliente.nombre + ', ' + turno.servicio.subtipo + ', ' + cfg.label">
                           <span class="block text-[10px] font-semibold tabular-nums text-slate-600">{{ formatHora(turno.inicio) }}</span>
@@ -215,10 +215,6 @@ export class CalendarioPageComponent implements OnInit {
 
   protected cambiarVista(vista: VistaCalendario): void {
     this.calendario.cambiarVista(vista);
-  }
-
-  protected irAlDia(fecha: Date): void {
-    void this.calendario.irAlDia(fecha);
   }
 
   protected abrirModalDia(fecha: Date): void {

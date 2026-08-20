@@ -1,5 +1,10 @@
 # Registro de cambios
 
+## Fix · Calendario vista semana: modal de turnos del día (2026-08-20)
+
+- Al hacer clic en un día (o en un turno) en la **vista semanal** ahora se abre el **mismo modal** de turnos del día que en la vista mensual (`abrirModalDia`), en lugar de navegar a la agenda.
+- Se eliminó el método `irAlDia` del componente (ya no se usa ninguna vista para navegar).
+
 ## Fix · Servicios y Precios: botón "Agregar" por card y CTA crea categoría (2026-08-20)
 
 - **Botón "Agregar" en el header de cada card** — se reemplazó el badge con la cantidad de servicios del encabezado por un botón "+ Agregar" que abre el modal de alta de servicio con esa categoría precargada.
