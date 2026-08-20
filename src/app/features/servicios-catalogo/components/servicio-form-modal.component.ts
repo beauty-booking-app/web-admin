@@ -34,7 +34,7 @@ import type { Servicio, CategoriaServicio } from '../../../core/models/servicio.
                       [(ngModel)]="categoria" name="categoria"
                       [disabled]="esEdicion()"
                       class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 focus:outline-none transition disabled:opacity-50">
-                @for (cat of categorias; track cat) {
+                @for (cat of categorias(); track cat) {
                   <option [value]="cat">{{ cat }}</option>
                 }
               </select>
@@ -94,12 +94,7 @@ export class ServicioFormModalComponent {
   protected precio = 0;
   protected duracion = 45;
 
-  protected readonly categorias: CategoriaServicio[] = [
-    'CORTE UNISEX',
-    'TRATAMIENTOS CAPILARES',
-    'COLOR',
-    'UÑAS',
-  ];
+  protected readonly categorias = this.serviciosService.categoriasList;
 
   abrirNueva(categoria?: CategoriaServicio): void {
     this.esEdicion.set(false);

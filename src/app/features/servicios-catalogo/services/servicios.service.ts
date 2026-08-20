@@ -12,6 +12,12 @@ export class ServiciosService {
   private readonly http = inject(HttpClient);
 
   private readonly _servicios = signal<Servicio[]>([]);
+  private readonly _categorias = signal<CategoriaServicio[]>([
+    'CORTE UNISEX',
+    'TRATAMIENTOS CAPILARES',
+    'COLOR',
+    'UÑAS',
+  ]);
   private readonly _cargando = signal(false);
   private readonly _error = signal<string | null>(null);
   private cargado = false;
@@ -20,13 +26,14 @@ export class ServiciosService {
   readonly cargando = this._cargando.asReadonly();
   readonly error = this._error.asReadonly();
 
+  readonly categoriasList = this._categorias.asReadonly();
+
   readonly categorias = computed(() => {
-    const orden: CategoriaServicio[] = [
-      'CORTE UNISEX',
-      'TRATAMIENTOS CAPILARES',
-      'COLOR',
-      'UÑAS',
-    ];
+    const presentes = new Set(this._servicios().map((s) => s.categoria));
+    const orden = this._categorias().filter((c) => presentes.has(c));
+    for (const c of presentes) {
+      if (!orden.includes(c)) orden.push(c);
+    }
     return orden.map((cat) => ({
       categoria: cat,
       servicios: this._servicios().filter((s) => s.categoria === cat),
@@ -34,6 +41,14 @@ export class ServiciosService {
   });
 
   readonly totalServicios = computed(() => this._servicios().length);
+
+  agregarCategoria(nombre: string): void {
+    const limpio = nombre.trim();
+    if (!limpio) return;
+    this._categorias.update((lista) =>
+      lista.includes(limpio) ? lista : [...lista, limpio],
+    );
+  }
 
   async cargarServiciosSiNecesario(): Promise<void> {
     if (this.cargado || this._cargando()) return;

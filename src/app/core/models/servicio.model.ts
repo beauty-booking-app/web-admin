@@ -1,8 +1,4 @@
-export type CategoriaServicio =
-  | 'CORTE UNISEX'
-  | 'TRATAMIENTOS CAPILARES'
-  | 'COLOR'
-  | 'UÑAS';
+export type CategoriaServicio = string;
 
 export interface Servicio {
   id: string;

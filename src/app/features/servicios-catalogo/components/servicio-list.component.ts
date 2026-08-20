@@ -1,11 +1,12 @@
 import { Component, inject, ViewChild, OnInit } from '@angular/core';
 import { ServiciosService } from '../services/servicios.service';
 import { ServicioFormModalComponent } from './servicio-form-modal.component';
+import { CategoriaFormModalComponent } from './categoria-form-modal.component';
 import { CurrencyArsPipe } from '../../../shared/pipes/currency-ars.pipe';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
-import type { Servicio, CategoriaServicio } from '../../../core/models/servicio.model';
+import type { Servicio } from '../../../core/models/servicio.model';
 
-const ICONOS_CATEGORIA: Record<CategoriaServicio, string> = {
+const ICONOS_CATEGORIA: Record<string, string> = {
   'CORTE UNISEX': '✂️',
   'TRATAMIENTOS CAPILARES': '💆',
   'COLOR': '🎨',
@@ -14,7 +15,7 @@ const ICONOS_CATEGORIA: Record<CategoriaServicio, string> = {
 
 @Component({
   selector: 'app-servicio-list',
-  imports: [CurrencyArsPipe, ServicioFormModalComponent, LoadingComponent],
+  imports: [CurrencyArsPipe, ServicioFormModalComponent, CategoriaFormModalComponent, LoadingComponent],
   template: `
     <div class="p-6 space-y-6">
       <!-- Header -->
@@ -23,11 +24,11 @@ const ICONOS_CATEGORIA: Record<CategoriaServicio, string> = {
           <h2 class="text-lg font-bold text-slate-900">Servicios y Precios</h2>
           <p class="text-xs text-slate-600 mt-1">{{ serviciosService.totalServicios() }} servicios en {{ categorias().length }} categorías</p>
         </div>
-        <button (click)="modal.abrirNueva()"
+        <button (click)="modalCategoria.abrir()"
                 class="bg-rose-700 hover:bg-rose-800 text-white font-semibold px-4 py-2 rounded-lg text-xs shadow-md shadow-rose-200 transition flex items-center gap-2"
-                aria-label="Crear nuevo servicio">
+                aria-label="Crear nueva categoría">
           <span class="text-base leading-none">+</span>
-          Nuevo Servicio
+          Nueva Categoría
         </button>
       </div>
 
@@ -57,9 +58,12 @@ const ICONOS_CATEGORIA: Record<CategoriaServicio, string> = {
                 <span class="text-base">{{ icono(grupo.categoria) }}</span>
                 <h3 class="font-bold text-slate-900 text-xs tracking-wide">{{ grupo.categoria }}</h3>
               </div>
-              <span class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-slate-200 text-slate-700">
-                {{ grupo.servicios.length }}
-              </span>
+              <button (click)="modal.abrirNueva(grupo.categoria)"
+                      class="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-rose-700 hover:bg-rose-800 text-white text-[11px] font-semibold transition"
+                      [attr.aria-label]="'Agregar servicio a ' + grupo.categoria">
+                <span class="text-sm leading-none">+</span>
+                Agregar
+              </button>
             </div>
 
             <!-- Lista de servicios -->
@@ -83,15 +87,6 @@ const ICONOS_CATEGORIA: Record<CategoriaServicio, string> = {
                 </div>
               }
             </div>
-
-            <!-- Footer con acción -->
-            <div class="px-5 py-2.5 bg-slate-50/50 border-t border-slate-100">
-              <button (click)="modal.abrirNueva(grupo.categoria)"
-                      class="text-[11px] font-medium text-rose-600 hover:text-rose-700 transition"
-                      [attr.aria-label]="'Agregar servicio a ' + grupo.categoria">
-                + Agregar a {{ grupo.categoria }}
-              </button>
-            </div>
           </div>
         }
       </div>
@@ -99,6 +94,7 @@ const ICONOS_CATEGORIA: Record<CategoriaServicio, string> = {
     </div>
 
     <app-servicio-form-modal #modalServicio />
+    <app-categoria-form-modal #modalCategoria />
   `,
 })
 export class ServicioListComponent implements OnInit {
@@ -106,12 +102,13 @@ export class ServicioListComponent implements OnInit {
   protected readonly categorias = this.serviciosService.categorias;
 
   @ViewChild('modalServicio') modal!: ServicioFormModalComponent;
+  @ViewChild('modalCategoria') modalCategoria!: CategoriaFormModalComponent;
 
   ngOnInit(): void {
     void this.serviciosService.cargarServicios();
   }
 
-  protected icono(categoria: CategoriaServicio): string {
+  protected icono(categoria: string): string {
     return ICONOS_CATEGORIA[categoria] ?? '📋';
   }
 }

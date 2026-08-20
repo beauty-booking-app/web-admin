@@ -1,5 +1,13 @@
 # Registro de cambios
 
+## Fix · Servicios y Precios: botón "Agregar" por card y CTA crea categoría (2026-08-20)
+
+- **Botón "Agregar" en el header de cada card** — se reemplazó el badge con la cantidad de servicios del encabezado por un botón "+ Agregar" que abre el modal de alta de servicio con esa categoría precargada.
+- **Se quitó el botón del footer** de cada card (el "+ Agregar a ..." del final ya no existe).
+- **El CTA principal "Nuevo Servicio" pasa a crear una categoría** — ahora abre un nuevo modal "Nueva Categoría" (solo pide el nombre) y la crea. El ABM de servicios por card sigue abriendo el modal de servicio.
+- **Categorías dinámicas** — `CategoriaServicio` deja de ser un union fijo y pasa a `string`; `ServiciosService` mantiene una lista ordenada de categorías (`categoriasList`), expone `agregarCategoria()` y el `categorias` computado incluye cualquier categoría nueva. El select de categoría del modal de servicio y los íconos usan la lista dinámica (fallback `📋` para categorías desconocidas).
+- Nuevo componente `CategoriaFormModalComponent` (`servicios-catalogo/components/categoria-form-modal.component.ts`).
+
 ## Fix · Calendario mensual: fondo de días y modal de turnos del día (2026-08-20)
 
 - **Fondo solo en el día actual** — se quitó el fondo (`bg-rose-50/40`) que se aplicaba a todos los días del mes y a las celdas vacías; ahora el resto de los días quedan sin fondo (solo borde sutil) y únicamente el día de hoy mantiene el resaltado (`ring-2 ring-rose-600` + `bg-rose-50` + círculo `rose-600`).
