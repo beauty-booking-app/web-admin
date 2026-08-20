@@ -44,13 +44,16 @@ import type { Turno, EstadoTurno } from '../../../../core/models/turno.model';
                     @let esPasado = turno.estado === 'Finalizado' || turno.estado === 'Cancelado' || turno.estado === 'No Asiste';
                     @let esAhora = turno.estado === 'En Proceso';
 
-                    <div class="relative flex gap-2.5 sm:gap-3 rounded-xl border bg-white p-2.5 transition-opacity text-[13px]"
+                    <div class="relative flex gap-2.5 sm:gap-3 rounded-xl border bg-white p-2.5 transition-opacity text-[13px] cursor-pointer hover:border-rose-300"
                          [class.opacity-55]="esPasado"
                          [class.border-amber-300]="esAhora"
                          [class.shadow-sm]="esAhora"
                          [class.border-slate-200]="!esAhora"
-                         role="article"
-                         [attr.aria-label]="turno.cliente.nombre + ', ' + turno.servicio.subtipo + ', ' + turno.estado">
+                         role="button"
+                         tabindex="0"
+                         (click)="onTurnoClick.emit(turno)"
+                         (keydown.enter)="onTurnoClick.emit(turno)"
+                         [attr.aria-label]="'Gestionar turno: ' + turno.cliente.nombre + ', ' + turno.servicio.subtipo + ', ' + turno.estado">
 
                       <div class="w-14 sm:w-[52px] shrink-0 text-right pt-0.5">
                         <p class="text-xs font-semibold tabular-nums text-slate-900">{{ formatHora(turno.inicio) }}</p>
@@ -139,13 +142,16 @@ import type { Turno, EstadoTurno } from '../../../../core/models/turno.model';
                     @let esPasado = turno.estado === 'Finalizado' || turno.estado === 'Cancelado' || turno.estado === 'No Asiste';
                     @let esAhora = turno.estado === 'En Proceso';
 
-                    <div class="relative flex gap-2.5 sm:gap-3 rounded-xl border bg-white p-2.5 transition-opacity text-[13px]"
+                    <div class="relative flex gap-2.5 sm:gap-3 rounded-xl border bg-white p-2.5 transition-opacity text-[13px] cursor-pointer hover:border-rose-300"
                          [class.opacity-55]="esPasado"
                          [class.border-amber-300]="esAhora"
                          [class.shadow-sm]="esAhora"
                          [class.border-slate-200]="!esAhora"
-                         role="article"
-                         [attr.aria-label]="turno.cliente.nombre + ', ' + turno.servicio.subtipo + ', ' + turno.estado">
+                         role="button"
+                         tabindex="0"
+                         (click)="onTurnoClick.emit(turno)"
+                         (keydown.enter)="onTurnoClick.emit(turno)"
+                         [attr.aria-label]="'Gestionar turno: ' + turno.cliente.nombre + ', ' + turno.servicio.subtipo + ', ' + turno.estado">
 
                       <div class="w-14 sm:w-[52px] shrink-0 text-right pt-0.5">
                         <p class="text-xs font-semibold tabular-nums text-slate-900">{{ formatHora(turno.inicio) }}</p>

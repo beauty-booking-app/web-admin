@@ -3,8 +3,10 @@ import { HeaderBarComponent } from '../components/header-bar/header-bar.componen
 import { HeroTurnosComponent } from '../components/hero-turnos/hero-turnos.component';
 import { TimelineComponent } from '../components/timeline/timeline.component';
 import { TurnoFormModalComponent } from '../components/turno-form-modal/turno-form-modal.component';
+import { TurnoDetalleModalComponent } from '../components/turno-detalle-modal/turno-detalle-modal.component';
 import { TurnosStateService } from '../services/turnos-state.service';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
+import type { Turno } from '../../../core/models/turno.model';
 
 @Component({
   selector: 'app-agenda-page',
@@ -13,6 +15,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
     HeroTurnosComponent,
     TimelineComponent,
     TurnoFormModalComponent,
+    TurnoDetalleModalComponent,
     LoadingComponent,
   ],
   template: `
@@ -41,10 +44,13 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
 
     <!-- Modal de nuevo turno -->
     <app-turno-form-modal #modalTurno />
+    <!-- Modal de detalle / gestión de turno -->
+    <app-turno-detalle-modal #modalDetalle (onCambios)="recargar()" />
   `,
 })
 export class AgendaPageComponent implements OnInit {
   @ViewChild('modalTurno') modalTurno!: TurnoFormModalComponent;
+  @ViewChild('modalDetalle') modalDetalle!: TurnoDetalleModalComponent;
 
   protected readonly turnosState = inject(TurnosStateService);
 
@@ -52,7 +58,11 @@ export class AgendaPageComponent implements OnInit {
     void this.turnosState.cargarAgenda();
   }
 
-  protected onTurnoClick(_turno: unknown): void {
-    // Placeholder: futura implementación de gestión de turno existente
+  protected onTurnoClick(turno: Turno): void {
+    this.modalDetalle.abrir(turno);
+  }
+
+  protected recargar(): void {
+    void this.turnosState.cargarAgenda();
   }
 }

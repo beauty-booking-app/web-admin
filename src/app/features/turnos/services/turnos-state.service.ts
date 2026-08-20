@@ -166,4 +166,23 @@ export class TurnosStateService {
       lista.map((t) => (t.id === turnoId ? { ...t, recordatorioEnviado: true } : t)),
     );
   }
+
+  async cancelarTurno(turnoId: string, reason: string): Promise<void> {
+    await firstValueFrom(
+      this.http.patch(`${API_URL}/admin/appointments/${turnoId}/cancel`, { reason }),
+    );
+    this._turnos.update((lista) =>
+      lista.map((t) => (t.id === turnoId ? { ...t, estado: 'Cancelado' } : t)),
+    );
+  }
+
+  async reprogramarTurno(turnoId: string, date: string, startTime: string): Promise<void> {
+    await firstValueFrom(
+      this.http.post(`${API_URL}/admin/appointments/${turnoId}/reschedule`, {
+        date,
+        startTime,
+      }),
+    );
+    await this.cargarAgenda();
+  }
 }

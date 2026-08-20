@@ -1,16 +1,17 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
 import {
   CalendarioService,
   lunesDe,
   type VistaCalendario,
 } from '../services/calendario.service';
 import { STATUS_CONFIG, type EstadoConfig } from '../components/status-config';
+import { TurnoDetalleModalComponent } from '../components/turno-detalle-modal/turno-detalle-modal.component';
 import type { Turno, EstadoTurno } from '../../../core/models/turno.model';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-calendario-page',
-  imports: [LoadingComponent],
+  imports: [LoadingComponent, TurnoDetalleModalComponent],
   template: `
     <div class="flex-1 min-h-0 overflow-y-auto pt-24 pb-8 p-6">
       <!-- Encabezado -->
@@ -175,7 +176,9 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
             } @else {
               @for (turno of turnosDe(dia); track turno.id) {
                 @let cfg = statusConfig(turno.estado);
-                <div class="flex items-center gap-3 rounded-lg border border-slate-200 p-3">
+                <button (click)="abrirDetalle(turno)"
+                        class="w-full flex items-center gap-3 rounded-lg border border-slate-200 bg-white p-3 text-left transition hover:border-rose-300 cursor-pointer"
+                        [attr.aria-label]="'Gestionar turno de ' + turno.cliente.nombre">
                   <div class="w-16 shrink-0">
                     <p class="text-sm font-bold text-slate-900 tabular-nums">{{ formatHora(turno.inicio) }}</p>
                     <p class="text-xs text-slate-600 tabular-nums">{{ formatHora(turno.fin) }}</p>
@@ -187,7 +190,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
                   </div>
                   <span class="shrink-0 inline-block text-[10px] px-2 py-1 rounded font-semibold"
                         [class]="cfg.bg + ' ' + cfg.text">{{ cfg.label }}</span>
-                </div>
+                </button>
               }
             }
           </div>
@@ -201,11 +204,14 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
         </div>
       </div>
     }
+
+    <app-turno-detalle-modal #modalDetalle (onCambios)="recargar()" />
   `,
 })
 export class CalendarioPageComponent implements OnInit {
   protected readonly calendario = inject(CalendarioService);
   protected readonly diaModal = signal<Date | null>(null);
+  @ViewChild('modalDetalle') private readonly modalDetalle!: TurnoDetalleModalComponent;
 
   protected readonly nombresDias = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
 
@@ -223,6 +229,15 @@ export class CalendarioPageComponent implements OnInit {
 
   protected cerrarModal(): void {
     this.diaModal.set(null);
+  }
+
+  protected abrirDetalle(turno: Turno): void {
+    this.diaModal.set(null);
+    this.modalDetalle.abrir(turno);
+  }
+
+  protected recargar(): void {
+    void this.calendario.cargarPeriodo();
   }
 
   protected diasSemana(): Date[] {

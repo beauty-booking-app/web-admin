@@ -1,5 +1,20 @@
 # Registro de cambios
 
+## Feature · Modal de detalle / gestión de turno (2026-08-20)
+
+Nuevo `TurnoDetalleModalComponent`: al hacer clic en un turno de la agenda del día (timeline) o en un turno del modal del calendario se abre un modal con los datos del turno (cliente, servicio, profesional, horario, precio, estado) y acciones:
+
+- **Cambiar estado** — select + botón "Aplicar" (usa la API admin `PATCH /admin/appointments/{id}/status`).
+- **Reprogramar** — formulario inline fecha + hora, confirma con la API admin `POST /admin/appointments/{id}/reschedule`.
+- **Cancelar turno** — confirmación + API admin cancel.
+- **Eliminar servicio** — confirmación; con el modelo de un solo servicio por turno, elimina el servicio cancelando el turno.
+
+Integración:
+- **Agenda (`agenda-page`)** — el timeline emite `onTurnoClick` (cards clicables, accesibles por teclado) y abre el modal de detalle.
+- **Calendario (`calendario-page`)** — al hacer clic en un turno del modal del día se cierra ese modal y se abre el de detalle del turno.
+- `TurnosStateService` ganó `cancelarTurno()` y `reprogramarTurno()` (llamadas reales a la API admin + actualización de estado local).
+- Decisiones acordadas: modelo de un solo servicio por turno; acciones = Cancelar / Reprogramar / Estado (sin edición de datos por ahora).
+
 ## Fix · Calendario vista semana: modal de turnos del día (2026-08-20)
 
 - Al hacer clic en un día (o en un turno) en la **vista semanal** ahora se abre el **mismo modal** de turnos del día que en la vista mensual (`abrirModalDia`), en lugar de navegar a la agenda.
