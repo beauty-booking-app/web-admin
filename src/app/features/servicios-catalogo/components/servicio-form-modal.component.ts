@@ -32,7 +32,7 @@ import type { Servicio, CategoriaServicio } from '../../../core/models/servicio.
               <label class="block text-slate-700 font-medium mb-1" for="srv-categoria">Categoría</label>
               <select id="srv-categoria"
                       [(ngModel)]="categoria" name="categoria"
-                      [disabled]="esEdicion()"
+                      [disabled]="esEdicion() || categoriaFija()"
                       class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 focus:outline-none transition disabled:opacity-50">
                 @for (cat of categorias(); track cat) {
                   <option [value]="cat">{{ cat }}</option>
@@ -88,6 +88,7 @@ export class ServicioFormModalComponent {
   readonly onGuardado = output<void>();
 
   protected esEdicion = signal(false);
+  protected categoriaFija = signal(false);
   protected servicioId = '';
   protected categoria: CategoriaServicio = 'CORTE UNISEX';
   protected subtipo = '';
@@ -103,11 +104,15 @@ export class ServicioFormModalComponent {
     this.subtipo = '';
     this.precio = 0;
     this.duracion = 45;
+    // Cuando se abre desde una card la categoría ya viene preseleccionada y no
+    // se puede cambiar; se inhabilita el select.
+    this.categoriaFija.set(categoria !== undefined);
     this.visible.set(true);
   }
 
   abrirEdicion(servicio: Servicio): void {
     this.esEdicion.set(true);
+    this.categoriaFija.set(true);
     this.servicioId = servicio.id;
     this.categoria = servicio.categoria;
     this.subtipo = servicio.subtipo;
