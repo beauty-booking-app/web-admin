@@ -10,7 +10,7 @@ export const STATUS_CONFIG: Record<EstadoTurno, EstadoConfig> = {
   'En Proceso': { label: 'En Proceso', bg: 'bg-emerald-100', text: 'text-emerald-700' },
   'Confirmado': { label: 'Confirmado', bg: 'bg-purple-100', text: 'text-purple-700' },
   'Pendiente': { label: 'Pendiente', bg: 'bg-amber-100', text: 'text-amber-700' },
-  'Finalizado': { label: 'Finalizado', bg: 'bg-slate-100', text: 'text-slate-500' },
+  'Finalizado': { label: 'Finalizado', bg: 'bg-slate-100', text: 'text-slate-600' },
   'Cancelado': { label: 'Cancelado', bg: 'bg-red-100', text: 'text-red-500' },
   'Reprogramado': { label: 'Reprogramado', bg: 'bg-blue-100', text: 'text-blue-700' },
   'No Asiste': { label: 'No Asiste', bg: 'bg-orange-100', text: 'text-orange-700' },

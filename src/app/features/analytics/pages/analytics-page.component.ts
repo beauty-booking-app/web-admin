@@ -12,7 +12,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
       <div class="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h2 class="text-lg font-bold text-slate-900">Dashboard de Analytics</h2>
-          <p class="text-xs text-slate-500 mt-1">
+          <p class="text-xs text-slate-600 mt-1">
             Evolución del negocio: demanda, facturación y clientes.
           </p>
         </div>
@@ -61,19 +61,19 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
       <!-- KPIs -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
-          <p class="text-[11px] text-slate-500 font-medium">Turnos Totales (mes)</p>
+          <p class="text-[11px] text-slate-600 font-medium">Turnos Totales (mes)</p>
           <p class="text-2xl font-bold text-slate-900 mt-1">{{ kpis().totalTurnos }}</p>
         </div>
         <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
-          <p class="text-[11px] text-slate-500 font-medium">Clientes Únicos (mes)</p>
+          <p class="text-[11px] text-slate-600 font-medium">Clientes Únicos (mes)</p>
           <p class="text-2xl font-bold text-slate-900 mt-1">{{ kpis().clientesUnicos }}</p>
         </div>
         <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
-          <p class="text-[11px] text-slate-500 font-medium">Facturación (mes)</p>
-          <p class="text-2xl font-bold text-emerald-600 mt-1">{{ kpis().facturacion | currencyArs }}</p>
+          <p class="text-[11px] text-slate-600 font-medium">Facturación (mes)</p>
+          <p class="text-2xl font-bold text-emerald-700 mt-1">{{ kpis().facturacion | currencyArs }}</p>
         </div>
         <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
-          <p class="text-[11px] text-slate-500 font-medium">Ticket Promedio</p>
+          <p class="text-[11px] text-slate-600 font-medium">Ticket Promedio</p>
           <p class="text-2xl font-bold text-rose-600 mt-1">{{ kpis().ticketPromedio | currencyArs }}</p>
         </div>
       </div>
@@ -82,7 +82,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
         <!-- Turnos por mes -->
         <section class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
           <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Turnos por Mes</h3>
-          <p class="text-[11px] text-slate-500 mt-0.5">Últimos 6 meses</p>
+          <p class="text-[11px] text-slate-600 mt-0.5">Últimos 6 meses</p>
           <div class="mt-5 flex items-end justify-between gap-3 h-44"
                role="img"
                [attr.aria-label]="descripcionTurnosPorMes()">
@@ -92,7 +92,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
                 <div class="w-full bg-rose-100 rounded-t-md transition-all"
                      [style.height.%]="alturaBarra(mes.cantidad, maxTurnos)"
                      title="{{ mes.label }}: {{ mes.cantidad }} turnos"></div>
-                <span class="text-[10px] text-slate-500 truncate w-full text-center">{{ siglaMes(mes.label) }}</span>
+                <span class="text-[10px] text-slate-600 truncate w-full text-center">{{ siglaMes(mes.label) }}</span>
               </div>
             }
           </div>
@@ -101,7 +101,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
         <!-- Ganancias por mes -->
         <section class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
           <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Ganancias por Mes</h3>
-          <p class="text-[11px] text-slate-500 mt-0.5">Facturación y diferencia vs mes anterior</p>
+          <p class="text-[11px] text-slate-600 mt-0.5">Facturación y diferencia vs mes anterior</p>
           <div class="mt-5 space-y-3 overflow-y-auto max-h-44"
                role="img"
                [attr.aria-label]="descripcionGanancias()">
@@ -117,7 +117,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
                   {{ mes.facturacion | currencyArs }}
                 </span>
                 <span class="w-16 shrink-0 text-right text-[11px] font-bold"
-                      [class.text-emerald-600]="mes.diferenciaPct >= 0"
+                      [class.text-emerald-700]="mes.diferenciaPct >= 0"
                       [class.text-rose-600]="mes.diferenciaPct < 0">
                   {{ mes.diferenciaPct >= 0 ? '+' : '' }}{{ mes.diferenciaPct }}%
                 </span>
@@ -131,7 +131,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
         <!-- Servicios más solicitados -->
         <section class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
           <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Servicios Más Solicitados</h3>
-          <p class="text-[11px] text-slate-500 mt-0.5">Top 5 del mes seleccionado</p>
+          <p class="text-[11px] text-slate-600 mt-0.5">Top 5 del mes seleccionado</p>
           <div class="mt-5 space-y-3">
             @for (servicio of analyticsService.serviciosTop(); track servicio.subtipo) {
               <div class="flex items-center gap-3">
@@ -141,11 +141,11 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
                        [style.width.%]="alturaBarra(servicio.cantidad, maxServicios)" [title]="servicio.subtipo"></div>
                 </div>
                 <span class="w-16 shrink-0 text-right text-[11px] font-semibold text-slate-800">{{ servicio.cantidad }}</span>
-                <span class="w-24 shrink-0 text-right text-[11px] text-slate-500">{{ servicio.recaudacion | currencyArs }}</span>
+                <span class="w-24 shrink-0 text-right text-[11px] text-slate-600">{{ servicio.recaudacion | currencyArs }}</span>
               </div>
             }
             @empty {
-              <p class="text-sm text-slate-500 text-center py-6">Sin datos para esta categoría.</p>
+              <p class="text-sm text-slate-600 text-center py-6">Sin datos para esta categoría.</p>
             }
           </div>
         </section>
@@ -153,7 +153,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
         <!-- Clientes frecuentes -->
         <section class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
           <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Clientes Frecuentes</h3>
-          <p class="text-[11px] text-slate-500 mt-0.5">Top 5 por cantidad de turnos del mes</p>
+          <p class="text-[11px] text-slate-600 mt-0.5">Top 5 por cantidad de turnos del mes</p>
           <ul class="mt-5 divide-y divide-slate-100">
             @for (cliente of analyticsService.clientesFrecuentes(); track cliente.nombre; let i = $index) {
               <li class="flex items-center gap-3 py-2.5">
@@ -165,7 +165,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
               </li>
             }
             @empty {
-              <li class="text-sm text-slate-500 text-center py-6">Sin clientes en el mes seleccionado.</li>
+              <li class="text-sm text-slate-600 text-center py-6">Sin clientes en el mes seleccionado.</li>
             }
           </ul>
         </section>

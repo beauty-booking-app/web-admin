@@ -12,13 +12,13 @@ import type { Turno } from '../../../core/models/turno.model';
       <div class="flex items-center justify-between">
         <div>
           <h2 class="text-lg font-bold text-slate-900">Recordatorios</h2>
-          <p class="text-xs text-slate-500 mt-1">
+          <p class="text-xs text-slate-600 mt-1">
             Enviá recordatorios por WhatsApp a los turnos pendientes de confirmar.
           </p>
         </div>
         <button (click)="enviarTodos()"
                 [disabled]="sinConTelefono()"
-                class="bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold px-5 py-2.5 rounded-lg text-xs shadow-md shadow-emerald-100 transition flex items-center gap-2"
+                class="bg-emerald-700 hover:bg-emerald-800 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold px-5 py-2.5 rounded-lg text-xs shadow-md shadow-emerald-100 transition flex items-center gap-2"
                 aria-label="Enviar todos los recordatorios pendientes por WhatsApp">
           📱 Enviar Todos por WhatsApp
         </button>
@@ -38,14 +38,14 @@ import type { Turno } from '../../../core/models/turno.model';
       <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
         <div class="px-5 py-3.5 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
           <h3 class="font-bold text-slate-900 text-xs tracking-wide">Turnos Pendientes de Confirmar</h3>
-          <span class="text-[11px] text-slate-500 font-medium">
+          <span class="text-[11px] text-slate-600 font-medium">
             {{ turnosPendientes().length }} por enviar
           </span>
         </div>
 
         @if (turnosPendientes().length === 0) {
           <div class="p-8 text-center">
-            <p class="text-slate-500 text-sm">No hay turnos pendientes de confirmar.</p>
+            <p class="text-slate-600 text-sm">No hay turnos pendientes de confirmar.</p>
           </div>
         } @else {
           <ul class="divide-y divide-slate-100">
@@ -61,13 +61,13 @@ import type { Turno } from '../../../core/models/turno.model';
                         </span>
                       }
                     </div>
-                    <p class="text-xs text-slate-500 mt-0.5">
+                    <p class="text-xs text-slate-600 mt-0.5">
                       {{ formatHora(turno) }} · {{ turno.servicio.categoria }} - {{ turno.servicio.subtipo }}
                     </p>
-                    <p class="text-xs text-slate-500">{{ turno.cliente.telefono || 'Sin teléfono registrado' }}</p>
+                    <p class="text-xs text-slate-600">{{ turno.cliente.telefono || 'Sin teléfono registrado' }}</p>
                   </div>
                   <div class="flex items-center gap-2 shrink-0">
-                    <span class="text-xs text-slate-500 font-medium">{{ turno.servicio.precioBase | currencyArs }}</span>
+                    <span class="text-xs text-slate-600 font-medium">{{ turno.servicio.precioBase | currencyArs }}</span>
                     <button (click)="enviarIndividual(turno)"
                             [disabled]="yaEnviado(turno.id) || !turno.cliente.telefono"
                             class="bg-emerald-50 hover:bg-emerald-100 disabled:opacity-40 disabled:cursor-not-allowed text-emerald-800 border border-emerald-300 py-2 px-3 rounded-lg text-xs font-semibold transition shadow-xs"

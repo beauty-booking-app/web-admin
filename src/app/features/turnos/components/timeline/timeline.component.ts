@@ -12,13 +12,13 @@ import type { Turno, EstadoTurno } from '../../../../core/models/turno.model';
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5 pb-4 border-b border-slate-100">
         <div>
           <h2 class="text-base font-bold text-slate-900">Agenda del Día</h2>
-          <p class="text-xs text-slate-500">Dos columnas: Servicios generales y Uñas · hac clic para gestionar</p>
+          <p class="text-xs text-slate-600">Dos columnas: Servicios generales y Uñas · hac clic para gestionar</p>
         </div>
       </div>
 
       @if (turnosOrdenados().length === 0) {
         <div class="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-10 text-center">
-          <p class="text-sm text-slate-500">La agenda del día está vacía.</p>
+          <p class="text-sm text-slate-600">La agenda del día está vacía.</p>
         </div>
       } @else {
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
@@ -32,7 +32,7 @@ import type { Turno, EstadoTurno } from '../../../../core/models/turno.model';
 
             @if (serviciosGenerales().length === 0) {
               <div class="rounded-xl border border-dashed border-slate-200 bg-slate-50/50 p-6 text-center">
-                <p class="text-xs text-slate-400">Sin turnos en esta columna</p>
+                <p class="text-xs text-slate-500">Sin turnos en esta columna</p>
               </div>
             } @else {
               <div class="relative">
@@ -54,7 +54,7 @@ import type { Turno, EstadoTurno } from '../../../../core/models/turno.model';
 
                       <div class="w-14 sm:w-[52px] shrink-0 text-right pt-0.5">
                         <p class="text-xs font-semibold tabular-nums text-slate-900">{{ formatHora(turno.inicio) }}</p>
-                        <p class="text-[10px] text-slate-400 tabular-nums">{{ formatHora(turno.fin) }}</p>
+                        <p class="text-[10px] text-slate-500 tabular-nums">{{ formatHora(turno.fin) }}</p>
                       </div>
 
                       <div class="hidden sm:flex items-start pt-1.5">
@@ -80,10 +80,10 @@ import type { Turno, EstadoTurno } from '../../../../core/models/turno.model';
                                 [class]="cfg.bg + ' ' + cfg.text">
                             {{ cfg.label }}
                           </span>
-                          <span class="text-[10px] text-slate-400">{{ turno.profesional }}</span>
+                          <span class="text-[10px] text-slate-500">{{ turno.profesional }}</span>
                         </div>
                         <p class="font-bold text-slate-900 leading-tight">{{ turno.servicio.subtipo }}</p>
-                        <div class="flex flex-wrap items-center gap-x-2 gap-y-0 text-[11px] text-slate-500 mt-0.5">
+                        <div class="flex flex-wrap items-center gap-x-2 gap-y-0 text-[11px] text-slate-600 mt-0.5">
                           <span>👤 {{ turno.cliente.nombre }}</span>
                           <span class="font-medium text-slate-700 tabular-nums">{{ turno.servicio.precioBase | currencyArs }}</span>
                         </div>
@@ -122,12 +122,12 @@ import type { Turno, EstadoTurno } from '../../../../core/models/turno.model';
           <div>
             <div class="bg-emerald-50 p-2 rounded-lg text-center border-t-2 border-emerald-500 border border-emerald-200/60 mb-4">
               <p class="font-bold text-slate-900 text-xs">Uñas & Manicura</p>
-              <p class="text-[10px] text-emerald-600 font-medium">Camila — Especialista</p>
+              <p class="text-[10px] text-emerald-700 font-medium">Camila — Especialista</p>
             </div>
 
             @if (serviciosUnas().length === 0) {
               <div class="rounded-xl border border-dashed border-slate-200 bg-slate-50/50 p-6 text-center">
-                <p class="text-xs text-slate-400">Sin turnos de uñas hoy</p>
+                <p class="text-xs text-slate-500">Sin turnos de uñas hoy</p>
               </div>
             } @else {
               <div class="relative">
@@ -149,7 +149,7 @@ import type { Turno, EstadoTurno } from '../../../../core/models/turno.model';
 
                       <div class="w-14 sm:w-[52px] shrink-0 text-right pt-0.5">
                         <p class="text-xs font-semibold tabular-nums text-slate-900">{{ formatHora(turno.inicio) }}</p>
-                        <p class="text-[10px] text-slate-400 tabular-nums">{{ formatHora(turno.fin) }}</p>
+                        <p class="text-[10px] text-slate-500 tabular-nums">{{ formatHora(turno.fin) }}</p>
                       </div>
 
                       <div class="hidden sm:flex items-start pt-1.5">
@@ -175,10 +175,10 @@ import type { Turno, EstadoTurno } from '../../../../core/models/turno.model';
                                 [class]="cfg.bg + ' ' + cfg.text">
                             {{ cfg.label }}
                           </span>
-                          <span class="text-[10px] text-slate-400">{{ turno.profesional }}</span>
+                          <span class="text-[10px] text-slate-500">{{ turno.profesional }}</span>
                         </div>
                         <p class="font-bold text-slate-900 leading-tight">{{ turno.servicio.subtipo }}</p>
-                        <div class="flex flex-wrap items-center gap-x-2 gap-y-0 text-[11px] text-slate-500 mt-0.5">
+                        <div class="flex flex-wrap items-center gap-x-2 gap-y-0 text-[11px] text-slate-600 mt-0.5">
                           <span>👤 {{ turno.cliente.nombre }}</span>
                           <span class="font-medium text-slate-700 tabular-nums">{{ turno.servicio.precioBase | currencyArs }}</span>
                         </div>

@@ -16,7 +16,7 @@ import type { Turno } from '../../../../core/models/turno.model';
           </span>
           <h2 class="text-xs font-bold tracking-wider text-slate-700 uppercase">Atención en Curso y Próximos 60 Minutos</h2>
         </div>
-        <span class="text-xs text-slate-500 font-medium">
+        <span class="text-xs text-slate-600 font-medium">
           {{ turnosInminentes().length }} Turnos requiriendo atención prioritaria
         </span>
       </div>
@@ -52,27 +52,27 @@ import type { Turno } from '../../../../core/models/turno.model';
                   {{ formatRangoHorario(turno) }}
                 </span>
                 <h3 class="font-bold text-slate-900 text-base mt-0.5">{{ turno.cliente.nombre }}</h3>
-                <p class="text-xs text-slate-500">Tel: {{ turno.cliente.telefono }}</p>
+                <p class="text-xs text-slate-600">Tel: {{ turno.cliente.telefono }}</p>
               </div>
             </div>
 
             <!-- Detalles -->
             <div class="space-y-2 text-xs bg-slate-50 p-2.5 rounded-lg border border-slate-200/80 mb-3">
               <div class="flex justify-between">
-                <span class="text-slate-500">Servicio:</span>
+                <span class="text-slate-600">Servicio:</span>
                 <span class="text-slate-900 font-semibold">{{ turno.servicio.categoria }} - {{ turno.servicio.subtipo }}</span>
               </div>
               <div class="flex justify-between">
-                <span class="text-slate-500">Profesional:</span>
+                <span class="text-slate-600">Profesional:</span>
                 <span class="font-bold"
                       [class.text-pink-600]="turno.profesional === 'Sofía'"
-                      [class.text-emerald-600]="turno.profesional === 'Camila'">
+                      [class.text-emerald-700]="turno.profesional === 'Camila'">
                   {{ turno.profesional }}
                 </span>
               </div>
               <div class="flex justify-between">
-                <span class="text-slate-500">Precio:</span>
-                <span class="text-emerald-600 font-bold">{{ turno.servicio.precioBase | currencyArs }}</span>
+                <span class="text-slate-600">Precio:</span>
+                <span class="text-emerald-700 font-bold">{{ turno.servicio.precioBase | currencyArs }}</span>
               </div>
             </div>
 
@@ -85,13 +85,13 @@ import type { Turno } from '../../../../core/models/turno.model';
                 </button>
               } @else if (turno.estado === 'Confirmado') {
                 <button (click)="iniciarTurno(turno)"
-                        class="flex-1 bg-rose-600 hover:bg-rose-500 text-white py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1 transition shadow-md shadow-rose-100">
+                        class="flex-1 bg-rose-700 hover:bg-rose-800 text-white py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1 transition shadow-md shadow-rose-100">
                   ▶ Iniciar Atención
                 </button>
               } @else if (turno.estado === 'Pendiente') {
                 <button (click)="enviarRecordatorio(turno)"
                         [disabled]="!turno.cliente.telefono"
-                        class="flex-1 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 disabled:cursor-not-allowed text-white py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1 transition shadow-md shadow-emerald-100">
+                        class="flex-1 bg-emerald-700 hover:bg-emerald-800 disabled:opacity-40 disabled:cursor-not-allowed text-white py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1 transition shadow-md shadow-emerald-100">
                   📱 WhatsApp Recordatorio
                 </button>
               }
@@ -99,7 +99,7 @@ import type { Turno } from '../../../../core/models/turno.model';
           </div>
         } @empty {
           <div class="col-span-3 bg-white border border-slate-200 rounded-xl p-8 text-center shadow-sm">
-            <p class="text-slate-500 text-sm">No hay turnos inminentes en este momento.</p>
+            <p class="text-slate-600 text-sm">No hay turnos inminentes en este momento.</p>
           </div>
         }
       </div>

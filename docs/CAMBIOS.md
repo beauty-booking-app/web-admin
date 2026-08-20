@@ -1,5 +1,17 @@
 # Registro de cambios
 
+## WCAG · Ajuste de paleta de contraste (rama temporal `test/colores-wcag`) (2026-08-20)
+
+Aplicado de `colores.md` (Dark Neutral / Warm Elegance) para cumplir WCAG 2.1 AA (ratio ≥ 4.5:1):
+
+- **Fondo principal** del layout: `bg-slate-50` → `bg-slate-100` (#F1F5F9). Los contenedores siguen en blanco puro con borde `slate-200` (#E2E8F0).
+- **Texto secundario** — `text-slate-500` → `text-slate-600` (#475569, ratio > 6.5:1) y `text-slate-400` → `text-slate-500` (ratio ≥ 4.5:1) en descripciones, fechas e íconos.
+- **Primario / Acción** — botones y CTA "AGENDAR TURNO" de `rose-600` a `rose-700` (#BE185D) con hover `rose-800` (#9D174D).
+- **Éxito / Facturación** — cifras de caja y métricas de dinero de `emerald-600` a `emerald-700` (#047857); botones de acción en `emerald-700`/hover `emerald-800`.
+- **Sidebar** — enlaces inactivos en `slate-600` (#475569).
+
+Validado con `pnpm run build` (OK, solo warnings pre-existentes de jspdf) y `pnpm test` (3 files, 12 tests OK).
+
 ## Fix · Loading en modal de turno y guardado de horarios (2026-08-18)
 
 - El modal de alta de turno muestra un spinner mientras carga los servicios ("Cargando servicios…") antes de mostrar el select de categoría/servicio.

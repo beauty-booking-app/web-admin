@@ -21,7 +21,7 @@ import type { Servicio, CategoriaServicio } from '../../../core/models/servicio.
               {{ esEdicion() ? '✏️ Editar Servicio' : '✨ Nuevo Servicio' }}
             </h3>
             <button (click)="cerrar()"
-                    class="text-slate-400 hover:text-slate-600 transition p-1"
+                    class="text-slate-500 hover:text-slate-600 transition p-1"
                     aria-label="Cerrar modal">
               ✕
             </button>
@@ -71,7 +71,7 @@ import type { Servicio, CategoriaServicio } from '../../../core/models/servicio.
                 Cancelar
               </button>
               <button type="submit"
-                      class="bg-rose-600 hover:bg-rose-500 text-white font-semibold px-5 py-2 rounded-lg shadow-md shadow-rose-200 transition">
+                      class="bg-rose-700 hover:bg-rose-800 text-white font-semibold px-5 py-2 rounded-lg shadow-md shadow-rose-200 transition">
                 {{ esEdicion() ? 'Guardar Cambios' : 'Crear Servicio' }}
               </button>
             </div>

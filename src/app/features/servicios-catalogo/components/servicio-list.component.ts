@@ -21,10 +21,10 @@ const ICONOS_CATEGORIA: Record<CategoriaServicio, string> = {
       <div class="flex items-center justify-between">
         <div>
           <h2 class="text-lg font-bold text-slate-900">Servicios y Precios</h2>
-          <p class="text-xs text-slate-500 mt-1">{{ serviciosService.totalServicios() }} servicios en {{ categorias().length }} categorías</p>
+          <p class="text-xs text-slate-600 mt-1">{{ serviciosService.totalServicios() }} servicios en {{ categorias().length }} categorías</p>
         </div>
         <button (click)="modal.abrirNueva()"
-                class="bg-rose-600 hover:bg-rose-500 text-white font-semibold px-4 py-2 rounded-lg text-xs shadow-md shadow-rose-200 transition flex items-center gap-2"
+                class="bg-rose-700 hover:bg-rose-800 text-white font-semibold px-4 py-2 rounded-lg text-xs shadow-md shadow-rose-200 transition flex items-center gap-2"
                 aria-label="Crear nuevo servicio">
           <span class="text-base leading-none">+</span>
           Nuevo Servicio
@@ -43,7 +43,7 @@ const ICONOS_CATEGORIA: Record<CategoriaServicio, string> = {
           <app-loading texto="Cargando servicios…" />
         </div>
       } @else if (serviciosService.totalServicios() === 0 && !serviciosService.error()) {
-        <div class="bg-white border border-slate-200 rounded-xl p-10 text-center text-sm text-slate-500 shadow-sm">
+        <div class="bg-white border border-slate-200 rounded-xl p-10 text-center text-sm text-slate-600 shadow-sm">
           No hay servicios cargados.
         </div>
       } @else {
@@ -68,14 +68,14 @@ const ICONOS_CATEGORIA: Record<CategoriaServicio, string> = {
                 <div class="px-5 py-3 flex items-center justify-between hover:bg-slate-50/50 transition group">
                   <div class="flex-1 min-w-0">
                     <p class="text-xs font-semibold text-slate-900 truncate">{{ srv.subtipo }}</p>
-                    <p class="text-[11px] text-slate-500 mt-0.5">{{ srv.duracionMinutos }} min</p>
+                    <p class="text-[11px] text-slate-600 mt-0.5">{{ srv.duracionMinutos }} min</p>
                   </div>
                   <div class="flex items-center gap-3 ml-4">
                     <span class="text-xs font-bold text-slate-900 whitespace-nowrap">
                       {{ srv.precioBase | currencyArs }}
                     </span>
                     <button (click)="modal.abrirEdicion(srv)"
-                            class="opacity-0 group-hover:opacity-100 text-slate-400 hover:text-rose-600 transition p-1"
+                            class="opacity-0 group-hover:opacity-100 text-slate-500 hover:text-rose-600 transition p-1"
                             [attr.aria-label]="'Editar ' + srv.subtipo">
                       ✏️
                     </button>

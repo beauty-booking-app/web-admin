@@ -18,13 +18,13 @@ import { CurrencyArsPipe } from '../../shared/pipes/currency-ars.pipe';
         </div>
         <div>
           <h1 class="font-bold text-slate-900 text-sm tracking-wide">VELVET &amp; GLOW</h1>
-          <p class="text-[11px] text-slate-500 font-medium">Gestión Operativa</p>
+          <p class="text-[11px] text-slate-600 font-medium">Gestión Operativa</p>
         </div>
       </div>
 
       <!-- Navigation -->
       <nav class="flex-1 p-3 space-y-1 overflow-y-auto" role="navigation" aria-label="Menú principal">
-        <div class="px-3 py-2 text-[10px] font-bold tracking-wider text-slate-400 uppercase">Principal</div>
+        <div class="px-3 py-2 text-[10px] font-bold tracking-wider text-slate-500 uppercase">Principal</div>
 
         <a routerLink="/" routerLinkActive="active-nav" [routerLinkActiveOptions]="{ exact: true }"
            class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold transition-all"
@@ -41,7 +41,7 @@ import { CurrencyArsPipe } from '../../shared/pipes/currency-ars.pipe';
         <a routerLink="/calendario" routerLinkActive="active-nav"
            class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all"
            aria-label="Calendario por semana y mes">
-          <span class="w-4 h-4 text-slate-500">🗓️</span>
+          <span class="w-4 h-4 text-slate-600">🗓️</span>
           <span>Calendario</span>
         </a>
 
@@ -49,17 +49,17 @@ import { CurrencyArsPipe } from '../../shared/pipes/currency-ars.pipe';
            class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all"
            aria-label="Servicios y precios">
           <div class="flex items-center gap-2.5">
-            <span class="w-4 h-4 text-slate-500">✨</span>
+            <span class="w-4 h-4 text-slate-600">✨</span>
             <span>Servicios y Precios</span>
           </div>
-          <span class="text-[10px] text-slate-400 font-medium">{{ serviciosService.totalServicios() }} tipos</span>
+          <span class="text-[10px] text-slate-500 font-medium">{{ serviciosService.totalServicios() }} tipos</span>
         </a>
 
         <a routerLink="/recordatorios" routerLinkActive="active-nav"
            class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all"
            aria-label="Recordatorios por WhatsApp">
           <div class="flex items-center gap-2.5">
-            <span class="w-4 h-4 text-slate-500">📱</span>
+            <span class="w-4 h-4 text-slate-600">📱</span>
             <span>Recordatorios</span>
           </div>
           @if (cantidadPendientes() > 0) {
@@ -72,14 +72,14 @@ import { CurrencyArsPipe } from '../../shared/pipes/currency-ars.pipe';
         <a routerLink="/analytics" routerLinkActive="active-nav"
            class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all"
            aria-label="Dashboard de analytics">
-          <span class="w-4 h-4 text-slate-500">📊</span>
+          <span class="w-4 h-4 text-slate-600">📊</span>
           <span>Analytics</span>
         </a>
 
         <a routerLink="/configuracion" routerLinkActive="active-nav"
            class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all"
            aria-label="Horarios y ausencias">
-          <span class="w-4 h-4 text-slate-500">🕐</span>
+          <span class="w-4 h-4 text-slate-600">🕐</span>
            <span>Horarios y Ausencias</span>
         </a>
       </nav>
@@ -89,10 +89,10 @@ import { CurrencyArsPipe } from '../../shared/pipes/currency-ars.pipe';
         <!-- Facturación estimada hoy -->
         <div class="p-3 bg-emerald-50 flex items-center justify-between gap-2">
           <div class="min-w-0">
-            <p class="text-[10px] font-semibold text-slate-500 uppercase tracking-wide">Facturación Estimada Hoy</p>
+            <p class="text-[10px] font-semibold text-slate-600 uppercase tracking-wide">Facturación Estimada Hoy</p>
             <p class="text-base font-bold text-emerald-700 mt-0.5 truncate">{{ turnosState.metricas().facturacion | currencyArs }}</p>
           </div>
-          <div class="w-9 h-9 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-sm shrink-0" aria-hidden="true">$</div>
+          <div class="w-9 h-9 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center text-sm shrink-0" aria-hidden="true">$</div>
         </div>
 
         <!-- Status footer -->
@@ -106,7 +106,7 @@ import { CurrencyArsPipe } from '../../shared/pipes/currency-ars.pipe';
         <div class="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
           <div class="bg-gradient-to-r from-rose-500 to-emerald-500 h-full" [style.width.%]="porcentajeOcupacion"></div>
         </div>
-        <div class="flex justify-between text-[10px] text-slate-500 font-medium mt-1">
+        <div class="flex justify-between text-[10px] text-slate-600 font-medium mt-1">
           <span>Ocupación hoy: {{ porcentajeOcupacion }}%</span>
           <span>{{ turnosState.metricas().totalTurnos }} turnos</span>
         </div>

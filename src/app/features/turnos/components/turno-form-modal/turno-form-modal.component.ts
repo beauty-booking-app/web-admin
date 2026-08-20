@@ -24,7 +24,7 @@ import { LoadingComponent } from '../../../../shared/components/loading/loading.
               📅 Agendar Nuevo Turno
             </h3>
             <button (click)="cerrar()"
-                    class="text-slate-400 hover:text-slate-600 transition p-1"
+                    class="text-slate-500 hover:text-slate-600 transition p-1"
                     aria-label="Cerrar modal">
               ✕
             </button>
@@ -104,7 +104,7 @@ import { LoadingComponent } from '../../../../shared/components/loading/loading.
                 Cancelar
               </button>
               <button type="submit"
-                      class="bg-rose-600 hover:bg-rose-500 text-white font-semibold px-5 py-2 rounded-lg shadow-md shadow-rose-200 transition">
+                      class="bg-rose-700 hover:bg-rose-800 text-white font-semibold px-5 py-2 rounded-lg shadow-md shadow-rose-200 transition">
                 Confirmar Agendamiento
               </button>
             </div>

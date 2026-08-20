@@ -28,7 +28,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
                     [class.bg-white]="calendario.vista() === 'semana'"
                     [class.shadow-sm]="calendario.vista() === 'semana'"
                     [class.text-rose-600]="calendario.vista() === 'semana'"
-                    [class.text-slate-500]="calendario.vista() !== 'semana'"
+                    [class.text-slate-600]="calendario.vista() !== 'semana'"
                     aria-label="Ver por semana">
               Semana
             </button>
@@ -37,7 +37,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
                     [class.bg-white]="calendario.vista() === 'mes'"
                     [class.shadow-sm]="calendario.vista() === 'mes'"
                     [class.text-rose-600]="calendario.vista() === 'mes'"
-                    [class.text-slate-500]="calendario.vista() !== 'mes'"
+                    [class.text-slate-600]="calendario.vista() !== 'mes'"
                     aria-label="Ver por mes">
               Mes
             </button>
@@ -81,7 +81,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
                   <button (click)="irAlDia(dia)"
                           class="px-2 py-2 text-center border-b border-slate-100 hover:bg-slate-50 transition"
                           [attr.aria-label]="'Ir a la agenda del día ' + diaCorto(dia)">
-                    <span class="block text-[10px] uppercase tracking-wide font-bold text-slate-400">{{ diaCorto(dia) }}</span>
+                    <span class="block text-[10px] uppercase tracking-wide font-bold text-slate-500">{{ diaCorto(dia) }}</span>
                     <span class="block text-sm font-bold text-slate-800"
                           [class.text-rose-600]="esHoy(dia)">{{ dia.getDate() }}</span>
                   </button>
@@ -94,9 +94,9 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
                         <button (click)="irAlDia(dia)"
                                 class="w-full text-left rounded-lg border border-slate-200 bg-white px-2 py-1.5 transition hover:border-rose-300"
                                 [attr.aria-label]="turno.cliente.nombre + ', ' + turno.servicio.subtipo + ', ' + cfg.label">
-                          <span class="block text-[10px] font-semibold tabular-nums text-slate-500">{{ formatHora(turno.inicio) }}</span>
+                          <span class="block text-[10px] font-semibold tabular-nums text-slate-600">{{ formatHora(turno.inicio) }}</span>
                           <span class="block text-[11px] font-bold text-slate-800 truncate">{{ turno.cliente.nombre }}</span>
-                          <span class="block text-[10px] text-slate-500 truncate">{{ turno.servicio.subtipo }}</span>
+                          <span class="block text-[10px] text-slate-600 truncate">{{ turno.servicio.subtipo }}</span>
                           <span class="inline-block mt-1 text-[9px] px-1 py-0.5 rounded font-semibold"
                                 [class]="cfg.bg + ' ' + cfg.text">{{ cfg.label }}</span>
                         </button>
@@ -112,7 +112,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
                    aria-label="Calendario mensual">
             <div class="grid grid-cols-7 border-b border-slate-100">
               @for (d of nombresDias; track d) {
-                <div class="px-2 py-2 text-center text-[10px] uppercase tracking-wide font-bold text-slate-400">{{ d }}</div>
+                <div class="px-2 py-2 text-center text-[10px] uppercase tracking-wide font-bold text-slate-500">{{ d }}</div>
               }
             </div>
             <div class="grid grid-cols-7">
@@ -134,7 +134,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
                       </span>
                     }
                     @if (lista.length > 3) {
-                      <span class="text-[9px] font-semibold text-slate-400 px-1">+{{ lista.length - 3 }} más</span>
+                      <span class="text-[9px] font-semibold text-slate-500 px-1">+{{ lista.length - 3 }} más</span>
                     }
                   </button>
                 } @else {
