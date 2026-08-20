@@ -12,7 +12,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
   selector: 'app-calendario-page',
   imports: [LoadingComponent],
   template: `
-    <div class="flex-1 overflow-y-auto pt-24 p-6">
+    <div class="flex-1 min-h-0 overflow-y-auto pt-24 pb-8 p-6">
       <!-- Encabezado -->
       <header class="flex flex-wrap items-center justify-between gap-4 mb-4">
         <div class="flex items-center gap-3">
@@ -119,12 +119,21 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
               @for (celda of celdasMes(); track $index) {
                 @if (celda) {
                   @let lista = turnosDe(celda);
+                  @let seleccionado = esHoy(celda);
                   <button (click)="irAlDia(celda)"
-                          class="min-h-32 p-1.5 border border-slate-100 text-left align-top transition hover:bg-rose-50/40 flex flex-col gap-1"
-                          [class.bg-rose-50/40]="esHoy(celda)"
-                          [attr.aria-label]="'Ir a la agenda del día ' + formatearFecha(celda)">
-                    <span class="text-xs font-bold text-slate-600"
-                          [class.text-rose-600]="esHoy(celda)">{{ celda.getDate() }}</span>
+                          class="min-h-32 p-1.5 border text-left align-top transition flex flex-col gap-1"
+                          [class.border-slate-100]="!seleccionado"
+                          [class.bg-rose-50/40]="!seleccionado"
+                          [class.ring-2]="seleccionado"
+                          [class.ring-rose-600]="seleccionado"
+                          [class.border-rose-600]="seleccionado"
+                          [class.bg-rose-50]="seleccionado"
+                          [class.hover:bg-rose-100]="seleccionado"
+                          [attr.aria-label]="'Ir a la agenda del día ' + formatearFecha(celda) + (seleccionado ? ' (hoy)' : '')">
+                    <span class="inline-flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold"
+                          [class.text-slate-600]="!seleccionado"
+                          [class.bg-rose-600]="seleccionado"
+                          [class.text-white]="seleccionado">{{ celda.getDate() }}</span>
                     @for (turno of lista.slice(0, 3); track turno.id) {
                       @let cfg = statusConfig(turno.estado);
                       <span class="truncate rounded px-1 py-0.5 text-[9px] leading-tight font-medium"

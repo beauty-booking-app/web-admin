@@ -1,5 +1,10 @@
 # Registro de cambios
 
+## Fix · Calendario mensual: día seleccionado visible y scroll (2026-08-20)
+
+- **Día actual/seleccionado destacado** — en la vista mensual, el día de hoy ahora se marca con `ring-2 ring-rose-600`, borde `rose-600` y fondo `rose-50`, y el número del día se pinta como un círculo `rose-600` con texto blanco (antes era un simple `bg-rose-50/40` imperceptible).
+- **Scroll del calendario** — se agregó `min-h-0` al contenedor (`flex-1 overflow-y-auto`) y `pb-8` para que la última fila de la grilla no quede cortada y el contenedor scrollee correctamente (el `min-height: auto` del flex impedía el scroll).
+
 ## WCAG · Ajuste de paleta de contraste (rama temporal `test/colores-wcag`) (2026-08-20)
 
 Aplicado de `colores.md` (Dark Neutral / Warm Elegance) para cumplir WCAG 2.1 AA (ratio ≥ 4.5:1):
