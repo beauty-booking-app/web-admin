@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import {
   CalendarioService,
   lunesDe,
@@ -119,21 +119,18 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
               @for (celda of celdasMes(); track $index) {
                 @if (celda) {
                   @let lista = turnosDe(celda);
-                  @let seleccionado = esHoy(celda);
-                  <button (click)="irAlDia(celda)"
-                          class="min-h-32 p-1.5 border text-left align-top transition flex flex-col gap-1"
-                          [class.border-slate-100]="!seleccionado"
-                          [class.bg-rose-50/40]="!seleccionado"
-                          [class.ring-2]="seleccionado"
-                          [class.ring-rose-600]="seleccionado"
-                          [class.border-rose-600]="seleccionado"
-                          [class.bg-rose-50]="seleccionado"
-                          [class.hover:bg-rose-100]="seleccionado"
-                          [attr.aria-label]="'Ir a la agenda del día ' + formatearFecha(celda) + (seleccionado ? ' (hoy)' : '')">
+                  @let hoy = esHoy(celda);
+                  <button (click)="abrirModalDia(celda)"
+                          class="relative min-h-32 p-1.5 border border-slate-100 text-left align-top transition flex flex-col gap-1 hover:bg-slate-50"
+                          [class.ring-2]="hoy"
+                          [class.ring-rose-600]="hoy"
+                          [class.border-rose-600]="hoy"
+                          [class.bg-rose-50]="hoy"
+                          [attr.aria-label]="'Ver turnos del día ' + formatearFecha(celda) + (hoy ? ' (hoy)' : '')">
                     <span class="inline-flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold"
-                          [class.text-slate-600]="!seleccionado"
-                          [class.bg-rose-600]="seleccionado"
-                          [class.text-white]="seleccionado">{{ celda.getDate() }}</span>
+                          [class.text-slate-600]="!hoy"
+                          [class.bg-rose-600]="hoy"
+                          [class.text-white]="hoy">{{ celda.getDate() }}</span>
                     @for (turno of lista.slice(0, 3); track turno.id) {
                       @let cfg = statusConfig(turno.estado);
                       <span class="truncate rounded px-1 py-0.5 text-[9px] leading-tight font-medium"
@@ -147,7 +144,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
                     }
                   </button>
                 } @else {
-                  <div class="min-h-32 bg-slate-50/60 border border-slate-100"></div>
+                  <div class="min-h-32 border border-slate-100"></div>
                 }
               }
             </div>
@@ -155,10 +152,60 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
         }
       }
     </div>
+
+    @if (diaModal(); as dia) {
+      <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+           (click)="cerrarModal()" role="dialog" aria-modal="true"
+           [attr.aria-label]="'Turnos del día ' + formatearFecha(dia)">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-lg flex flex-col max-h-[80vh]"
+             (click)="$event.stopPropagation()">
+          <header class="flex items-center justify-between px-5 py-4 border-b border-slate-200">
+            <div>
+              <h2 class="text-lg font-bold text-slate-900">Turnos del día</h2>
+              <p class="text-sm text-slate-600">{{ formatearFecha(dia) }}</p>
+            </div>
+            <button (click)="cerrarModal()"
+                    class="p-2 rounded-lg hover:bg-slate-100 text-slate-600 text-xl leading-none"
+                    aria-label="Cerrar">✕</button>
+          </header>
+
+          <div class="flex-1 overflow-y-auto px-5 py-4 space-y-2">
+            @if (turnosDe(dia).length === 0) {
+              <p class="text-sm text-slate-600">No hay turnos este día.</p>
+            } @else {
+              @for (turno of turnosDe(dia); track turno.id) {
+                @let cfg = statusConfig(turno.estado);
+                <div class="flex items-center gap-3 rounded-lg border border-slate-200 p-3">
+                  <div class="w-16 shrink-0">
+                    <p class="text-sm font-bold text-slate-900 tabular-nums">{{ formatHora(turno.inicio) }}</p>
+                    <p class="text-xs text-slate-600 tabular-nums">{{ formatHora(turno.fin) }}</p>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <p class="text-sm font-bold text-slate-900 truncate">{{ turno.cliente.nombre }}</p>
+                    <p class="text-xs text-slate-600 truncate">{{ turno.servicio.categoria }} · {{ turno.servicio.subtipo }}</p>
+                    <p class="text-xs text-slate-600">{{ turno.profesional }}</p>
+                  </div>
+                  <span class="shrink-0 inline-block text-[10px] px-2 py-1 rounded font-semibold"
+                        [class]="cfg.bg + ' ' + cfg.text">{{ cfg.label }}</span>
+                </div>
+              }
+            }
+          </div>
+
+          <footer class="px-5 py-3 border-t border-slate-200 flex justify-end">
+            <button (click)="cerrarModal()"
+                    class="px-4 py-2 rounded-lg text-sm font-semibold text-slate-700 bg-white border border-slate-300 hover:bg-slate-100 transition">
+              Cerrar
+            </button>
+          </footer>
+        </div>
+      </div>
+    }
   `,
 })
 export class CalendarioPageComponent implements OnInit {
   protected readonly calendario = inject(CalendarioService);
+  protected readonly diaModal = signal<Date | null>(null);
 
   protected readonly nombresDias = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
 
@@ -172,6 +219,14 @@ export class CalendarioPageComponent implements OnInit {
 
   protected irAlDia(fecha: Date): void {
     void this.calendario.irAlDia(fecha);
+  }
+
+  protected abrirModalDia(fecha: Date): void {
+    this.diaModal.set(fecha);
+  }
+
+  protected cerrarModal(): void {
+    this.diaModal.set(null);
   }
 
   protected diasSemana(): Date[] {

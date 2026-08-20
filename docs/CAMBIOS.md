@@ -1,5 +1,10 @@
 # Registro de cambios
 
+## Fix · Calendario mensual: fondo de días y modal de turnos del día (2026-08-20)
+
+- **Fondo solo en el día actual** — se quitó el fondo (`bg-rose-50/40`) que se aplicaba a todos los días del mes y a las celdas vacías; ahora el resto de los días quedan sin fondo (solo borde sutil) y únicamente el día de hoy mantiene el resaltado (`ring-2 ring-rose-600` + `bg-rose-50` + círculo `rose-600`).
+- **Modal de turnos del día** — al hacer clic en un día del calendario mensual ya no navega a la agenda: abre un modal con la lista de turnos de ese día (hora inicio/fin, cliente, servicio, profesional y estado). Cierra con el botón ✕, el botón "Cerrar" o haciendo clic fuera del modal.
+
 ## Fix · Calendario mensual: día seleccionado visible y scroll (2026-08-20)
 
 - **Día actual/seleccionado destacado** — en la vista mensual, el día de hoy ahora se marca con `ring-2 ring-rose-600`, borde `rose-600` y fondo `rose-50`, y el número del día se pinta como un círculo `rose-600` con texto blanco (antes era un simple `bg-rose-50/40` imperceptible).
