@@ -1,4 +1,4 @@
-# Arquitectura — GlowControl Admin
+# Arquitectura — TammiControl Admin
 
 ## Estructura del proyecto
 

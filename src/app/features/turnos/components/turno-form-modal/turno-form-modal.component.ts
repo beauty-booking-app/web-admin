@@ -1,5 +1,7 @@
 import { Component, computed, inject, signal, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { hugeCalendar01, hugeCancel01 } from '@ng-icons/huge-icons';
 import { TurnosStateService } from '../../services/turnos-state.service';
 import type { Turno } from '../../../../core/models/turno.model';
 import { CurrencyArsPipe } from '../../../../shared/pipes/currency-ars.pipe';
@@ -8,7 +10,8 @@ import { LoadingComponent } from '../../../../shared/components/loading/loading.
 
 @Component({
   selector: 'app-turno-form-modal',
-  imports: [FormsModule, CurrencyArsPipe, LoadingComponent],
+  imports: [FormsModule, CurrencyArsPipe, LoadingComponent, NgIcon],
+  providers: [provideIcons({ hugeCalendar01, hugeCancel01 })],
   template: `
     @if (visible()) {
       <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4"
@@ -21,12 +24,13 @@ import { LoadingComponent } from '../../../../shared/components/loading/loading.
 
           <div class="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
             <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
-              📅 Agendar Nuevo Turno
+              <ng-icon name="hugeCalendar01" size="16" class="shrink-0" />
+              Agendar Nuevo Turno
             </h3>
             <button (click)="cerrar()"
-                    class="text-slate-500 hover:text-slate-600 transition p-1"
+                    class="cursor-pointer text-slate-500 hover:text-slate-600 transition p-1"
                     aria-label="Cerrar modal">
-              ✕
+              <ng-icon name="hugeCancel01" size="14" />
             </button>
           </div>
 
@@ -39,7 +43,7 @@ import { LoadingComponent } from '../../../../shared/components/loading/loading.
                      class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 focus:outline-none transition">
             </div>
 
-            <div class="grid grid-cols-2 gap-3">
+  
               <div>
                 <label class="block text-slate-700 font-medium mb-1" for="cliente-telefono">Teléfono / WhatsApp</label>
                 <input id="cliente-telefono" type="tel" required
@@ -47,16 +51,8 @@ import { LoadingComponent } from '../../../../shared/components/loading/loading.
                        placeholder="+54 9 351 ..."
                        class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 focus:outline-none transition">
               </div>
-              <div>
-                <label class="block text-slate-700 font-medium mb-1" for="profesional-select">Profesional Asignado</label>
-                <select id="profesional-select"
-                        [(ngModel)]="profesionalSeleccionado" name="profesional"
-                        class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 focus:outline-none transition">
-                  <option value="Sofía">Sofía (Peluquería Integral)</option>
-                  <option value="Camila">Camila (Manicura y Uñas)</option>
-                </select>
-              </div>
-            </div>
+
+           
 
       @if (serviciosService.cargando()) {
         <div class="rounded-lg border border-slate-200 p-4 bg-white">
@@ -100,12 +96,12 @@ import { LoadingComponent } from '../../../../shared/components/loading/loading.
 
             <div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-2">
               <button type="button" (click)="cerrar()"
-                      class="px-4 py-2 rounded-lg text-slate-600 hover:bg-slate-100 font-medium transition">
+                      class="cursor-pointer px-4 py-2 rounded-lg text-slate-600 hover:bg-slate-100 font-medium transition">
                 Cancelar
               </button>
               <button type="submit"
-                      class="bg-rose-700 hover:bg-rose-800 text-white font-semibold px-5 py-2 rounded-lg shadow-md shadow-rose-200 transition">
-                Confirmar Agendamiento
+                      class="cursor-pointer bg-rose-700 hover:bg-rose-400 text-white font-semibold px-5 py-2 rounded-lg shadow-md shadow-rose-200 transition">
+                Confirmar turno
               </button>
             </div>
           </form>

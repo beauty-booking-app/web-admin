@@ -1,5 +1,41 @@
 # Registro de cambios
 
+## Refactor · Reemplazo de emojis por iconos `@ng-icons` (2026-08-21)
+
+Se reemplazaron todos los emojis de la UI por iconos SVG vía `<ng-icon name="..." />` (`@ng-icons/core` v35). Prioridad de packs: **huge** primero, **heroicons** segundo, **mynaui** tercero (solo si no existe equivalente en los anteriores).
+
+| Emoji | Icono | Pack |
+|---|---|---|
+| ✂️ | `hugeScissor` | huge |
+| 📅 | `hugeCalendar01` | huge |
+| 🗓️ | `hugeCalendar03` | huge |
+| ✨ | `hugeSparkles` | huge |
+| 📱 | `hugeSmartPhone01` | huge |
+| 📊 | `hugeChartColumn` | huge |
+| 🕐 | `hugeClock02` | huge |
+| 💆 | `hugeHairDryer` | huge |
+| 🎨 | `hugeColors` | huge |
+| 📋 | `hugeClipboard` | huge |
+| ✏️ | `hugeEdit02` | huge |
+| 📁 | `hugeFolder01` | huge |
+| ✕ | `hugeCancel01` | huge |
+| ✅ | `hugeCheckmarkCircle01` | huge |
+| 🖨️ | `hugePrinter` | huge |
+| 👤 | `hugeUser` | huge |
+| 🗑 | `hugeDelete02` | huge |
+| ↻ | `hugeRotateClockwise` | huge |
+| ▶ | `hugePlay` | huge |
+| ✓ | `heroCheck` | heroicons/outline |
+| 💅 | `mynaHand` | mynaui/outline |
+
+Notas:
+- Cada componente que usa iconos importa `NgIcon` + `provideIcons({...})` con solo los iconos que usa (tree-shaking por lazy chunk).
+- `ICONOS_CATEGORIA` en `servicio-list` ahora mapea categoría → nombre de icono (fallback `hugeClipboard`) y se renderiza con `[name]`.
+- Los packs heroicons/mynaui exponen subpath exports por variante: usar `@ng-icons/heroicons/outline` y `@ng-icons/mynaui/outline` (la entrada raíz no incluye todos los iconos).
+- Tamaños via input `size="14"` etc. (coerce a px); el color hereda `currentColor`.
+
+Archivos tocados: `sidebar`, `login-page`, `horarios-page`, `calendario-page`, `recordatorios-page`, `servicio-list`, `categoria-form-modal`, `servicio-form-modal`, `turno-form-modal`, `turno-detalle-modal`, `header-bar`, `timeline`, `hero-turnos`.
+
 ## Feature · Modal de detalle / gestión de turno (2026-08-20)
 
 Nuevo `TurnoDetalleModalComponent`: al hacer clic en un turno de la agenda del día (timeline) o en un turno del modal del calendario se abre un modal con los datos del turno (cliente, servicio, profesional, horario, precio, estado) y acciones:

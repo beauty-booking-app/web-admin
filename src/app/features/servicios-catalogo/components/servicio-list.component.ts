@@ -1,4 +1,13 @@
 import { Component, inject, ViewChild, OnInit } from '@angular/core';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import {
+  hugeClipboard,
+  hugeColors,
+  hugeEdit02,
+  hugeHairDryer,
+  hugeScissor,
+} from '@ng-icons/huge-icons';
+import { mynaHand } from '@ng-icons/mynaui/outline';
 import { ServiciosService } from '../services/servicios.service';
 import { ServicioFormModalComponent } from './servicio-form-modal.component';
 import { CategoriaFormModalComponent } from './categoria-form-modal.component';
@@ -7,15 +16,16 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
 import type { Servicio } from '../../../core/models/servicio.model';
 
 const ICONOS_CATEGORIA: Record<string, string> = {
-  'CORTE UNISEX': '✂️',
-  'TRATAMIENTOS CAPILARES': '💆',
-  'COLOR': '🎨',
-  'UÑAS': '💅',
+  'CORTE UNISEX': 'hugeScissor',
+  'TRATAMIENTOS CAPILARES': 'hugeHairDryer',
+  'COLOR': 'hugeColors',
+  'UÑAS': 'mynaHand',
 };
 
 @Component({
   selector: 'app-servicio-list',
-  imports: [CurrencyArsPipe, ServicioFormModalComponent, CategoriaFormModalComponent, LoadingComponent],
+  imports: [CurrencyArsPipe, ServicioFormModalComponent, CategoriaFormModalComponent, LoadingComponent, NgIcon],
+  providers: [provideIcons({ hugeClipboard, hugeColors, hugeEdit02, hugeHairDryer, hugeScissor, mynaHand })],
   template: `
     <div class="p-6 space-y-6">
       <!-- Header -->
@@ -55,7 +65,7 @@ const ICONOS_CATEGORIA: Record<string, string> = {
             <!-- Header de categoría -->
             <div class="px-5 py-3.5 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
               <div class="flex items-center gap-2.5">
-                <span class="text-base">{{ icono(grupo.categoria) }}</span>
+                <ng-icon [name]="icono(grupo.categoria)" size="18" class="text-slate-700 shrink-0" />
                 <h3 class="font-bold text-slate-900 text-xs tracking-wide">{{ grupo.categoria }}</h3>
               </div>
               <button (click)="modal.abrirNueva(grupo.categoria)"
@@ -81,7 +91,7 @@ const ICONOS_CATEGORIA: Record<string, string> = {
                     <button (click)="modal.abrirEdicion(srv)"
                             class="opacity-0 group-hover:opacity-100 text-slate-500 hover:text-rose-600 transition p-1"
                             [attr.aria-label]="'Editar ' + srv.subtipo">
-                      ✏️
+                      <ng-icon name="hugeEdit02" size="14" />
                     </button>
                   </div>
                 </div>
@@ -109,6 +119,6 @@ export class ServicioListComponent implements OnInit {
   }
 
   protected icono(categoria: string): string {
-    return ICONOS_CATEGORIA[categoria] ?? '📋';
+    return ICONOS_CATEGORIA[categoria] ?? 'hugeClipboard';
   }
 }

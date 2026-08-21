@@ -9,7 +9,7 @@ export function construirMensajeRecordatorio(turno: Turno): string {
   return (
     `Hola ${turno.cliente.nombre}, te recordamos tu turno de ` +
     `${turno.servicio.subtipo} (${turno.servicio.categoria}) hoy a las ${hora}. ` +
-    `¡Te esperamos! - Velvet & Glow`
+    `¡Te esperamos! - Tammi`
   );
 }
 

@@ -5,9 +5,9 @@ import { API_URL } from './environment';
 import type { AuthResponse, User } from './backend.models';
 
 const STORAGE_KEYS = {
-  accessToken: 'glow_access_token',
-  refreshToken: 'glow_refresh_token',
-  usuario: 'glow_usuario',
+  accessToken: 'tam_access_token',
+  refreshToken: 'tam_refresh_token',
+  usuario: 'tam_usuario',
 } as const;
 
 function leerUsuarioGuardado(): User | null {

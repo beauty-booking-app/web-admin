@@ -73,7 +73,7 @@ export class AgendaPdfService {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(16);
     doc.setTextColor(...NEGRO);
-    doc.text('VELVET & GLOW', margen, 16);
+    doc.text('Tammi', margen, 16);
 
     const fecha = turnos.length > 0 ? this.fechaCompleta(turnos[0].inicio) : this.fechaCompleta(new Date());
     doc.setFont('helvetica', 'normal');

@@ -10,7 +10,7 @@ Generar el PDF en el cliente con **jsPDF** (aprobado por el usuario, única depe
 2. **Servicio `AgendaPdfService`** (`src/app/features/turnos/services/agenda-pdf.service.ts`)
    - Método `exportarDia(turnos: Turno[])` que:
      1. Crea el documento con orientación vertical y medidas A4.
-     2. Escribe la cabecera: "VELVET & GLOW", fecha completa del día (o de `turnos[0].inicio`), subtítulo "Agenda del día".
+     2. Escribe la cabecera: "Tammi", fecha completa del día (o de `turnos[0].inicio`), subtítulo "Agenda del día".
      3. Agrupa los turnos por profesional y dibuja secciones con título.
      4. Por cada turno: fila con hora ini-fin, cliente, servicio (categoría - subtipo), estado, precio (`currencyArs`) y teléfono.
      5. Si no hay turnos: escribe mensaje "Sin turnos para el día".

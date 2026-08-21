@@ -1,4 +1,6 @@
 import { Component, inject, output } from '@angular/core';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { hugeUser } from '@ng-icons/huge-icons';
 import { TurnosStateService } from '../../services/turnos-state.service';
 import { CurrencyArsPipe } from '../../../../shared/pipes/currency-ars.pipe';
 import { STATUS_CONFIG, CATEGORY_CONFIG, type EstadoConfig } from '../status-config';
@@ -6,18 +8,19 @@ import type { Turno, EstadoTurno } from '../../../../core/models/turno.model';
 
 @Component({
   selector: 'app-timeline',
-  imports: [CurrencyArsPipe],
+  imports: [CurrencyArsPipe, NgIcon],
+  providers: [provideIcons({ hugeUser })],
   template: `
     <section class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5 pb-4 border-b border-slate-100">
         <div>
-          <h2 class="text-base font-bold text-amber-900">Agenda del Día</h2>
+          <h2 class="text-base font-bold text-slate-900">Agenda del Día</h2>
         </div>
       </div>
 
       @if (turnosOrdenados().length === 0) {
         <div class="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-10 text-center">
-          <p class="text-sm text-slate-600">La agenda del día está vacía.</p>
+          <p class="text-sm text-amber-600">La agenda del día está vacía.</p>
         </div>
       } @else {
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
@@ -25,7 +28,7 @@ import type { Turno, EstadoTurno } from '../../../../core/models/turno.model';
           <!-- Columna: Servicios Generales -->
           <div>
             <div class="bg-amber-100 p-2 rounded-lg text-center mb-4">
-              <p class="font-bold text-purple-900">Peluquería</p>
+              <p class="font-bold text-amber-900">Peluquería</p>
             </div>
 
             @if (serviciosGenerales().length === 0) {
@@ -85,7 +88,7 @@ import type { Turno, EstadoTurno } from '../../../../core/models/turno.model';
                         </div>
                         <p class="font-bold text-slate-900 leading-tight">{{ turno.servicio.subtipo }}</p>
                         <div class="flex flex-wrap items-center gap-x-2 gap-y-0 text-[11px] text-slate-600 mt-0.5">
-                          <span>👤 {{ turno.cliente.nombre }}</span>
+                          <span class="inline-flex items-center gap-1"><ng-icon name="hugeUser" size="12" class="shrink-0" /> {{ turno.cliente.nombre }}</span>
                           <span class="font-medium text-slate-700 tabular-nums">{{ turno.servicio.precioBase | currencyArs }}</span>
                         </div>
                       </div>
@@ -182,7 +185,7 @@ import type { Turno, EstadoTurno } from '../../../../core/models/turno.model';
                         </div>
                         <p class="font-bold text-slate-900 leading-tight">{{ turno.servicio.subtipo }}</p>
                         <div class="flex flex-wrap items-center gap-x-2 gap-y-0 text-[11px] text-slate-600 mt-0.5">
-                          <span>👤 {{ turno.cliente.nombre }}</span>
+                          <span class="inline-flex items-center gap-1"><ng-icon name="hugeUser" size="12" class="shrink-0" /> {{ turno.cliente.nombre }}</span>
                           <span class="font-medium text-slate-700 tabular-nums">{{ turno.servicio.precioBase | currencyArs }}</span>
                         </div>
                       </div>

@@ -16,7 +16,7 @@ Componente standalone que consume el `TurnosStateService` para obtener los turno
 
 - **Enlace wa.me directo** — Sin API de WhatsApp; se abre el enlace en nueva pestaña para que el admin envíe manualmente o use WhatsApp Web.
 - **Reusar TurnosStateService** — Los recordatorios dependen de los turnos existentes; no se crea estado duplicado.
-- **Mensaje predefinido** — Formato: "Hola {nombre}, te recordamos tu turno de {servicio} hoy a las {hora}. ¡Te esperamos! - Velvet & Glow".
+- **Mensaje predefinido** — Formato: "Hola {nombre}, te recordamos tu turno de {servicio} hoy a las {hora}. ¡Te esperamos! - Tammi".
 
 ## Riesgos
 

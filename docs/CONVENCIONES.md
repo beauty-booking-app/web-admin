@@ -36,6 +36,7 @@ Cada cambio significativo debe documentarse en `docs/`:
 - **Sin `ngStyle`:** usar bindings de estilo directo: `[style.width.px]="..."`.
 - **Templates simples:** mantener templates limpios; lógica compleja en el componente o servicio.
 - **Async pipe:** usar para manejar observables en templates.
+- **Iconos:** usar `<ng-icon name="..." />` (`@ng-icons/core`); nunca emojis en la UI. Prioridad de packs: `huge-icons` → `heroicons/outline` → `mynaui/outline`. Importar `NgIcon` + `provideIcons({...})` por componente, solo con los iconos usados. Tamaño con el input `size="14"` (px) y color heredado vía `currentColor`.
 
 ## Componentes
 

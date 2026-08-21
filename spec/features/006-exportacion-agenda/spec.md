@@ -19,7 +19,7 @@ El corazón del panel es la agenda operativa diaria (misión). La impresión/PDF
 
 - [x] La ruta `/` (Agenda del día) incluye un botón accesible "Exportar PDF" junto al header de la agenda.
 - [x] Al hacer clic se genera y descarga un archivo `agenda-YYYY-MM-DD.pdf`.
-- [x] El PDF incluye el nombre del salón (VELVET & GLOW) y la fecha completa del día en la cabecera.
+- [x] El PDF incluye el nombre del salón (Tammi) y la fecha completa del día en la cabecera.
 - [x] El PDF incluye todos los turnos del día (apilados por hora) con cliente, servicio, profesional, estado, precio y teléfono.
 - [x] Los turnos se agrupan en secciones por profesional con título de sección.
 - [x] Cumple WCAG 2.1 AA en el botón (aria-label, contraste, target 44px).

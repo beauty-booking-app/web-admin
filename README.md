@@ -1,6 +1,6 @@
-# GlowControl — Panel de Administración (web-admin)
+# TammiControl — Panel de Administración (web-admin)
 
-Panel de administración web del salón de belleza (VELVET & GLOW). Es un **dashboard operacional** para la gestión interna: agenda del día, turnos, catálogo de servicios, horarios operativos y recordatorios a clientes.
+Panel de administración web del salón de belleza (Tammi). Es un **dashboard operacional** para la gestión interna: agenda del día, turnos, catálogo de servicios, horarios operativos y recordatorios a clientes.
 
 Consume la API del backend FastAPI (`api-backend`).
 

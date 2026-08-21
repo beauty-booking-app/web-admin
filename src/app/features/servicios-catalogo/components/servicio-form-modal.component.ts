@@ -1,11 +1,14 @@
 import { Component, inject, signal, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { hugeCancel01, hugeEdit02, hugeSparkles } from '@ng-icons/huge-icons';
 import { ServiciosService } from '../services/servicios.service';
 import type { Servicio, CategoriaServicio } from '../../../core/models/servicio.model';
 
 @Component({
   selector: 'app-servicio-form-modal',
-  imports: [FormsModule],
+  imports: [FormsModule, NgIcon],
+  providers: [provideIcons({ hugeCancel01, hugeEdit02, hugeSparkles })],
   template: `
     @if (visible()) {
       <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4"
@@ -18,12 +21,18 @@ import type { Servicio, CategoriaServicio } from '../../../core/models/servicio.
 
           <div class="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
             <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
-              {{ esEdicion() ? '✏️ Editar Servicio' : '✨ Nuevo Servicio' }}
+              @if (esEdicion()) {
+                <ng-icon name="hugeEdit02" size="16" class="shrink-0" />
+                Editar Servicio
+              } @else {
+                <ng-icon name="hugeSparkles" size="16" class="shrink-0" />
+                Nuevo Servicio
+              }
             </h3>
             <button (click)="cerrar()"
                     class="text-slate-500 hover:text-slate-600 transition p-1"
                     aria-label="Cerrar modal">
-              ✕
+              <ng-icon name="hugeCancel01" size="14" />
             </button>
           </div>
 

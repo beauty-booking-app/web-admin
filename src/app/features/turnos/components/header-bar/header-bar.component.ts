@@ -1,9 +1,13 @@
 import { Component, computed, signal, inject, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { hugePrinter } from '@ng-icons/huge-icons';
 import { TurnosStateService } from '../../services/turnos-state.service';
 import { AgendaPdfService } from '../../services/agenda-pdf.service';
 
 @Component({
   selector: 'app-header-bar',
+  imports: [NgIcon],
+  providers: [provideIcons({ hugePrinter })],
   template: `
     <header class="h-[69px] border-b border-slate-200 bg-white/90 backdrop-blur px-6 flex items-center justify-between shrink-0 gap-4 shadow-sm">
       <div class="flex items-center gap-4">
@@ -19,7 +23,7 @@ import { AgendaPdfService } from '../../services/agenda-pdf.service';
         <button (click)="exportarPdf()"
                 class="flex items-center gap-2 border border-slate-300 text-slate-700 hover:bg-slate-100 font-semibold px-4 py-2 rounded-lg text-xs transition"
                 aria-label="Exportar agenda del día en PDF">
-          <span>🖨️</span>
+          <ng-icon name="hugePrinter" size="14" class="shrink-0" />
           <span class="hidden sm:inline">EXPORTAR PDF</span>
         </button>
 

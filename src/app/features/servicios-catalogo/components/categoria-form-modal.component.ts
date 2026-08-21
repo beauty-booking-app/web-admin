@@ -1,10 +1,13 @@
 import { Component, inject, signal, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { hugeCancel01, hugeFolder01 } from '@ng-icons/huge-icons';
 import { ServiciosService } from '../services/servicios.service';
 
 @Component({
   selector: 'app-categoria-form-modal',
-  imports: [FormsModule],
+  imports: [FormsModule, NgIcon],
+  providers: [provideIcons({ hugeCancel01, hugeFolder01 })],
   template: `
     @if (visible()) {
       <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4"
@@ -13,11 +16,11 @@ import { ServiciosService } from '../services/servicios.service';
              (click)="$event.stopPropagation()">
           <div class="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
             <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
-              <span>📁</span> Nueva Categoría
+              <ng-icon name="hugeFolder01" size="16" class="shrink-0" /> Nueva Categoría
             </h3>
             <button (click)="cerrar()" class="text-slate-500 hover:text-slate-600 transition p-1"
                     aria-label="Cerrar modal">
-              ✕
+              <ng-icon name="hugeCancel01" size="14" />
             </button>
           </div>
 

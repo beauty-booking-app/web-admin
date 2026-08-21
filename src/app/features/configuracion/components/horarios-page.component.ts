@@ -1,11 +1,14 @@
 import { Component, inject, OnInit } from '@angular/core';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { hugeCheckmarkCircle01 } from '@ng-icons/huge-icons';
 import { HorariosService } from '../services/horarios.service';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 import type { DiaSemana } from '../../../core/models/franja-laboral.model';
 
 @Component({
   selector: 'app-horarios-page',
-  imports: [LoadingComponent],
+  imports: [LoadingComponent, NgIcon],
+  providers: [provideIcons({ hugeCheckmarkCircle01 })],
   template: `
     <div class="p-6 space-y-6">
       <!-- Header -->
@@ -41,7 +44,7 @@ import type { DiaSemana } from '../../../core/models/franja-laboral.model';
         <div class="bg-emerald-50 border border-emerald-200 rounded-lg px-4 py-3 flex items-center gap-2 text-xs text-emerald-800 font-medium"
              role="status"
              aria-live="polite">
-          <span class="text-base">✅</span>
+          <ng-icon name="hugeCheckmarkCircle01" size="16" class="shrink-0" />
           Configuración de horarios guardada correctamente.
         </div>
       }

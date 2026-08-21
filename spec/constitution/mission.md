@@ -2,7 +2,7 @@
 
 ## Qué construimos
 
-**GlowControl** (VELVET & GLOW) — Panel de administración operativo interno para un salón de belleza (peluquería y servicio de manicura). Es una SPA que gestiona la agenda diaria, turnos, catálogo de servicios, horarios operativos y recordatorios a clientes.
+**TammiControl** (Tammi) — Panel de administración operativo interno para un salón de belleza (peluquería y servicio de manicura). Es una SPA que gestiona la agenda diaria, turnos, catálogo de servicios, horarios operativos y recordatorios a clientes.
 
 Las piezas principales del producto:
 

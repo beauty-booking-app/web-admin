@@ -1,5 +1,16 @@
 import { Component, inject, computed } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import {
+  hugeCalendar01,
+  hugeCalendar03,
+  hugeChartColumn,
+  hugeCheckmarkCircle01,
+  hugeClock02,
+  hugeScissor,
+  hugeSmartPhone01,
+  hugeSparkles,
+} from '@ng-icons/huge-icons';
 import { TurnosStateService } from '../../features/turnos/services/turnos-state.service';
 import { RecordatorioService } from '../../features/turnos/services/recordatorio.service';
 import { ServiciosService } from '../../features/servicios-catalogo/services/servicios.service';
@@ -8,16 +19,28 @@ import { CurrencyArsPipe } from '../../shared/pipes/currency-ars.pipe';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [RouterLink, RouterLinkActive, CurrencyArsPipe],
+  imports: [RouterLink, RouterLinkActive, CurrencyArsPipe, NgIcon],
+  providers: [
+    provideIcons({
+      hugeCalendar01,
+      hugeCalendar03,
+      hugeChartColumn,
+      hugeCheckmarkCircle01,
+      hugeClock02,
+      hugeScissor,
+      hugeSmartPhone01,
+      hugeSparkles,
+    }),
+  ],
   template: `
     <aside class="w-64 bg-white border-r border-slate-200 flex flex-col shrink-0 shadow-sm h-full">
       <!-- Brand -->
       <div class="p-4 border-b border-slate-100 flex items-center gap-3">
         <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-rose-600 to-pink-500 flex items-center justify-center text-white shadow-md shadow-rose-200 font-bold text-lg">
-          ✂
+          <ng-icon name="hugeScissor" />
         </div>
         <div>
-          <h1 class="font-bold text-slate-900 text-sm tracking-wide">VELVET &amp; GLOW</h1>
+          <h1 class="font-bold text-slate-900 text-sm tracking-wide">Tammi</h1>
           <p class="text-[11px] text-slate-600 font-medium">Gestión Operativa</p>
         </div>
       </div>
@@ -30,7 +53,7 @@ import { CurrencyArsPipe } from '../../shared/pipes/currency-ars.pipe';
            class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold transition-all"
            aria-label="Agenda del día">
           <div class="flex items-center gap-2.5">
-            <span class="w-4 h-4 text-rose-600">📅</span>
+            <ng-icon name="hugeCalendar01" size="16" class="text-rose-600 shrink-0" />
             <span>Agenda del Día</span>
           </div>
           <span class="px-2 py-0.5 text-[10px] rounded-full bg-rose-200 text-rose-800 font-bold">
@@ -41,7 +64,7 @@ import { CurrencyArsPipe } from '../../shared/pipes/currency-ars.pipe';
         <a routerLink="/calendario" routerLinkActive="active-nav"
            class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all"
            aria-label="Calendario por semana y mes">
-          <span class="w-4 h-4 text-slate-600">🗓️</span>
+          <ng-icon name="hugeCalendar03" size="16" class="text-slate-600 shrink-0" />
           <span>Calendario</span>
         </a>
 
@@ -49,7 +72,7 @@ import { CurrencyArsPipe } from '../../shared/pipes/currency-ars.pipe';
            class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all"
            aria-label="Servicios y precios">
           <div class="flex items-center gap-2.5">
-            <span class="w-4 h-4 text-slate-600">✨</span>
+            <ng-icon name="hugeSparkles" size="16" class="text-slate-600 shrink-0" />
             <span>Servicios y Precios</span>
           </div>
           <span class="text-[10px] text-slate-500 font-medium">{{ serviciosService.totalServicios() }} tipos</span>
@@ -59,7 +82,7 @@ import { CurrencyArsPipe } from '../../shared/pipes/currency-ars.pipe';
            class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all"
            aria-label="Recordatorios por WhatsApp">
           <div class="flex items-center gap-2.5">
-            <span class="w-4 h-4 text-slate-600">📱</span>
+            <ng-icon name="hugeSmartPhone01" size="16" class="text-slate-600 shrink-0" />
             <span>Recordatorios</span>
           </div>
           @if (cantidadPendientes() > 0) {
@@ -72,14 +95,14 @@ import { CurrencyArsPipe } from '../../shared/pipes/currency-ars.pipe';
         <a routerLink="/analytics" routerLinkActive="active-nav"
            class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all"
            aria-label="Dashboard de analytics">
-          <span class="w-4 h-4 text-slate-600">📊</span>
+          <ng-icon name="hugeChartColumn" size="16" class="text-slate-600 shrink-0" />
           <span>Analytics</span>
         </a>
 
         <a routerLink="/configuracion" routerLinkActive="active-nav"
            class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all"
            aria-label="Horarios y ausencias">
-          <span class="w-4 h-4 text-slate-600">🕐</span>
+          <ng-icon name="hugeClock02" size="16" class="text-slate-600 shrink-0" />
            <span>Horarios y Ausencias</span>
         </a>
       </nav>
@@ -100,7 +123,8 @@ import { CurrencyArsPipe } from '../../shared/pipes/currency-ars.pipe';
         <div class="flex items-center justify-between text-slate-600 mb-1">
           <span class="font-medium">Estado del Salón:</span>
           <span class="text-emerald-700 font-bold flex items-center gap-1">
-            ✅ Operativo
+            <ng-icon name="hugeCheckmarkCircle01" size="14" class="shrink-0" />
+            Operativo
           </span>
         </div>
         <div class="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">

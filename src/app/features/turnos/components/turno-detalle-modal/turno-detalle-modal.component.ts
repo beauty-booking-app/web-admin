@@ -1,5 +1,7 @@
 import { Component, inject, signal, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { hugeCancel01, hugeClock02, hugeDelete02, hugeRotateClockwise } from '@ng-icons/huge-icons';
 import { TurnosStateService } from '../../services/turnos-state.service';
 import { STATUS_CONFIG } from '../status-config';
 import { CurrencyArsPipe } from '../../../../shared/pipes/currency-ars.pipe';
@@ -25,7 +27,8 @@ function horaHHMM(f: Date): string {
 
 @Component({
   selector: 'app-turno-detalle-modal',
-  imports: [FormsModule, CurrencyArsPipe],
+  imports: [FormsModule, CurrencyArsPipe, NgIcon],
+  providers: [provideIcons({ hugeCancel01, hugeClock02, hugeDelete02, hugeRotateClockwise })],
   template: `
     @if (turno(); as t) {
       <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4"
@@ -35,10 +38,10 @@ function horaHHMM(f: Date): string {
 
           <div class="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
             <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
-              <span>🕐</span> Detalle del Turno
+              <ng-icon name="hugeClock02" size="16" class="shrink-0" /> Detalle del Turno
             </h3>
             <button (click)="cerrar()" class="text-slate-500 hover:text-slate-600 transition p-1"
-                    aria-label="Cerrar modal">✕</button>
+                    aria-label="Cerrar modal"><ng-icon name="hugeCancel01" size="14" /></button>
           </div>
 
           <div class="flex-1 overflow-y-auto p-5 space-y-4 text-sm">
@@ -109,7 +112,7 @@ function horaHHMM(f: Date): string {
               @if (!reprogramando()) {
                 <button (click)="reprogramando.set(true)"
                         class="text-xs font-semibold text-rose-700 hover:text-rose-800 transition">
-                  ↻ Reprogramar este turno
+                  <ng-icon name="hugeRotateClockwise" size="14" class="align-[-2px]" /> Reprogramar este turno
                 </button>
               } @else {
                 <div class="space-y-2">
@@ -162,7 +165,7 @@ function horaHHMM(f: Date): string {
               } @else {
                 <button (click)="confirmandoEliminar.set(true)"
                         class="text-xs font-semibold text-red-600 hover:text-red-700 transition text-left">
-                  🗑 Eliminar servicio
+                  <ng-icon name="hugeDelete02" size="14" class="align-[-2px]" /> Eliminar servicio
                 </button>
               }
             </div>

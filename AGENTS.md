@@ -2,7 +2,7 @@
 
 ## 1. Descripción del Dominio
 Aplicación web administrativa interna para un salón de belleza (peluquería y servicio de manicura). 
-* **Nombre de la app:** VELVET & GLOW (sidebar) / GlowControl (index.html title)
+* **Nombre de la app:** Tammi (sidebar) / Tammiontrol (index.html title)
 * **Propósito:** Gestión interna diaria de la agenda, turnos, catálogo de servicios, horarios operativos y recordatorios a clientes.
 * **Audiencia:** Uso exclusivo por parte del personal administrativo (las reservas externas se realizan en otra plataforma).
 * **Enfoque de UX:** Es un **dashboard operacional**, NO un dashboard de analíticas. La prioridad máxima es la gestión operativa fluida del día a día.

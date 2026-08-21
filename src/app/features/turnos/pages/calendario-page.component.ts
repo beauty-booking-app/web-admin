@@ -1,4 +1,6 @@
 import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { hugeCancel01 } from '@ng-icons/huge-icons';
 import {
   CalendarioService,
   lunesDe,
@@ -11,7 +13,8 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
 
 @Component({
   selector: 'app-calendario-page',
-  imports: [LoadingComponent, TurnoDetalleModalComponent],
+  imports: [LoadingComponent, TurnoDetalleModalComponent, NgIcon],
+  providers: [provideIcons({ hugeCancel01 })],
   template: `
     <div class="flex-1 min-h-0 overflow-y-auto pt-24 pb-8 p-6">
       <!-- Encabezado -->
@@ -166,8 +169,8 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
               <p class="text-sm text-slate-600">{{ formatearFecha(dia) }}</p>
             </div>
             <button (click)="cerrarModal()"
-                    class="p-2 rounded-lg hover:bg-slate-100 text-slate-600 text-xl leading-none"
-                    aria-label="Cerrar">✕</button>
+                    class="p-2 rounded-lg hover:bg-slate-100 text-slate-600"
+                    aria-label="Cerrar"><ng-icon name="hugeCancel01" size="18" /></button>
           </header>
 
           <div class="flex-1 overflow-y-auto px-5 py-4 space-y-2">

@@ -2,21 +2,24 @@ import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { hugeScissor } from '@ng-icons/huge-icons';
 import { AuthService } from '../../core/api/auth.service';
 import { mensajeDeError } from '../../core/api/error-utils';
 
 @Component({
   selector: 'app-login-page',
-  imports: [FormsModule],
+  imports: [FormsModule, NgIcon],
+  providers: [provideIcons({ hugeScissor })],
   template: `
     <div class="min-h-screen bg-gradient-to-br from-rose-50 via-slate-50 to-pink-100 flex items-center justify-center p-4">
       <div class="w-full max-w-sm">
         <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
           <div class="px-6 py-6 bg-gradient-to-tr from-rose-600 to-pink-500 text-white text-center">
             <div class="w-12 h-12 mx-auto rounded-xl bg-white/20 border border-white/30 flex items-center justify-center text-xl font-bold shadow-inner">
-              ✂
+              <ng-icon name="hugeScissor" />
             </div>
-            <h1 class="font-bold text-lg tracking-wide mt-3">VELVET &amp; GLOW</h1>
+            <h1 class="font-bold text-lg tracking-wide mt-3">Tammi</h1>
             <p class="text-[11px] text-rose-100 font-medium">Panel de Gestión Operativa</p>
           </div>
 
@@ -32,7 +35,7 @@ import { mensajeDeError } from '../../core/api/error-utils';
               <input id="login-email" type="email" required
                      [(ngModel)]="email" name="email" autocomplete="username"
                      class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 focus:outline-none transition min-h-[44px]"
-                     placeholder="admin@velvetglow.com">
+                     placeholder="admin@tammi.com">
             </div>
 
             <div>

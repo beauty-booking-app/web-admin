@@ -1,11 +1,15 @@
 import { Component, inject } from '@angular/core';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { heroCheck } from '@ng-icons/heroicons/outline';
+import { hugePlay, hugeSmartPhone01 } from '@ng-icons/huge-icons';
 import { TurnosStateService } from '../../services/turnos-state.service';
 import { CurrencyArsPipe } from '../../../../shared/pipes/currency-ars.pipe';
 import type { Turno } from '../../../../core/models/turno.model';
 
 @Component({
   selector: 'app-hero-turnos',
-  imports: [CurrencyArsPipe],
+  imports: [CurrencyArsPipe, NgIcon],
+  providers: [provideIcons({ heroCheck, hugePlay, hugeSmartPhone01 })],
   template: `
     <section class="mb-4">
       <div class="flex items-center justify-between mb-3">
@@ -31,7 +35,7 @@ import type { Turno } from '../../../../core/models/turno.model';
                  [class.bg-rose-600]="turno.estado === 'Confirmado' && !esEnCurso(turno)"
                  [class.bg-amber-500]="turno.estado === 'Pendiente'">
               @if (turno.estado === 'En Proceso') {
-                ▶ En Proceso
+                <ng-icon name="hugePlay" size="10" class="shrink-0" /> En Proceso
               } @else if (turno.estado === 'Pendiente') {
                 Sin Confirmar
               } @else {
@@ -78,18 +82,21 @@ import type { Turno } from '../../../../core/models/turno.model';
               @if (turno.estado === 'En Proceso') {
                 <button (click)="finalizarTurno(turno)"
                         class="flex-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1 transition shadow-xs">
-                  ✓ Finalizar y Cobrar
+                  <ng-icon name="heroCheck" size="14" class="shrink-0" />
+                  Finalizar y Cobrar
                 </button>
               } @else if (turno.estado === 'Confirmado') {
                 <button (click)="iniciarTurno(turno)"
                         class="flex-1 bg-rose-700 hover:bg-rose-800 text-white py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1 transition shadow-md shadow-rose-100">
-                  ▶ Iniciar Atención
+                  <ng-icon name="hugePlay" size="12" class="shrink-0" />
+                  Iniciar Atención
                 </button>
               } @else if (turno.estado === 'Pendiente') {
                 <button (click)="enviarRecordatorio(turno)"
                         [disabled]="!turno.cliente.telefono"
                         class="flex-1 bg-emerald-700 hover:bg-emerald-800 disabled:opacity-40 disabled:cursor-not-allowed text-white py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1 transition shadow-md shadow-emerald-100">
-                  📱 WhatsApp Recordatorio
+                  <ng-icon name="hugeSmartPhone01" size="14" class="shrink-0" />
+                  WhatsApp Recordatorio
                 </button>
               }
             </div>
