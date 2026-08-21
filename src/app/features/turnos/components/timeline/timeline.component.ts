@@ -97,19 +97,19 @@ import type { Turno, EstadoTurno } from '../../../../core/models/turno.model';
                         <div class="flex flex-col gap-1 shrink-0">
                           @if (turno.estado === 'Pendiente') {
                             <button (click)="confirmarTurno(turno); $event.stopPropagation()"
-                                    class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition-colors font-medium whitespace-nowrap">
+                                    class="cursor-pointer text-[10px] px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition-colors font-medium whitespace-nowrap">
                               Confirmar
                             </button>
                           }
                           @if (turno.estado === 'Confirmado') {
                             <button (click)="iniciarTurno(turno); $event.stopPropagation()"
-                                    class="text-[10px] px-1.5 py-0.5 rounded bg-amber-50 text-amber-700 hover:bg-amber-100 transition-colors font-medium whitespace-nowrap">
+                                    class="cursor-pointer text-[10px] px-1.5 py-0.5 rounded bg-amber-50 text-amber-700 hover:bg-amber-100 transition-colors font-medium whitespace-nowrap">
                               Iniciar
                             </button>
                           }
                           @if (turno.estado === 'En Proceso') {
                             <button (click)="completarTurno(turno); $event.stopPropagation()"
-                                    class="text-[10px] px-1.5 py-0.5 rounded bg-sky-50 text-sky-700 hover:bg-sky-100 transition-colors font-medium whitespace-nowrap">
+                                    class="cursor-pointer text-[10px] px-1.5 py-0.5 rounded bg-sky-50 text-sky-700 hover:bg-sky-100 transition-colors font-medium whitespace-nowrap">
                               Completar
                             </button>
                           }
@@ -194,19 +194,19 @@ import type { Turno, EstadoTurno } from '../../../../core/models/turno.model';
                         <div class="flex flex-col gap-1 shrink-0">
                           @if (turno.estado === 'Pendiente') {
                             <button (click)="confirmarTurno(turno); $event.stopPropagation()"
-                                    class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition-colors font-medium whitespace-nowrap">
+                                    class="cursor-pointer text-[10px] px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition-colors font-medium whitespace-nowrap">
                               Confirmar
                             </button>
                           }
                           @if (turno.estado === 'Confirmado') {
                             <button (click)="iniciarTurno(turno); $event.stopPropagation()"
-                                    class="text-[10px] px-1.5 py-0.5 rounded bg-amber-50 text-amber-700 hover:bg-amber-100 transition-colors font-medium whitespace-nowrap">
+                                    class="cursor-pointer text-[10px] px-1.5 py-0.5 rounded bg-amber-50 text-amber-700 hover:bg-amber-100 transition-colors font-medium whitespace-nowrap">
                               Iniciar
                             </button>
                           }
                           @if (turno.estado === 'En Proceso') {
                             <button (click)="completarTurno(turno); $event.stopPropagation()"
-                                    class="text-[10px] px-1.5 py-0.5 rounded bg-sky-50 text-sky-700 hover:bg-sky-100 transition-colors font-medium whitespace-nowrap">
+                                    class="cursor-pointer text-[10px] px-1.5 py-0.5 rounded bg-sky-50 text-sky-700 hover:bg-sky-100 transition-colors font-medium whitespace-nowrap">
                               Completar
                             </button>
                           }

@@ -81,20 +81,20 @@ import type { Turno } from '../../../../core/models/turno.model';
             <div class="flex items-center justify-between gap-2 pt-1">
               @if (turno.estado === 'En Proceso') {
                 <button (click)="finalizarTurno(turno)"
-                        class="flex-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1 transition shadow-xs">
+                        class="cursor-pointer flex-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1 transition shadow-xs">
                   <ng-icon name="heroCheck" size="14" class="shrink-0" />
                   Finalizar y Cobrar
                 </button>
               } @else if (turno.estado === 'Confirmado') {
                 <button (click)="iniciarTurno(turno)"
-                        class="flex-1 bg-rose-700 hover:bg-rose-800 text-white py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1 transition shadow-md shadow-rose-100">
+                        class="cursor-pointer flex-1 bg-rose-700 hover:bg-rose-800 text-white py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1 transition shadow-md shadow-rose-100">
                   <ng-icon name="hugePlay" size="12" class="shrink-0" />
                   Iniciar Atención
                 </button>
               } @else if (turno.estado === 'Pendiente') {
                 <button (click)="enviarRecordatorio(turno)"
                         [disabled]="!turno.cliente.telefono"
-                        class="flex-1 bg-emerald-700 hover:bg-emerald-800 disabled:opacity-40 disabled:cursor-not-allowed text-white py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1 transition shadow-md shadow-emerald-100">
+                        class="cursor-pointer flex-1 bg-emerald-700 hover:bg-emerald-800 disabled:opacity-40 disabled:cursor-not-allowed text-white py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1 transition shadow-md shadow-emerald-100">
                   <ng-icon name="hugeSmartPhone01" size="14" class="shrink-0" />
                   WhatsApp Recordatorio
                 </button>

@@ -21,7 +21,7 @@ import type { DiaSemana } from '../../../core/models/franja-laboral.model';
         </div>
         <button (click)="guardar()"
                 [disabled]="horariosService.cargando() || horariosService.guardando() || horariosService.franjas().length === 0"
-                class="bg-rose-700 hover:bg-rose-800 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold px-5 py-2 rounded-lg text-xs shadow-md shadow-rose-200 transition flex items-center gap-2"
+                class="cursor-pointer bg-rose-700 hover:bg-rose-800 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold px-5 py-2 rounded-lg text-xs shadow-md shadow-rose-200 transition flex items-center gap-2"
                 aria-label="Guardar cambios de horario">
           @if (horariosService.guardando()) {
             <span class="w-3.5 h-3.5 rounded-full border-2 border-white/40 border-t-white animate-spin"></span>
@@ -74,7 +74,7 @@ import type { DiaSemana } from '../../../core/models/franja-laboral.model';
                  [class.opacity-50]="!franja.activo">
               <!-- Toggle -->
               <button (click)="horariosService.toggleDia(franja.dia)"
-                      class="relative w-10 h-5 rounded-full transition-colors shrink-0"
+                      class="cursor-pointer relative w-10 h-5 rounded-full transition-colors shrink-0"
                       [class.bg-rose-600]="franja.activo"
                       [class.bg-slate-300]="!franja.activo"
                       role="switch"

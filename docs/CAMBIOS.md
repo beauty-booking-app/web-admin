@@ -1,5 +1,9 @@
 # Registro de cambios
 
+## UI · `cursor-pointer` en todos los botones (2026-08-21)
+
+Se agregó la clase `cursor-pointer` a los 51 `<button>` de la UI (47 agregados; `turno-form-modal` y un botón del calendario ya la tenían). Quedan **sin hover** (intencional o pendiente): el switch de días en `horarios-page`, y los toggles de vista "Semana"/"Mes" en `calendario-page`.
+
 ## Refactor · Reemplazo de emojis por iconos `@ng-icons` (2026-08-21)
 
 Se reemplazaron todos los emojis de la UI por iconos SVG vía `<ng-icon name="..." />` (`@ng-icons/core` v35). Prioridad de packs: **huge** primero, **heroicons** segundo, **mynaui** tercero (solo si no existe equivalente en los anteriores).

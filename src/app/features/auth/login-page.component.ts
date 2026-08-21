@@ -48,7 +48,7 @@ import { mensajeDeError } from '../../core/api/error-utils';
 
             <button type="submit"
                     [disabled]="enviando() || !email.trim() || !password"
-                    class="w-full bg-rose-700 hover:bg-rose-800 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-2.5 rounded-lg shadow-md shadow-rose-200 transition min-h-[44px]">
+                    class="cursor-pointer w-full bg-rose-700 hover:bg-rose-800 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-2.5 rounded-lg shadow-md shadow-rose-200 transition min-h-[44px]">
               {{ enviando() ? 'Ingresando…' : 'Ingresar al Panel' }}
             </button>
           </form>

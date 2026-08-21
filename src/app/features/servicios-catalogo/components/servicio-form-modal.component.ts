@@ -30,7 +30,7 @@ import type { Servicio, CategoriaServicio } from '../../../core/models/servicio.
               }
             </h3>
             <button (click)="cerrar()"
-                    class="text-slate-500 hover:text-slate-600 transition p-1"
+                    class="cursor-pointer text-slate-500 hover:text-slate-600 transition p-1"
                     aria-label="Cerrar modal">
               <ng-icon name="hugeCancel01" size="14" />
             </button>
@@ -76,11 +76,11 @@ import type { Servicio, CategoriaServicio } from '../../../core/models/servicio.
 
             <div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-2">
               <button type="button" (click)="cerrar()"
-                      class="px-4 py-2 rounded-lg text-slate-600 hover:bg-slate-100 font-medium transition">
+                      class="cursor-pointer px-4 py-2 rounded-lg text-slate-600 hover:bg-slate-100 font-medium transition">
                 Cancelar
               </button>
               <button type="submit"
-                      class="bg-rose-700 hover:bg-rose-800 text-white font-semibold px-5 py-2 rounded-lg shadow-md shadow-rose-200 transition">
+                      class="cursor-pointer bg-rose-700 hover:bg-rose-800 text-white font-semibold px-5 py-2 rounded-lg shadow-md shadow-rose-200 transition">
                 {{ esEdicion() ? 'Guardar Cambios' : 'Crear Servicio' }}
               </button>
             </div>

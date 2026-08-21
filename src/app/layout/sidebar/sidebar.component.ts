@@ -140,7 +140,7 @@ import { CurrencyArsPipe } from '../../shared/pipes/currency-ars.pipe';
             {{ auth.usuario()?.name ?? 'Administrador' }}
           </span>
           <button (click)="cerrarSesion()"
-                  class="text-[11px] font-semibold text-rose-600 hover:text-rose-700 transition whitespace-nowrap min-h-[44px]"
+                  class="cursor-pointer text-[11px] font-semibold text-rose-600 hover:text-rose-700 transition whitespace-nowrap min-h-[44px]"
                   aria-label="Cerrar sesión">
             Cerrar sesión
           </button>

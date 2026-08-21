@@ -21,14 +21,14 @@ import { AgendaPdfService } from '../../services/agenda-pdf.service';
 
       <div class="flex items-center gap-3">
         <button (click)="exportarPdf()"
-                class="flex items-center gap-2 border border-slate-300 text-slate-700 hover:bg-slate-100 font-semibold px-4 py-2 rounded-lg text-xs transition"
+                class="cursor-pointer flex items-center gap-2 border border-slate-300 text-slate-700 hover:bg-slate-100 font-semibold px-4 py-2 rounded-lg text-xs transition"
                 aria-label="Exportar agenda del día en PDF">
           <ng-icon name="hugePrinter" size="14" class="shrink-0" />
           <span class="hidden sm:inline">EXPORTAR PDF</span>
         </button>
 
         <button (click)="onNuevoTurno.emit()"
-                class="flex items-center gap-2 bg-gradient-to-r from-rose-700 to-rose-600 hover:from-rose-800 hover:to-rose-700 text-white font-semibold px-4 py-2 rounded-lg text-xs shadow-md shadow-rose-200 transition-all hover:scale-[1.02] active:scale-95"
+                class="cursor-pointer flex items-center gap-2 bg-gradient-to-r from-rose-700 to-rose-600 hover:from-rose-800 hover:to-rose-700 text-white font-semibold px-4 py-2 rounded-lg text-xs shadow-md shadow-rose-200 transition-all hover:scale-[1.02] active:scale-95"
                 aria-label="Agendar nuevo turno">
           <span>+</span>
           <span>AGENDAR TURNO</span>

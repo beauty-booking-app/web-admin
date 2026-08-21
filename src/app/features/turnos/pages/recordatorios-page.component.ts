@@ -21,7 +21,7 @@ import type { Turno } from '../../../core/models/turno.model';
         </div>
         <button (click)="enviarTodos()"
                 [disabled]="sinConTelefono()"
-                class="bg-emerald-700 hover:bg-emerald-800 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold px-5 py-2.5 rounded-lg text-xs shadow-md shadow-emerald-100 transition flex items-center gap-2"
+                class="cursor-pointer bg-emerald-700 hover:bg-emerald-800 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold px-5 py-2.5 rounded-lg text-xs shadow-md shadow-emerald-100 transition flex items-center gap-2"
                 aria-label="Enviar todos los recordatorios pendientes por WhatsApp">
           <ng-icon name="hugeSmartPhone01" size="14" class="shrink-0" />
           Enviar Todos por WhatsApp
@@ -74,7 +74,7 @@ import type { Turno } from '../../../core/models/turno.model';
                     <span class="text-xs text-slate-600 font-medium">{{ turno.servicio.precioBase | currencyArs }}</span>
                     <button (click)="enviarIndividual(turno)"
                             [disabled]="yaEnviado(turno.id) || !turno.cliente.telefono"
-                            class="bg-emerald-50 hover:bg-emerald-100 disabled:opacity-40 disabled:cursor-not-allowed text-emerald-800 border border-emerald-300 py-2 px-3 rounded-lg text-xs font-semibold transition shadow-xs"
+                            class="cursor-pointer bg-emerald-50 hover:bg-emerald-100 disabled:opacity-40 disabled:cursor-not-allowed text-emerald-800 border border-emerald-300 py-2 px-3 rounded-lg text-xs font-semibold transition shadow-xs"
                             [attr.aria-label]="'Enviar recordatorio por WhatsApp a ' + turno.cliente.nombre">
                       <ng-icon name="hugeSmartPhone01" size="14" class="shrink-0" />
                       Enviar Individual

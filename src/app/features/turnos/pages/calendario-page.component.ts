@@ -21,14 +21,14 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
       <header class="flex flex-wrap items-center justify-between gap-4 mb-4">
         <div class="flex items-center gap-3">
           <button (click)="calendario.irHoy()"
-                  class="px-4 py-2 rounded-lg text-sm font-bold text-slate-700 bg-white border border-slate-200 shadow-sm hover:bg-slate-100 transition"
+                  class="cursor-pointer px-4 py-2 rounded-lg text-sm font-bold text-slate-700 bg-white border border-slate-200 shadow-sm hover:bg-slate-100 transition"
                   title="Ir a hoy" aria-label="Ir a hoy">
             Hoy
           </button>
 
           <div class="flex items-center bg-slate-100 border border-slate-200 rounded-lg p-1.5" role="group" aria-label="Cambiar vista">
             <button (click)="cambiarVista('semana')"
-                    class="px-3 py-1 rounded text-xs font-bold transition"
+                    class="cursor-pointer px-3 py-1 rounded text-xs font-bold transition"
                     [class.bg-white]="calendario.vista() === 'semana'"
                     [class.shadow-sm]="calendario.vista() === 'semana'"
                     [class.text-rose-600]="calendario.vista() === 'semana'"
@@ -37,7 +37,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
               Semana
             </button>
             <button (click)="cambiarVista('mes')"
-                    class="px-3 py-1 rounded text-xs font-bold transition"
+                    class="cursor-pointer px-3 py-1 rounded text-xs font-bold transition"
                     [class.bg-white]="calendario.vista() === 'mes'"
                     [class.shadow-sm]="calendario.vista() === 'mes'"
                     [class.text-rose-600]="calendario.vista() === 'mes'"
@@ -50,13 +50,13 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
 
         <div class="flex items-center gap-2 bg-white border border-slate-200 rounded-lg p-1.5 shadow-sm">
           <button (click)="calendario.irAnterior()"
-                  class="p-1.5 rounded hover:bg-slate-100 text-slate-600 transition"
+                  class="cursor-pointer p-1.5 rounded hover:bg-slate-100 text-slate-600 transition"
                   title="Período anterior" aria-label="Período anterior">
             ‹
           </button>
           <h1 class="text-base font-bold text-slate-900 px-2 whitespace-nowrap">{{ calendario.labelPeriodo() }}</h1>
           <button (click)="calendario.irSiguiente()"
-                  class="p-1.5 rounded hover:bg-slate-100 text-slate-600 transition"
+                  class="cursor-pointer p-1.5 rounded hover:bg-slate-100 text-slate-600 transition"
                   title="Período siguiente" aria-label="Período siguiente">
             ›
           </button>
@@ -83,7 +83,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
                 @let lista = turnosDe(dia);
                 <div class="flex flex-col min-w-0" [class.bg-rose-50/40]="esHoy(dia)">
                   <button (click)="abrirModalDia(dia)"
-                          class="px-2 py-2 text-center border-b border-slate-100 hover:bg-slate-50 transition"
+                          class="cursor-pointer px-2 py-2 text-center border-b border-slate-100 hover:bg-slate-50 transition"
                           [attr.aria-label]="'Ver turnos del día ' + diaCorto(dia)">
                     <span class="block text-[10px] uppercase tracking-wide font-bold text-slate-500">{{ diaCorto(dia) }}</span>
                     <span class="block text-sm font-bold text-slate-800"
@@ -96,7 +96,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
                       @for (turno of lista; track turno.id) {
                         @let cfg = statusConfig(turno.estado);
                         <button (click)="abrirModalDia(dia)"
-                                class="w-full text-left rounded-lg border border-slate-200 bg-white px-2 py-1.5 transition hover:border-rose-300"
+                                class="cursor-pointer w-full text-left rounded-lg border border-slate-200 bg-white px-2 py-1.5 transition hover:border-rose-300"
                                 [attr.aria-label]="turno.cliente.nombre + ', ' + turno.servicio.subtipo + ', ' + cfg.label">
                           <span class="block text-[10px] font-semibold tabular-nums text-slate-600">{{ formatHora(turno.inicio) }}</span>
                           <span class="block text-[11px] font-bold text-slate-800 truncate">{{ turno.cliente.nombre }}</span>
@@ -125,7 +125,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
                   @let lista = turnosDe(celda);
                   @let hoy = esHoy(celda);
                   <button (click)="abrirModalDia(celda)"
-                          class="relative min-h-32 p-1.5 border border-slate-100 text-left align-top transition flex flex-col gap-1 hover:bg-slate-50"
+                          class="cursor-pointer relative min-h-32 p-1.5 border border-slate-100 text-left align-top transition flex flex-col gap-1 hover:bg-slate-50"
                           [class.ring-2]="hoy"
                           [class.ring-rose-600]="hoy"
                           [class.border-rose-600]="hoy"
@@ -169,7 +169,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
               <p class="text-sm text-slate-600">{{ formatearFecha(dia) }}</p>
             </div>
             <button (click)="cerrarModal()"
-                    class="p-2 rounded-lg hover:bg-slate-100 text-slate-600"
+                    class="cursor-pointer p-2 rounded-lg hover:bg-slate-100 text-slate-600"
                     aria-label="Cerrar"><ng-icon name="hugeCancel01" size="18" /></button>
           </header>
 
@@ -200,7 +200,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
 
           <footer class="px-5 py-3 border-t border-slate-200 flex justify-end">
             <button (click)="cerrarModal()"
-                    class="px-4 py-2 rounded-lg text-sm font-semibold text-slate-700 bg-white border border-slate-300 hover:bg-slate-100 transition">
+                    class="cursor-pointer px-4 py-2 rounded-lg text-sm font-semibold text-slate-700 bg-white border border-slate-300 hover:bg-slate-100 transition">
               Cerrar
             </button>
           </footer>

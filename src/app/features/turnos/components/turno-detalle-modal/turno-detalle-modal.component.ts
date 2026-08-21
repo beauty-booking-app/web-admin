@@ -40,7 +40,7 @@ function horaHHMM(f: Date): string {
             <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
               <ng-icon name="hugeClock02" size="16" class="shrink-0" /> Detalle del Turno
             </h3>
-            <button (click)="cerrar()" class="text-slate-500 hover:text-slate-600 transition p-1"
+            <button (click)="cerrar()" class="cursor-pointer text-slate-500 hover:text-slate-600 transition p-1"
                     aria-label="Cerrar modal"><ng-icon name="hugeCancel01" size="14" /></button>
           </div>
 
@@ -100,7 +100,7 @@ function horaHHMM(f: Date): string {
                   }
                 </select>
                 <button (click)="aplicarEstado()" [disabled]="ocupado()"
-                        class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold transition disabled:opacity-50">
+                        class="cursor-pointer px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold transition disabled:opacity-50">
                   Aplicar
                 </button>
               </div>
@@ -111,7 +111,7 @@ function horaHHMM(f: Date): string {
               <p class="text-[10px] uppercase tracking-wide font-bold text-slate-500 mb-1">Reprogramar</p>
               @if (!reprogramando()) {
                 <button (click)="reprogramando.set(true)"
-                        class="text-xs font-semibold text-rose-700 hover:text-rose-800 transition">
+                        class="cursor-pointer text-xs font-semibold text-rose-700 hover:text-rose-800 transition">
                   <ng-icon name="hugeRotateClockwise" size="14" class="align-[-2px]" /> Reprogramar este turno
                 </button>
               } @else {
@@ -132,11 +132,11 @@ function horaHHMM(f: Date): string {
                   </div>
                   <div class="flex gap-2">
                     <button (click)="reprogramando.set(false)"
-                            class="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-100 transition">
+                            class="cursor-pointer px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-100 transition">
                       Cancelar
                     </button>
                     <button (click)="aplicarReprogramacion()" [disabled]="ocupado()"
-                            class="px-4 py-1.5 rounded-lg bg-rose-700 hover:bg-rose-800 text-white text-xs font-semibold transition disabled:opacity-50">
+                            class="cursor-pointer px-4 py-1.5 rounded-lg bg-rose-700 hover:bg-rose-800 text-white text-xs font-semibold transition disabled:opacity-50">
                       Confirmar reprogramación
                     </button>
                   </div>
@@ -153,18 +153,18 @@ function horaHHMM(f: Date): string {
                   </p>
                   <div class="flex gap-2">
                     <button (click)="confirmandoEliminar.set(false)"
-                            class="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:bg-red-100 transition">
+                            class="cursor-pointer px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:bg-red-100 transition">
                       No
                     </button>
                     <button (click)="eliminarServicio()" [disabled]="ocupado()"
-                            class="px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-700 text-white text-xs font-semibold transition disabled:opacity-50">
+                            class="cursor-pointer px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-700 text-white text-xs font-semibold transition disabled:opacity-50">
                       Sí, eliminar
                     </button>
                   </div>
                 </div>
               } @else {
                 <button (click)="confirmandoEliminar.set(true)"
-                        class="text-xs font-semibold text-red-600 hover:text-red-700 transition text-left">
+                        class="cursor-pointer text-xs font-semibold text-red-600 hover:text-red-700 transition text-left">
                   <ng-icon name="hugeDelete02" size="14" class="align-[-2px]" /> Eliminar servicio
                 </button>
               }
@@ -175,16 +175,16 @@ function horaHHMM(f: Date): string {
             @if (confirmandoCancelar()) {
               <span class="text-xs font-medium text-slate-600 self-center">¿Cancelar todo el turno?</span>
               <button (click)="confirmandoCancelar.set(false)"
-                      class="px-4 py-2 rounded-lg text-xs font-semibold text-slate-600 border border-slate-300 hover:bg-slate-100 transition">
+                      class="cursor-pointer px-4 py-2 rounded-lg text-xs font-semibold text-slate-600 border border-slate-300 hover:bg-slate-100 transition">
                 No
               </button>
               <button (click)="cancelarTurno()" [disabled]="ocupado()"
-                      class="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white text-xs font-semibold transition disabled:opacity-50">
+                      class="cursor-pointer px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white text-xs font-semibold transition disabled:opacity-50">
                 Sí, cancelar
               </button>
             } @else {
               <button (click)="confirmandoCancelar.set(true)"
-                      class="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white text-xs font-semibold transition">
+                      class="cursor-pointer px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white text-xs font-semibold transition">
                 Cancelar turno
               </button>
             }
