@@ -11,8 +11,7 @@ import type { Turno, EstadoTurno } from '../../../../core/models/turno.model';
     <section class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5 pb-4 border-b border-slate-100">
         <div>
-          <h2 class="text-base font-bold text-slate-900">Agenda del Día</h2>
-          <p class="text-xs text-slate-600">Dos columnas: Servicios generales y Uñas · hac clic para gestionar</p>
+          <h2 class="text-base font-bold text-amber-900">Agenda del Día</h2>
         </div>
       </div>
 
@@ -25,14 +24,13 @@ import type { Turno, EstadoTurno } from '../../../../core/models/turno.model';
 
           <!-- Columna: Servicios Generales -->
           <div>
-            <div class="bg-slate-50 p-2 rounded-lg text-center border-t-2 border-pink-500 border border-slate-200/60 mb-4">
-              <p class="font-bold text-slate-900 text-xs">Servicios Generales</p>
-              <p class="text-[10px] text-pink-600 font-medium">Corte · Tratamientos · Color</p>
+            <div class="bg-amber-100 p-2 rounded-lg text-center mb-4">
+              <p class="font-bold text-purple-900">Peluquería</p>
             </div>
 
             @if (serviciosGenerales().length === 0) {
               <div class="rounded-xl border border-dashed border-slate-200 bg-slate-50/50 p-6 text-center">
-                <p class="text-xs text-slate-500">Sin turnos en esta columna</p>
+                <p class="text-xs text-slate-500">Sin turnos de peluquería hoy</p>
               </div>
             } @else {
               <div class="relative">
@@ -123,9 +121,8 @@ import type { Turno, EstadoTurno } from '../../../../core/models/turno.model';
 
           <!-- Columna: Uñas -->
           <div>
-            <div class="bg-emerald-50 p-2 rounded-lg text-center border-t-2 border-emerald-500 border border-emerald-200/60 mb-4">
-              <p class="font-bold text-slate-900 text-xs">Uñas & Manicura</p>
-              <p class="text-[10px] text-emerald-700 font-medium">Camila — Especialista</p>
+            <div class="bg-purple-100 p-2 rounded-lg text-center mb-4">
+              <p class="font-bold text-purple-900">Manicura</p>
             </div>
 
             @if (serviciosUnas().length === 0) {

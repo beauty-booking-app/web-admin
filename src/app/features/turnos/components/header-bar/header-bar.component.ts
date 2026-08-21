@@ -8,7 +8,6 @@ import { AgendaPdfService } from '../../services/agenda-pdf.service';
     <header class="h-[69px] border-b border-slate-200 bg-white/90 backdrop-blur px-6 flex items-center justify-between shrink-0 gap-4 shadow-sm">
       <div class="flex items-center gap-4">
         <div class="flex items-center gap-3 bg-slate-100 border border-slate-200 rounded-lg px-4 h-9">
-          <span class="text-rose-500 animate-pulse" aria-hidden="true">●</span>
           <div class="text-center leading-tight">
             <span class="text-xs font-bold text-slate-900 block">{{ fechaFormateada() }}</span>
           </div>

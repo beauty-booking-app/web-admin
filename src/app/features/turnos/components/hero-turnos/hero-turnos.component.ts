@@ -16,9 +16,6 @@ import type { Turno } from '../../../../core/models/turno.model';
           </span>
           <h2 class="text-xs font-bold tracking-wider text-slate-700 uppercase">Atención en Curso y Próximos 60 Minutos</h2>
         </div>
-        <span class="text-xs text-slate-600 font-medium">
-          {{ turnosInminentes().length }} Turnos requiriendo atención prioritaria
-        </span>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -99,7 +96,7 @@ import type { Turno } from '../../../../core/models/turno.model';
           </div>
         } @empty {
           <div class="col-span-3 bg-white border border-slate-200 rounded-xl p-8 text-center shadow-sm">
-            <p class="text-slate-600 text-sm">No hay turnos inminentes en este momento.</p>
+            <p class="text-slate-600 text-sm">No hay turnos en la próxima hora.</p>
           </div>
         }
       </div>
