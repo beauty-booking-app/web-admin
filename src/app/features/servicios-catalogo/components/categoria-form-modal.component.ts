@@ -39,7 +39,7 @@ import { ServiciosService } from '../services/servicios.service';
                 Cancelar
               </button>
               <button type="submit"
-                      class="cursor-pointer bg-rose-700 hover:bg-rose-800 text-white font-semibold px-5 py-2 rounded-lg shadow-md shadow-rose-200 transition">
+                      class="text-sm cursor-pointer bg-rose-500 hover:bg-rose-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md shadow-rose-200 transition">
                 Crear Categoría
               </button>
             </div>

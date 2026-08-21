@@ -80,7 +80,7 @@ import type { Servicio, CategoriaServicio } from '../../../core/models/servicio.
                 Cancelar
               </button>
               <button type="submit"
-                      class="cursor-pointer bg-rose-700 hover:bg-rose-800 text-white font-semibold px-5 py-2 rounded-lg shadow-md shadow-rose-200 transition">
+                      class="text-sm cursor-pointer bg-rose-500 hover:bg-rose-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md shadow-rose-200 transition">
                 {{ esEdicion() ? 'Guardar Cambios' : 'Crear Servicio' }}
               </button>
             </div>

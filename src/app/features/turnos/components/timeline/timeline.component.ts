@@ -27,8 +27,8 @@ import type { Turno, EstadoTurno } from '../../../../core/models/turno.model';
 
           <!-- Columna: Servicios Generales -->
           <div>
-            <div class="bg-amber-100 p-2 rounded-lg text-center mb-4">
-              <p class="font-bold text-amber-900">Peluquería</p>
+            <div class="bg-emerald-100 p-2 rounded-lg text-center mb-4">
+              <p class="font-bold text-emerald-900">Peluquería</p>
             </div>
 
             @if (serviciosGenerales().length === 0) {
@@ -45,7 +45,7 @@ import type { Turno, EstadoTurno } from '../../../../core/models/turno.model';
                     @let esPasado = turno.estado === 'Finalizado' || turno.estado === 'Cancelado' || turno.estado === 'No Asiste';
                     @let esAhora = turno.estado === 'En Proceso';
 
-                    <div class="relative flex gap-2.5 sm:gap-3 rounded-xl border bg-white p-2.5 transition-opacity text-[13px] cursor-pointer hover:border-rose-300"
+                    <div class="relative flex gap-2.5 sm:gap-3 rounded-xl border bg-white p-2.5 transition-opacity text-[13px] cursor-pointer hover:border-rose-300 hover:border-2"
                          [class.opacity-55]="esPasado"
                          [class.border-amber-300]="esAhora"
                          [class.shadow-sm]="esAhora"

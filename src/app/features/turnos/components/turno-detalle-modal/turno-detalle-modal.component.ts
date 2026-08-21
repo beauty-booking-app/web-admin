@@ -136,7 +136,7 @@ function horaHHMM(f: Date): string {
                       Cancelar
                     </button>
                     <button (click)="aplicarReprogramacion()" [disabled]="ocupado()"
-                            class="cursor-pointer px-4 py-1.5 rounded-lg bg-rose-700 hover:bg-rose-800 text-white text-xs font-semibold transition disabled:opacity-50">
+                            class="cursor-pointer px-4 py-1.5 rounded-lg bg-rose-500 hover:bg-rose-700 text-white text-sm font-semibold transition disabled:opacity-50">
                       Confirmar reprogramación
                     </button>
                   </div>

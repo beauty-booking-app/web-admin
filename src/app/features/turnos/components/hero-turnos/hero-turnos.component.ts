@@ -87,7 +87,7 @@ import type { Turno } from '../../../../core/models/turno.model';
                 </button>
               } @else if (turno.estado === 'Confirmado') {
                 <button (click)="iniciarTurno(turno)"
-                        class="cursor-pointer flex-1 bg-rose-700 hover:bg-rose-800 text-white py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1 transition shadow-md shadow-rose-100">
+                        class="cursor-pointer flex-1 bg-rose-500 hover:bg-rose-700 text-white py-1.5 rounded-lg text-sm font-semibold flex items-center justify-center gap-1 transition shadow-md shadow-rose-100">
                   <ng-icon name="hugePlay" size="12" class="shrink-0" />
                   Iniciar Atención
                 </button>

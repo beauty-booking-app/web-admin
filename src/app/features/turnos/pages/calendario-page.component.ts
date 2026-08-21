@@ -125,11 +125,12 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
                   @let lista = turnosDe(celda);
                   @let hoy = esHoy(celda);
                   <button (click)="abrirModalDia(celda)"
-                          class="cursor-pointer relative min-h-32 p-1.5 border border-slate-100 text-left align-top transition flex flex-col gap-1 hover:bg-slate-50"
-                          [class.ring-2]="hoy"
-                          [class.ring-rose-600]="hoy"
+                          class="cursor-pointer relative min-h-32 p-1.5 border text-left align-top transition flex flex-col gap-1 hover:bg-slate-50"
+                          [class.border-slate-100]="!hoy"
+                          [class.border-2]="hoy"
                           [class.border-rose-600]="hoy"
                           [class.bg-rose-50]="hoy"
+                          [class.rounded-2xl]="hoy"
                           [attr.aria-label]="'Ver turnos del día ' + formatearFecha(celda) + (hoy ? ' (hoy)' : '')">
                     <span class="inline-flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold"
                           [class.text-slate-600]="!hoy"

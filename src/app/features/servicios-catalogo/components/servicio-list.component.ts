@@ -35,7 +35,7 @@ const ICONOS_CATEGORIA: Record<string, string> = {
           <p class="text-xs text-slate-600 mt-1">{{ serviciosService.totalServicios() }} servicios en {{ categorias().length }} categorías</p>
         </div>
         <button (click)="modalCategoria.abrir()"
-                class="cursor-pointer bg-rose-700 hover:bg-rose-800 text-white font-semibold px-4 py-2 rounded-lg text-xs shadow-md shadow-rose-200 transition flex items-center gap-2"
+                class="cursor-pointer bg-rose-500 hover:bg-rose-700 text-white font-semibold px-4 py-2 rounded-lg text-sm shadow-md shadow-rose-200 transition flex items-center gap-2"
                 aria-label="Crear nueva categoría">
           <span class="text-base leading-none">+</span>
           Nueva Categoría
@@ -69,7 +69,7 @@ const ICONOS_CATEGORIA: Record<string, string> = {
                 <h3 class="font-bold text-slate-900 text-xs tracking-wide">{{ grupo.categoria }}</h3>
               </div>
               <button (click)="modal.abrirNueva(grupo.categoria)"
-                      class="cursor-pointer flex items-center gap-1 px-3 py-1.5 rounded-lg bg-rose-700 hover:bg-rose-800 text-white text-[11px] font-semibold transition"
+                      class="cursor-pointer flex items-center gap-1 px-3 py-1.5 rounded-lg bg-rose-500 hover:bg-rose-700 text-white text-sm font-semibold transition"
                       [attr.aria-label]="'Agregar servicio a ' + grupo.categoria">
                 <span class="text-sm leading-none">+</span>
                 Agregar

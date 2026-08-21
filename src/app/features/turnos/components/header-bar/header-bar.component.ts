@@ -28,7 +28,7 @@ import { AgendaPdfService } from '../../services/agenda-pdf.service';
         </button>
 
         <button (click)="onNuevoTurno.emit()"
-                class="cursor-pointer flex items-center gap-2 bg-gradient-to-r from-rose-700 to-rose-600 hover:from-rose-800 hover:to-rose-700 text-white font-semibold px-4 py-2 rounded-lg text-xs shadow-md shadow-rose-200 transition-all hover:scale-[1.02] active:scale-95"
+                class="cursor-pointer flex items-center gap-2 bg-gradient-to-r from-rose-700 to-rose-600 hover:from-rose-800 hover:to-rose-700 text-white font-semibold px-4 py-2 rounded-lg text-xs shadow-md shadow-rose-200"
                 aria-label="Agendar nuevo turno">
           <span>+</span>
           <span>AGENDAR TURNO</span>
