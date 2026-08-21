@@ -1,5 +1,14 @@
 # Registro de cambios
 
+## Feature · ABM de categorías/servicios conectado a la API + imagen por categoría (2026-08-21)
+
+El catálogo del panel dejó de ser in-memory: ahora usa los endpoints reales `/admin/services` y `/admin/service-types` (requiere sesión Admin; el token lo agrega el interceptor).
+
+- **Categorías** — crear (nombre + descripción + imagen), editar y eliminar (confirmación inline en dos pasos; el backend rechaza borrar categorías con servicios, 409).
+- **Imagen de referencia** — nuevo campo en el modal de categoría: preview local, quitar/reemplazar, subida vía `POST /files` (`entity=service_reference`, solo imágenes, máx 5 MB). El backend la envía a Cloudinary y `/public/services` devuelve la URL final, que la landing ya renderiza. En las cards se muestra como miniatura en lugar del icono.
+- **Subtipos** — crear/editar/eliminar contra `service-types`; el modal muestra estado "Guardando…" y errores.
+- `ServiciosService` reescrito alrededor de `GET /admin/services`; mantiene su superficie anterior (`servicios`, `categorias`, `catalogoPorSubtipo`, `totalServicios`) para turnos/analytics/calendario/sidebar. `Servicio` ganó `serviceId` opcional y `categoria` pasa a ser el nombre real del Service (ya no se normaliza a las 4 categorías fijas).
+
 ## UI · `cursor-pointer` en todos los botones (2026-08-21)
 
 Se agregó la clase `cursor-pointer` a los 51 `<button>` de la UI (47 agregados; `turno-form-modal` y un botón del calendario ya la tenían). Quedan **sin hover** (intencional o pendiente): el switch de días en `horarios-page`, y los toggles de vista "Semana"/"Mes" en `calendario-page`.

@@ -2,6 +2,8 @@ export type CategoriaServicio = string;
 
 export interface Servicio {
   id: string;
+  /** Id del Service (categoría) al que pertenece en el backend. */
+  serviceId?: string;
   categoria: CategoriaServicio;
   subtipo: string;
   duracionMinutos: number;

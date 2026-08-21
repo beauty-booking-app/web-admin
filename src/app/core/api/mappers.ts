@@ -65,10 +65,10 @@ export function categorizarServicio(nombre: string): CategoriaServicio {
 }
 
 export function serviceToServicios(service: Service): Servicio[] {
-  const categoria = categorizarServicio(service.name);
   return service.types.map((type) => ({
     id: type.id,
-    categoria,
+    serviceId: service.id,
+    categoria: service.name,
     subtipo: type.name,
     duracionMinutos: type.durationMinutes,
     precioBase: type.price,
@@ -132,7 +132,9 @@ function turnoDesdeFuente(
   const primerServicio = fuente.serviceNames[0] ?? 'Servicio';
   const base = catalogoPorSubtipo.get(primerServicio);
   const categoria = base?.categoria ?? 'CORTE UNISEX';
-  const profesional = categoria === 'UÑAS' ? 'Camila' : 'Sofía';
+  // La categoría viene del backend con su nombre real ("Uñas", "uñas"...).
+  const esUnias = categoria.trim().toUpperCase() === 'UÑAS';
+  const profesional = esUnias ? 'Camila' : 'Sofía';
   return {
     id: fuente.id,
     cliente: { nombre: fuente.clienteNombre, telefono: '' },

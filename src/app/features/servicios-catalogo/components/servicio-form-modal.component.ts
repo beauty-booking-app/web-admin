@@ -80,8 +80,9 @@ import type { Servicio, CategoriaServicio } from '../../../core/models/servicio.
                 Cancelar
               </button>
               <button type="submit"
-                      class="text-sm cursor-pointer bg-rose-500 hover:bg-rose-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md shadow-rose-200 transition">
-                {{ esEdicion() ? 'Guardar Cambios' : 'Crear Servicio' }}
+                      [disabled]="guardando()"
+                      class="cursor-pointer text-sm bg-rose-500 hover:bg-rose-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold px-5 py-2 rounded-lg shadow-md shadow-rose-200 transition">
+                {{ guardando() ? 'Guardando…' : esEdicion() ? 'Guardar Cambios' : 'Crear Servicio' }}
               </button>
             </div>
           </form>
@@ -96,9 +97,13 @@ export class ServicioFormModalComponent {
   readonly visible = signal(false);
   readonly onGuardado = output<void>();
 
+  protected readonly guardando = signal(false);
+  protected readonly error = signal<string | null>(null);
+
   protected esEdicion = signal(false);
   protected categoriaFija = signal(false);
-  protected servicioId = '';
+  protected tipoId: string | null = null;
+  protected serviceId: string | null = null;
   protected categoria: CategoriaServicio = 'CORTE UNISEX';
   protected subtipo = '';
   protected precio = 0;
@@ -108,7 +113,9 @@ export class ServicioFormModalComponent {
 
   abrirNueva(categoria?: CategoriaServicio): void {
     this.esEdicion.set(false);
-    this.servicioId = '';
+    this.tipoId = null;
+    this.serviceId =
+      this.serviciosService.categorias().find((c) => c.categoria === categoria)?.id ?? null;
     this.categoria = categoria ?? 'CORTE UNISEX';
     this.subtipo = '';
     this.precio = 0;
@@ -116,43 +123,53 @@ export class ServicioFormModalComponent {
     // Cuando se abre desde una card la categoría ya viene preseleccionada y no
     // se puede cambiar; se inhabilita el select.
     this.categoriaFija.set(categoria !== undefined);
+    this.error.set(null);
     this.visible.set(true);
   }
 
   abrirEdicion(servicio: Servicio): void {
     this.esEdicion.set(true);
     this.categoriaFija.set(true);
-    this.servicioId = servicio.id;
+    this.tipoId = servicio.id;
+    this.serviceId = servicio.serviceId ?? null;
     this.categoria = servicio.categoria;
     this.subtipo = servicio.subtipo;
     this.precio = servicio.precioBase;
     this.duracion = servicio.duracionMinutos;
+    this.error.set(null);
     this.visible.set(true);
   }
 
   cerrar(): void {
+    if (this.guardando()) return;
     this.visible.set(false);
   }
 
-  guardar(): void {
-    if (!this.subtipo.trim() || this.precio <= 0 || this.duracion <= 0) return;
+  async guardar(): Promise<void> {
+    if (!this.subtipo.trim() || this.precio <= 0 || this.duracion <= 0 || this.guardando()) return;
 
-    if (this.esEdicion()) {
-      this.serviciosService.editar(this.servicioId, {
-        subtipo: this.subtipo.trim(),
-        precioBase: this.precio,
-        duracionMinutos: this.duracion,
-      });
-    } else {
-      this.serviciosService.agregar({
-        categoria: this.categoria,
-        subtipo: this.subtipo.trim(),
-        precioBase: this.precio,
-        duracionMinutos: this.duracion,
-      });
+    const datos = {
+      nombre: this.subtipo.trim(),
+      precio: this.precio,
+      duracionMinutos: this.duracion,
+    };
+    this.guardando.set(true);
+    this.error.set(null);
+    try {
+      if (this.esEdicion() && this.tipoId) {
+        await this.serviciosService.actualizarTipo(this.tipoId, datos);
+      } else if (this.serviceId) {
+        await this.serviciosService.crearTipo(this.serviceId, datos);
+      } else {
+        this.error.set('No se encontró la categoría del servicio.');
+        return;
+      }
+      this.onGuardado.emit();
+      this.visible.set(false);
+    } catch (err) {
+      this.error.set(err instanceof Error ? err.message : 'Error al guardar el servicio');
+    } finally {
+      this.guardando.set(false);
     }
-
-    this.onGuardado.emit();
-    this.cerrar();
   }
 }

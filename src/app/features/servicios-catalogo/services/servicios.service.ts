@@ -1,54 +1,61 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { firstValueFrom } from 'rxjs';
-import type { Servicio, CategoriaServicio } from '../../../core/models/servicio.model';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, firstValueFrom } from 'rxjs';
+import type { Servicio } from '../../../core/models/servicio.model';
 import { API_URL } from '../../../core/api/environment';
-import type { Service } from '../../../core/api/backend.models';
+import type { ReferenceImage, Service } from '../../../core/api/backend.models';
 import { serviceToServicios } from '../../../core/api/mappers';
 import { mensajeDeError } from '../../../core/api/error-utils';
+
+export interface CategoriaGrupo {
+  id: string;
+  categoria: string;
+  descripcion: string | null;
+  imagenUrl: string | null;
+  servicios: Servicio[];
+}
+
+export interface CategoriaInput {
+  nombre: string;
+  descripcion?: string | null;
+  imagenFile?: File | null;
+}
+
+export interface TipoInput {
+  nombre: string;
+  precio: number;
+  duracionMinutos: number;
+}
 
 @Injectable({ providedIn: 'root' })
 export class ServiciosService {
   private readonly http = inject(HttpClient);
 
-  private readonly _servicios = signal<Servicio[]>([]);
-  private readonly _categorias = signal<CategoriaServicio[]>([
-    'CORTE UNISEX',
-    'TRATAMIENTOS CAPILARES',
-    'COLOR',
-    'UÑAS',
-  ]);
+  /** Categorías tal como las devuelve la API admin (backend Service). */
+  private readonly _services = signal<Service[]>([]);
   private readonly _cargando = signal(false);
   private readonly _error = signal<string | null>(null);
   private cargado = false;
 
-  readonly servicios = this._servicios.asReadonly();
   readonly cargando = this._cargando.asReadonly();
   readonly error = this._error.asReadonly();
 
-  readonly categoriasList = this._categorias.asReadonly();
+  /** Subtipos aplanados (compatibilidad con turnos/analytics/calendario). */
+  readonly servicios = computed(() => this._services().flatMap(serviceToServicios));
 
-  readonly categorias = computed(() => {
-    const presentes = new Set(this._servicios().map((s) => s.categoria));
-    const orden = this._categorias().filter((c) => presentes.has(c));
-    for (const c of presentes) {
-      if (!orden.includes(c)) orden.push(c);
-    }
-    return orden.map((cat) => ({
-      categoria: cat,
-      servicios: this._servicios().filter((s) => s.categoria === cat),
-    }));
-  });
+  readonly categorias = computed<CategoriaGrupo[]>(() =>
+    this._services().map((svc) => ({
+      id: svc.id,
+      categoria: svc.name,
+      descripcion: svc.description,
+      imagenUrl: svc.referenceImage?.url ?? null,
+      servicios: serviceToServicios(svc),
+    })),
+  );
 
-  readonly totalServicios = computed(() => this._servicios().length);
+  readonly categoriasList = computed(() => this.categorias().map((c) => c.categoria));
 
-  agregarCategoria(nombre: string): void {
-    const limpio = nombre.trim();
-    if (!limpio) return;
-    this._categorias.update((lista) =>
-      lista.includes(limpio) ? lista : [...lista, limpio],
-    );
-  }
+  readonly totalServicios = computed(() => this.servicios().length);
 
   async cargarServiciosSiNecesario(): Promise<void> {
     if (this.cargado || this._cargando()) return;
@@ -61,9 +68,9 @@ export class ServiciosService {
     this._error.set(null);
     try {
       const services = await firstValueFrom(
-        this.http.get<Service[]>(`${API_URL}/public/services`),
+        this.http.get<Service[]>(`${API_URL}/admin/services`),
       );
-      this._servicios.set(services.flatMap(serviceToServicios));
+      this._services.set(services);
       this.cargado = true;
     } catch (err) {
       this._error.set(mensajeDeError(err));
@@ -74,22 +81,94 @@ export class ServiciosService {
 
   catalogoPorSubtipo(): Map<string, Servicio> {
     const mapa = new Map<string, Servicio>();
-    for (const servicio of this._servicios()) {
+    for (const servicio of this.servicios()) {
       mapa.set(servicio.subtipo, servicio);
     }
     return mapa;
   }
 
-  agregar(servicio: OmitId<Servicio>): void {
-    const id = `srv-${Date.now()}`;
-    this._servicios.update((lista) => [...lista, { ...servicio, id }]);
-  }
+  // --- Categorías (backend Service) ---
 
-  editar(id: string, cambios: Partial<Pick<Servicio, 'subtipo' | 'duracionMinutos' | 'precioBase'>>): void {
-    this._servicios.update((lista) =>
-      lista.map((s) => (s.id === id ? { ...s, ...cambios } : s)),
+  async crearCategoria(datos: CategoriaInput): Promise<void> {
+    const referenceImageId = await this.resolverImagen(datos.imagenFile);
+    await this.request(
+      this.http.post<Service>(`${API_URL}/admin/services`, {
+        name: datos.nombre,
+        description: datos.descripcion ?? null,
+        referenceImageId,
+      }),
     );
   }
-}
 
-type OmitId<T> = Omit<T, 'id'>;
+  async actualizarCategoria(id: string, datos: CategoriaInput): Promise<void> {
+    const referenceImageId = await this.resolverImagen(datos.imagenFile);
+    await this.request(
+      this.http.patch<Service>(`${API_URL}/admin/services/${id}`, {
+        name: datos.nombre,
+        description: datos.descripcion ?? null,
+        ...(referenceImageId !== undefined ? { referenceImageId } : {}),
+      }),
+    );
+  }
+
+  async eliminarCategoria(id: string): Promise<void> {
+    await this.request(this.http.delete(`${API_URL}/admin/services/${id}`));
+  }
+
+  // --- Subtipos (backend ServiceType) ---
+
+  async crearTipo(categoriaId: string, datos: TipoInput): Promise<void> {
+    await this.request(
+      this.http.post<Service>(`${API_URL}/admin/service-types`, {
+        serviceId: categoriaId,
+        name: datos.nombre,
+        durationMinutes: datos.duracionMinutos,
+        price: datos.precio,
+        referenceImageId: null,
+      }),
+    );
+  }
+
+  async actualizarTipo(tipoId: string, datos: TipoInput): Promise<void> {
+    await this.request(
+      this.http.patch<Service>(`${API_URL}/admin/service-types/${tipoId}`, {
+        name: datos.nombre,
+        durationMinutes: datos.duracionMinutos,
+        price: datos.precio,
+      }),
+    );
+  }
+
+  async eliminarTipo(tipoId: string): Promise<void> {
+    await this.request(this.http.delete(`${API_URL}/admin/service-types/${tipoId}`));
+  }
+
+  // --- Internos ---
+
+  /** Sube la imagen si hay una nueva; undefined = no cambiar la actual. */
+  private async resolverImagen(file: File | null | undefined): Promise<string | null | undefined> {
+    if (file === undefined) return undefined;
+    if (file === null) return null;
+    const imagen = await this.subirImagen(file);
+    return imagen.id;
+  }
+
+  async subirImagen(file: File): Promise<ReferenceImage> {
+    const form = new FormData();
+    form.append('file', file);
+    form.append('entity', 'service_reference');
+    // No forzar Content-Type: el browser agrega el boundary del multipart.
+    const headers = new HttpHeaders({ Accept: 'application/json' });
+    return firstValueFrom(
+      this.http.post<ReferenceImage>(`${API_URL}/files`, form, { headers }),
+    );
+  }
+
+  private async request(observable: Observable<unknown>): Promise<void> {
+    try {
+      await firstValueFrom(observable);
+    } catch (err) {
+      throw new Error(mensajeDeError(err));
+    }
+  }
+}
